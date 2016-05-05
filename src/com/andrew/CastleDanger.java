@@ -4,7 +4,7 @@ public class CastleDanger {
 
     public static void main(String[] args) {
 
-        // Final project goes here
+    Database db = new Database();
 
     }
 }
