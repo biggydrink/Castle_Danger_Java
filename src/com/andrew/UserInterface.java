@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 interface Command {
-    void runCommand();
+    void runCommand(Object argument);
 }
 
 public class UserInterface {
@@ -12,6 +12,20 @@ public class UserInterface {
 
     HashMap<String, Command> commandMap = new HashMap<String,Command>();
     Player player;
+    String cmd;
+    String args;
+
+    // ANSI values taken from   http://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+
 
     public UserInterface(Player player) {
         this.player = player;
@@ -20,30 +34,41 @@ public class UserInterface {
 
     public void createCommandMap() {
 
-
         commandMap.put("LOOK", new Command() {
-            public void runCommand() { setting(); }
+            public void runCommand(Object args) {
+                if (args.equals("")) {
+                    setting();
+                } else {
+                    look((String)args);
+                }
+            }
         });
 
         commandMap.put("L", new Command() {
-            public void runCommand() { setting(); }
+            public void runCommand(Object args) {
+                if (args.equals("")) {
+                    setting();
+                } else {
+                    look((String)args);
+                }
+            }
         });
 
         commandMap.put("SC", new Command() {
-            public void runCommand() { player.stats(); }
+            public void runCommand(Object args) { stats(); }
         });
 
         commandMap.put("N", new Command() {
-            public void runCommand() { player.goNorth(); }
+            public void runCommand(Object args) { player.goNorth(); setting(); }
         });
         commandMap.put("S", new Command() {
-            public void runCommand() { player.goSouth(); }
+            public void runCommand(Object args) { player.goSouth(); setting(); }
         });
         commandMap.put("E", new Command() {
-            public void runCommand() { player.goEast(); }
+            public void runCommand(Object args) { player.goEast(); setting(); }
         });
         commandMap.put("W", new Command() {
-            public void runCommand() { player.goWest(); }
+            public void runCommand(Object args) { player.goWest(); setting(); }
         });
 
     }
@@ -55,15 +80,16 @@ public class UserInterface {
         */
 
         String[] cmdWithArgs = parseInput();
-        String cmd = cmdWithArgs[0].toUpperCase();
-        String args = cmdWithArgs[1].toUpperCase();
+        cmd = cmdWithArgs[0].toUpperCase();
+        args = cmdWithArgs[1].toUpperCase();
 
         // TODO add a help command
         if (cmd.trim().equals("")) {
             prompt();
         } else {
             try {
-                commandMap.get(cmd).runCommand();
+                System.out.println("");
+                commandMap.get(cmd).runCommand(args);
             } catch (NullPointerException npe) {
                 System.out.println("Wait, what?");
             }
@@ -77,8 +103,8 @@ public class UserInterface {
     public String[] parseInput() {
         String input;
         String[] listInput;
-        String cmd;
-        String args = "";
+        String inputCmd;
+        String inputArgs = "";
         Scanner scanner = new Scanner(System.in);
 
         // Get input from user
@@ -87,15 +113,15 @@ public class UserInterface {
 
         // Parse input to command + arg
         listInput = input.split(" ");
-        cmd = listInput[0];
+        inputCmd = listInput[0];
         if (listInput.length > 1) {
             for (int i = 1; i < listInput.length; ++i) {
-                if (i > 1) args += " ";
-                args += listInput[i];
+                if (i > 1) inputArgs += " ";
+                inputArgs += listInput[i];
             }
         }
 
-        String cmdWithArgs[] = {cmd,args};
+        String cmdWithArgs[] = {inputCmd,inputArgs};
         return cmdWithArgs;
 
 
@@ -104,7 +130,17 @@ public class UserInterface {
     /** Display main game prompt */
     public void prompt() {
         // <[room name]: [hp]/[maxhp]HP : [exits]>
-        System.out.print("<" + player.currentRoom.name + " : " + player.getHP() + "/" + player.getMaxHP() + "HP : " + player.currentRoom.getExits() + ">");
+        String prompt;
+        double percentHP;
+        percentHP = player.getMaxHP() / player.getHP();
+
+
+        prompt = "<" + player.currentRoom.name + " : ";
+        prompt += getHPColor() + player.getHP() + "/" + player.getMaxHP() + "HP" + ANSI_RESET + " : ";
+        prompt += ANSI_CYAN + player.currentRoom.getExits() + ANSI_RESET + ">";
+
+        System.out.print(prompt);
+        //System.out.print("<" + player.currentRoom.name + " : " + player.getHP() + "/" + player.getMaxHP() + "HP : " + player.currentRoom.getExits() + ">");
     }
 
     /** Show description of item/player */
@@ -114,8 +150,32 @@ public class UserInterface {
 
     /** Display currentRoom description */
     public void setting() {
-        System.out.println(player.currentRoom.description);
+        System.out.println(ANSI_BLACK + player.currentRoom.description + ANSI_RESET);
+        System.out.print(ANSI_YELLOW + player.currentRoom.showMobs() + ANSI_RESET);
     }
 
+    /** Display player's stats */
+    public void stats() {
+        System.out.println("Player stats() called");
+        System.out.println(ANSI_BLACK + player.getDescription() + ANSI_RESET);
+        System.out.println("Name: " + ANSI_BLACK + player.getName() + ANSI_RESET);
+        System.out.println("HP: " + getHPColor() + player.getHP() + "/" + player.getMaxHP() + ANSI_RESET);
+        System.out.println("Attack: " + ANSI_BLACK + player.getAttack() + ANSI_RESET);
+        System.out.println("Defense: " + ANSI_BLACK +  player.getDefense() + ANSI_RESET);
+    }
+
+    private String getHPColor() {
+        double percentHP = player.getHP() / player.getMaxHP();
+
+        if (percentHP < 0.5) {
+            return ANSI_RED;
+        } else if (percentHP >= 0.5 && percentHP < .75) {
+            return ANSI_YELLOW;
+        } else if (percentHP >= .75) {
+            return ANSI_GREEN;
+        }
+        return ANSI_RESET;
+
+    }
 
 }

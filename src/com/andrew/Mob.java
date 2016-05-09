@@ -6,6 +6,7 @@ public class Mob {
 
     protected String name;
     protected String description;
+    protected String setting;
     protected int maxHP;
     protected int hp;
     protected int attack;
@@ -16,11 +17,10 @@ public class Mob {
 
 
     /** Construct that includes attack and defense, used for npcs/monsters */
-    public Mob(String name, String description, int maxHP, int attack, int defense) {
-        System.out.println("Mob initializer with attack/defense");
-
+    public Mob(String name, String description, String setting, int maxHP, int attack, int defense) {
         this.name = name;
         this.description = description;
+        this.setting = setting;
         this.maxHP = maxHP;
         this.hp = maxHP;
         this.attack = attack;
@@ -34,6 +34,7 @@ public class Mob {
         return name;
     }
     public String getDescription() { return description; }
+    public String getSetting() { return setting; }
     public int getMaxHP() { return maxHP; }
     public int getHP() { return hp; }
     public int getAttack() { return attack; }

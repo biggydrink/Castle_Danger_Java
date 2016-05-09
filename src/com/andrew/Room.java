@@ -44,4 +44,13 @@ public class Room {
         return exits;
     }
 
+    public String showMobs() {
+        String mobDescriptions = "";
+        for (Mob mob : mobList) {
+            mobDescriptions += mob.getSetting() + "\n";
+        }
+
+        return mobDescriptions;
+    }
+
 }

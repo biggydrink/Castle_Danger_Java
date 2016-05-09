@@ -6,27 +6,28 @@ import java.util.Scanner;
 
 public class World {
 
-    LinkedList<Player> playerList;
-    static Scanner mainScanner = new Scanner(System.in);
+    private static Scanner mainScanner = new Scanner(System.in);
+    protected LinkedList<Player> playerList;
+    private LinkedList<Room> roomList;
+    private LinkedList<Weapon> weaponList;
+    private LinkedList<Armor> armorList;
+    private LinkedList<Mob> mobList;
 
     public World() {
         playerList = new LinkedList<Player>();
-        Player firstPlayer = createPlayer();
-        UserInterface UI = new UserInterface(firstPlayer);
+        roomList = createRooms();
+        //weaponList = createWeapons();
+        //armorList = createArmor();
+        mobList = createMobs();
 
-        // Rooms
-        LinkedList<Room> roomList = createRooms();
-        firstPlayer.setCurrentRoom(roomList.get(0));
-
-        // Commands
-        UI.setting();
-        UI.prompt();
-        while (firstPlayer.getHP() > 0) {
-            UI.inputCommand();
-            UI.prompt();
-        }
-
+        roomList.get(0).mobList.add(mobList.get(0));
     }
+
+    public LinkedList<Player> getPlayerList() { return playerList; }
+    public LinkedList<Room> getRoomList() { return roomList; }
+    public LinkedList<Weapon> getWeaponList() { return weaponList; }
+    public LinkedList<Armor> getArmor() { return armorList; }
+    public LinkedList<Mob> getMob() { return mobList; }
 
     /** User selects a name for their character, character created and returned */
     protected Player createPlayer() {
@@ -48,7 +49,7 @@ public class World {
         roomList.add(starter);
 
         Room darkForest0 = new Room("Deeper Into the Deep Dark Forest","You're moving deeper into the forest. It looks like the trail leads north and south.");
-        Room darkForest1 = new Room("Even Deeper Into the Deep Dark Forest","Continuing on the trail deeper into the forest. It's starting to get a little\n darker, and the trees are looking a little bigger");
+        Room darkForest1 = new Room("Even Deeper Into the Deep Dark Forest","Continuing on the trail deeper into the forest. It's starting to get a little\ndarker, and the trees are looking a little bigger");
         Room darkForest2 = new Room("So Deep Into the Deep Dark Forest","This forest really is deep!");
         Room darkForest3 = new Room("Pretty Deep Now Into the Deep Dark Forest","It's starting to get dark now too.");
         Room darkForest4 = new Room("Definitely Very Deep Now Into the Deep Dark Forest","You're quite deep into the forest now. The trees are so massive\nand so thick that it's pretty dark. You think you can see a little bit of a clearing ahead to the north though.");
@@ -123,6 +124,16 @@ public class World {
 
         return roomList;
 
+    }
+
+    private LinkedList<Mob> createMobs() {
+
+        LinkedList<Mob> mobList = new LinkedList<>();
+
+        mobList.add(new Mob("Ladybug","A cute ladybug with little red spots.","There is a ladybug here",20,5,0));
+        mobList.add(new Mob("Super Ladybug","This ladybug is HUGE, with a gaping mouth that looks like it wants to eat you for lunch.","Whoa, a giant ladybug is here!! How did it get so huge? Why does it have a sword?!?",50,8,2));
+
+        return mobList;
     }
 
 

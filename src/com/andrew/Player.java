@@ -19,24 +19,16 @@ public class Player extends Mob {
         String description;
          */
 
-        super(name,"",100,1,1);
+        super(name,"","",100,1,1);
         playerRand = new Random();
         this.name = name;
+        this.description = "Behold, " + this.name + ". An elite player in this game!";
+        this.setting = name + " is standing here.";
         this.maxHP = playerRand.nextInt(10) + 80; // random max hp between 80 and 90
         this.hp = this.maxHP;
         this.attack = playerRand.nextInt(2) + 8; // random attack between 8 and 10
         this.defense = playerRand.nextInt(2) + 3; // random defense between 3 and 5
-        this.description = "Behold, " + this.name + ". An elite player in this game!";
-    }
 
-    /** Display player's stats */
-    public void stats() {
-        System.out.println("Player stats() called");
-        System.out.println(getDescription());
-        System.out.println("Name: " + getName());
-        System.out.println("HP: " + getHP() + "/" + getMaxHP());
-        System.out.println("Attack: " + getAttack());
-        System.out.println("Defense: " + getDefense());
     }
 
     public int getHP() {
@@ -56,7 +48,6 @@ public class Player extends Mob {
             currentRoom.mobList.remove(this);
             currentRoom = currentRoom.north;
             currentRoom.mobList.add(this);
-            System.out.println(currentRoom.description);
         } else {
             System.out.println("You can't go that way!");
         }
@@ -67,7 +58,6 @@ public class Player extends Mob {
             currentRoom.mobList.remove(this);
             currentRoom = currentRoom.south;
             currentRoom.mobList.add(this);
-            System.out.println(currentRoom.description);
         } else {
             System.out.println("You can't go that way!");
         }
@@ -78,7 +68,6 @@ public class Player extends Mob {
             currentRoom.mobList.remove(this);
             currentRoom = currentRoom.east;
             currentRoom.mobList.add(this);
-            System.out.println(currentRoom.description);
         } else {
             System.out.println("You can't go that way!");
         }
@@ -89,7 +78,6 @@ public class Player extends Mob {
             currentRoom.mobList.remove(this);
             currentRoom = currentRoom.west;
             currentRoom.mobList.add(this);
-            System.out.println(currentRoom.description);
         } else {
             System.out.println("You can't go that way!");
         }
