@@ -43,7 +43,7 @@ public class Database {
     private static String DB_CONNECTION_URL = "jdbc:mysql://localhost:3306/"; //TODO make this not local host
     private static String DB_NAME = "castle_danger";
     private static String USER = "root";
-    private static String PASS = "password";
+    private static String PASS = "4ig00K1MS$J$!1";
 
     private static Statement statement = null;
     private static Connection conn = null;
@@ -51,7 +51,7 @@ public class Database {
 
     private static String PLAYER_TABLE_NAME = "players";
     private static String INVENTORY_TABLE_NAME = "inventory";
-    private static String EQUIPPED_TABLE_NAME = "equipped";
+    private static String EQUIPPED_TABLE_NAME = "equipment";
 
     public Database() {
         setup();
@@ -106,9 +106,12 @@ public class Database {
     private boolean tableExists(String tableName) {
 
         try {
+
+            if (rs != null) rs.close();
+
             String checkTableExistsQuery = "SHOW TABLES LIKE '" + tableName + "'";
-            ResultSet tableRS = statement.executeQuery(checkTableExistsQuery);
-            if (tableRS.next()) {
+            rs = statement.executeQuery(checkTableExistsQuery);
+            if (rs.next()) {
                 return true;
             }
             return false;
@@ -134,7 +137,7 @@ public class Database {
         );
         */
 
-        String createTableQuery = "CREATE TABLE players (" +
+        String createTableQuery = "CREATE TABLE " + PLAYER_TABLE_NAME + " (" +
                 "player_key INT NOT NULL AUTO_INCREMENT PRIMARY KEY" +
                 ", name VARCHAR(25) UNIQUE NOT NULL" +
                 ", maxhp INT NOT NULL" +
@@ -168,9 +171,9 @@ public class Database {
         );
          */
 
-        String createTableQuery = "CREATE TABLE inventory (" +
+        String createTableQuery = "CREATE TABLE " + INVENTORY_TABLE_NAME + " (" +
                 "inv_key INT AUTO_INCREMENT PRIMARY KEY" +
-                ", player_key INT FOREIGN KEY NOT NULL" +
+                ", player_key INT NOT NULL" +
                 ", name VARCHAR(25) NOT NULL" +
                 ", description VARCHAR(500) NOT NULL" +
                 ", defense INT" +
@@ -201,9 +204,9 @@ public class Database {
                 equipPlacement VARCHAR(20)
         );
          */
-        String createTableQuery = "CREATE TABLE equipment (" +
+        String createTableQuery = "CREATE TABLE " + EQUIPPED_TABLE_NAME + " (" +
                 "eq_key INT AUTO_INCREMENT PRIMARY KEY" +
-                ", player_key INT FOREIGN KEY NOT NULL" +
+                ", player_key INT NOT NULL" +
                 ", name VARCHAR(25) NOT NULL" +
                 ", description VARCHAR(500) NOT NULL" +
                 ", defense INT" +

@@ -2,24 +2,46 @@ package com.andrew;
 
 import java.util.HashMap;
 
-abstract public class Mob {
+public class Mob {
 
     protected String name;
+    protected String description;
     protected int maxHP;
     protected int hp;
     protected int attack;
     protected int defense;
+    protected Room currentRoom;
     protected HashMap<String,Item> inventory;
-    protected HashMap<String,Item> equipped;
-    protected String description;
+    protected HashMap<String,Item> equipment;
 
 
-    public Mob() {
-        System.out.println("Mob initializer");
+    /** Construct that includes attack and defense, used for npcs/monsters */
+    public Mob(String name, String description, int maxHP, int attack, int defense) {
+        System.out.println("Mob initializer with attack/defense");
+
+        this.name = name;
+        this.description = description;
+        this.maxHP = maxHP;
+        this.hp = maxHP;
+        this.attack = attack;
+        this.defense = defense;
 
         inventory = new HashMap<String,Item>();
-        equipped = new HashMap<String,Item>();
+        equipment = new HashMap<String,Item>();
     }
+
+    public String getName() {
+        return name;
+    }
+    public String getDescription() { return description; }
+    public int getMaxHP() { return maxHP; }
+    public int getHP() { return hp; }
+    public int getAttack() { return attack; }
+    public int getDefense() { return defense; }
+
+    public void setMaxHP(int newMax) {maxHP = newMax; }
+    public void setHP(int newHP) {hp = newHP; }
+
 
     /** begins fight between this mob and another mob (can be monster or player character) */
     public void initiateAttack(Mob monster) {
@@ -64,6 +86,47 @@ abstract public class Mob {
     /** Use an item (if applicable) */
     public void use(String itemName) {
         System.out.println("Mob use() called");
+    }
+
+
+
+    public void goNorth() {
+        if (currentRoom.north != null) {
+            currentRoom.mobList.remove(this);
+            currentRoom = currentRoom.north;
+            currentRoom.mobList.add(this);
+        }
+    }
+    public void goSouth() {
+        if (currentRoom.north != null) {
+            currentRoom.mobList.remove(this);
+            currentRoom = currentRoom.north;
+            currentRoom.mobList.add(this);
+        }
+    }
+    public void goEast() {
+        if (currentRoom.north != null) {
+            currentRoom.mobList.remove(this);
+            currentRoom = currentRoom.north;
+            currentRoom.mobList.add(this);
+        }
+    }
+    public void goWest() {
+        if (currentRoom.north != null) {
+            currentRoom.mobList.remove(this);
+            currentRoom = currentRoom.north;
+            currentRoom.mobList.add(this);
+        }
+    }
+
+    public void setCurrentRoom(Room newRoom) {
+        if (currentRoom != null && !currentRoom.mobList.isEmpty()) {
+            currentRoom.mobList.remove(this);
+        }
+
+        newRoom.mobList.add(this);
+
+        currentRoom = newRoom;
     }
 
 }
