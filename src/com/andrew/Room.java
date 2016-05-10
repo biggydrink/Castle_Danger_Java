@@ -1,6 +1,5 @@
 package com.andrew;
 
-
 import java.util.LinkedList;
 
 public class Room {
@@ -45,12 +44,21 @@ public class Room {
     }
 
     public String showMobs() {
-        String mobDescriptions = "";
+        String mobSettings = "";
         for (Mob mob : mobList) {
-            mobDescriptions += mob.getSetting() + "\n";
+            mobSettings += mob.getSetting() + "\n";
         }
 
-        return mobDescriptions;
+        return mobSettings;
+    }
+
+    public String showItems() {
+        String itemSettings = "";
+        for (Item item : itemList) {
+            itemSettings += item.getSetting() + "\n";
+        }
+
+        return itemSettings;
     }
 
 }

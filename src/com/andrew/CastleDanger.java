@@ -16,7 +16,7 @@ public class CastleDanger {
         Player player = theWorld.createPlayer();
         player.setCurrentRoom(theWorld.getRoomList().get(0));
         // Create UI object
-        UserInterface UI = new UserInterface(player);
+        UserInterface UI = new UserInterface(player,theWorld);
 
         // Commands
         UI.setting();

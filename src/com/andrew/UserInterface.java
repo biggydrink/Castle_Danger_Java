@@ -12,6 +12,7 @@ public class UserInterface {
 
     HashMap<String, Command> commandMap = new HashMap<String,Command>();
     Player player;
+    World world;
     String cmd;
     String args;
 
@@ -27,14 +28,15 @@ public class UserInterface {
     public static final String ANSI_WHITE = "\u001B[37m";
 
 
-    public UserInterface(Player player) {
+    public UserInterface(Player player, World world) {
         this.player = player;
+        this.world = world;
         createCommandMap();
     }
 
     public void createCommandMap() {
 
-        commandMap.put("LOOK", new Command() {
+        commandMap.put("look", new Command() {
             public void runCommand(Object args) {
                 if (args.equals("")) {
                     setting();
@@ -44,7 +46,7 @@ public class UserInterface {
             }
         });
 
-        commandMap.put("L", new Command() {
+        commandMap.put("l", new Command() {
             public void runCommand(Object args) {
                 if (args.equals("")) {
                     setting();
@@ -54,20 +56,20 @@ public class UserInterface {
             }
         });
 
-        commandMap.put("SC", new Command() {
+        commandMap.put("sc", new Command() {
             public void runCommand(Object args) { stats(); }
         });
 
-        commandMap.put("N", new Command() {
+        commandMap.put("n", new Command() {
             public void runCommand(Object args) { player.goNorth(); setting(); }
         });
-        commandMap.put("S", new Command() {
+        commandMap.put("s", new Command() {
             public void runCommand(Object args) { player.goSouth(); setting(); }
         });
-        commandMap.put("E", new Command() {
+        commandMap.put("e", new Command() {
             public void runCommand(Object args) { player.goEast(); setting(); }
         });
-        commandMap.put("W", new Command() {
+        commandMap.put("w", new Command() {
             public void runCommand(Object args) { player.goWest(); setting(); }
         });
 
@@ -80,12 +82,12 @@ public class UserInterface {
         */
 
         String[] cmdWithArgs = parseInput();
-        cmd = cmdWithArgs[0].toUpperCase();
-        args = cmdWithArgs[1].toUpperCase();
+        cmd = cmdWithArgs[0].toLowerCase();
+        args = cmdWithArgs[1].toLowerCase();
 
         // TODO add a help command
         if (cmd.trim().equals("")) {
-            prompt();
+            System.out.println("");
         } else {
             try {
                 System.out.println("");
@@ -145,13 +147,32 @@ public class UserInterface {
 
     /** Show description of item/player */
     public void look(String name) {
-        System.out.println("UI look(args) called");
+
+        try {
+            Mob target = world.mobMap.get(name);
+            if (player.currentRoom.mobList.contains(target)) {
+                System.out.println(target.getSetting());
+            } else {
+                System.out.println("You don't see that here");
+            }
+        } catch (Exception e) {
+            System.out.println("Exception: " + e);
+        }
+
     }
 
     /** Display currentRoom description */
     public void setting() {
         System.out.println(ANSI_BLACK + player.currentRoom.description + ANSI_RESET);
-        System.out.print(ANSI_YELLOW + player.currentRoom.showMobs() + ANSI_RESET);
+
+        if (!player.currentRoom.mobList.isEmpty()) {
+            System.out.print(ANSI_RED + player.currentRoom.showMobs() + ANSI_RESET);
+        }
+        if (!player.currentRoom.itemList.isEmpty()) {
+            System.out.print(ANSI_YELLOW + player.currentRoom.showItems() + ANSI_RESET);
+        }
+
+
     }
 
     /** Display player's stats */
