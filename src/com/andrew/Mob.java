@@ -247,6 +247,9 @@ public class Mob {
         if (isInInventory(itemName)) {
             if (Interface.armorMap.get(itemName) != null || Interface.weaponMap.get(itemName) != null) { // It's a piece of armor or a weapon
                 Equipment toEquip = (Equipment) mobInventoryMap.get(itemName);
+                if (alreadyEquipped(toEquip.getEquipPlacement())) {
+                    unequip(mobEquipmentMap.get(toEquip.getEquipPlacement()).getName());
+                }
                 mobEquipmentMap.put(toEquip.getEquipPlacement(),toEquip);
                 setAttack(attack += toEquip.getAttack());
                 setDefense(defense + toEquip.getDefense());
@@ -258,6 +261,14 @@ public class Mob {
         }
 
         return false;
+    }
+
+    public boolean alreadyEquipped(String eqLoc) {
+        if (mobEquipmentMap.get(eqLoc) == null) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /** Unequips selected item */
