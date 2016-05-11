@@ -69,6 +69,7 @@ public class Mob {
 
                 if (monster.getHP() <= 0) {
                     monster.die();
+                    canMove = true;
                 }
                 if (hp <= 0) {
                     die();
@@ -137,6 +138,7 @@ public class Mob {
     public void drop(String itemName) {
         System.out.println("Mob drop() called");
         //TODO item should be added to a room's item list
+
     }
 
     /** Use an item (if applicable) */

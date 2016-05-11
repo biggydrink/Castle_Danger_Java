@@ -13,10 +13,27 @@ public class Room {
     Room south;
     Room east;
     Room west;
+    LinkedList<String> defaultMobTypes;
     LinkedList<Mob> mobList;
     HashMap<String,Mob> roomMobMap;
     LinkedList<Item> itemList;
     HashMap<String,Item> roomItemMap;
+
+    public Room(String name, String description, String defaultMob) {
+        this.name = name;
+        this.description = description;
+
+        mobList = new LinkedList<Mob>();
+        roomMobMap = new HashMap<String,Mob>();
+        itemList = new LinkedList<Item>();
+        roomItemMap = new HashMap<String,Item>();
+
+        defaultMobTypes = new LinkedList<>();
+        defaultMobTypes.add(defaultMob);
+        for (String mobName : defaultMobTypes) {
+            createMob(mobName);
+        }
+    }
 
     public Room(String name, String description) {
         this.name = name;
@@ -34,6 +51,13 @@ public class Room {
     public void setSouth(Room southRoom) { this.south = southRoom; }
     public void setEast(Room eastRoom) { this.east = eastRoom; }
     public void setWest(Room westRoom) { this.west = westRoom; }
+
+    public void createMob(String name) {
+        //addMob(Interface.mobMap.get(name));
+        Mob mapMob = Interface.mobMap.get(name);
+        Mob newMob = new Mob(mapMob.getName(),mapMob.getDescription(),mapMob.getSetting(),mapMob.getMaxHP(),mapMob.getAttack(),mapMob.getDefense());
+        newMob.setCurrentRoom(this);
+    }
 
     public String getExits() {
         String exits = "";
@@ -68,10 +92,13 @@ public class Room {
         roomItemMap.remove(item.getName().toLowerCase());
     }
 
-    public String showMobs() {
+    public String showMobs(Player player) {
         String mobSettings = "";
         for (Mob mob : mobList) {
-            mobSettings += mob.getSetting() + "\n";
+            if (!mob.getName().equals(player.getName())) {
+                mobSettings += mob.getSetting() + "\n";
+            }
+
         }
 
         return mobSettings;

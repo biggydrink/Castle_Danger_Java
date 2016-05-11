@@ -42,8 +42,6 @@ public class Interface {
         // Create player,
         player = createPlayer();
         player.setCurrentRoom(roomList.get(0));
-        mobMap.get("ladybug").setCurrentRoom(roomList.get(0));
-        //roomList.get(0).addMob(mobMap.get("ladybug"));
         player.currentRoom.addItem(weaponMap.get("longsword"));
 
         // Commands
@@ -145,11 +143,11 @@ public class Interface {
         try {
 
             if (mobMap.containsKey(name)) {
-                System.out.println(mobMap.get(name).getSetting());
+                System.out.println(mobMap.get(name).getDescription());
             } else if (armorMap.containsKey(name)) {
-                System.out.println(armorMap.get(name).getSetting());
+                System.out.println(armorMap.get(name).getDescription());
             } else if (weaponMap.containsKey(name)) {
-                System.out.println(weaponMap.get(name).getSetting());
+                System.out.println(weaponMap.get(name).getDescription());
             } else {
                 System.out.println("You don't see that here");
             }
@@ -165,7 +163,7 @@ public class Interface {
         System.out.println(ANSI_BLACK + player.currentRoom.description + ANSI_RESET);
 
         if (!player.currentRoom.mobList.isEmpty()) {
-            System.out.print(ANSI_RED + player.currentRoom.showMobs() + ANSI_RESET);
+            System.out.print(ANSI_RED + player.currentRoom.showMobs(player) + ANSI_RESET);
         }
         if (!player.currentRoom.itemList.isEmpty()) {
             System.out.print(ANSI_YELLOW + player.currentRoom.showItems() + ANSI_RESET);
@@ -201,7 +199,7 @@ public class Interface {
     private static class UserInterface {
 
         interface Command {
-            void runCommand(Object argument);
+            void runCommand(String argument);
         }
 
         HashMap<String, Command> commandMap = new HashMap<String,Command>();
@@ -214,7 +212,7 @@ public class Interface {
         public void createCommandMap() {
 
             commandMap.put("look", new Command() {
-                public void runCommand(Object args) {
+                public void runCommand(String args) {
                     if (args.equals("")) {
                         setting();
                     } else {
@@ -224,7 +222,7 @@ public class Interface {
             });
 
             commandMap.put("l", new Command() {
-                public void runCommand(Object args) {
+                public void runCommand(String args) {
                     if (args.equals("")) {
                         setting();
                     } else {
@@ -234,32 +232,39 @@ public class Interface {
             });
 
             commandMap.put("attack", new Command() {
-                public void runCommand(Object args) {
-                    //if (args.equals("")) {
-                    //    System.out.println("Attack who?");
-                    //} else if (player.currentRoom.mobList.contains(args)) {
-                    player.initiateAttack(player.currentRoom.mobList.get(0));
-                    //} else {
-                    //    System.out.println("You don't see that here");
-                    //}
+                public void runCommand(String args) {
+
+                    if (args.equals("")) {
+                        if (player.currentRoom.roomMobMap.size() == 1) {
+                            System.out.println("You're the only one here!");
+                        } else {
+                            System.out.println("Attack who?");
+                        }
+                    } else if (args.toLowerCase().equals(player.getName().toLowerCase())) {
+                        System.out.println("You can't attack yourself!");
+                    } else if (!player.currentRoom.roomMobMap.containsKey(args)) {
+                        System.out.println("Attack who?");
+                    } else {
+                        player.initiateAttack(player.currentRoom.roomMobMap.get(args));
+                    }
                 }
             });
 
             commandMap.put("sc", new Command() {
-                public void runCommand(Object args) { stats(); }
+                public void runCommand(String args) { stats(); }
             });
 
             commandMap.put("n", new Command() {
-                public void runCommand(Object args) { player.goNorth(); setting(); }
+                public void runCommand(String args) { player.goNorth(); setting(); }
             });
             commandMap.put("s", new Command() {
-                public void runCommand(Object args) { player.goSouth(); setting(); }
+                public void runCommand(String args) { player.goSouth(); setting(); }
             });
             commandMap.put("e", new Command() {
-                public void runCommand(Object args) { player.goEast(); setting(); }
+                public void runCommand(String args) { player.goEast(); setting(); }
             });
             commandMap.put("w", new Command() {
-                public void runCommand(Object args) { player.goWest(); setting(); }
+                public void runCommand(String args) { player.goWest(); setting(); }
             });
 
         }
