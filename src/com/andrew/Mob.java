@@ -220,9 +220,16 @@ public class Mob {
     }
 
     /** Remove an item from inventory */
-    public void drop(String itemName) {
-        System.out.println("Mob drop() called");
-        //TODO item should be added to a room's item list
+    public boolean drop(String itemName) {
+
+        if (isInInventory(itemName)) {
+            Item itemToDrop = mobInventoryMap.get(itemName);
+            currentRoom.addItem(itemToDrop);
+            mobInventoryMap.remove(itemName);
+            return true;
+        }
+
+        return false;
 
     }
 

@@ -42,9 +42,12 @@ public class Interface {
         // Create player,
         player = createPlayer();
         player.setCurrentRoom(roomList.get(0));
-        player.currentRoom.addItem(weaponMap.get("longsword"));
         player.currentRoom.addItem(armorMap.get("flimsy pants"));
-        player.currentRoom.addItem(armorMap.get("oozy shirt"));
+        player.currentRoom.addItem(armorMap.get("shabby shirt"));
+        player.gainItem("flimsy pants");
+        player.gainItem("shabby shirt");
+        player.equip("flimsy pants");
+        player.equip("shabby shirt");
 
         // Commands
         setting();
@@ -67,11 +70,36 @@ public class Interface {
         System.out.println("What is your name, Mr/Ms Hero?");
         newName = userScanner.nextLine();
         Player newPlayerChar = new Player(newName);
-        System.out.println("Welcome to Castle Danger, " + newName);
+        System.out.println("Welcome to Castle Danger, " + newName + " !");
+        viewHelp();
 
         playerList.push(newPlayerChar);
 
         return newPlayerChar;
+    }
+
+    static public void viewHelp() {
+        System.out.println("Here are some basic commands to use in the game:");
+        System.out.println(ANSI_BLACK + "Command" + padSpace(30 - "Command".length()) + "Use" + ANSI_RESET);
+        System.out.println("l / look" + padSpace(30 - "l / look".length()) + "Look at your surroundings");
+        System.out.println("l / look [something]" + padSpace(30 - "l / look [something]".length()) + "Look at something or someone");
+        System.out.println("n / s / e / w" + padSpace(30-"n / s / e / w".length()) + "Go north, south, east, or west");
+        System.out.println("i / inv" + padSpace(30-"i / inv".length()) + "See what you have in your inventory");
+        System.out.println("eq" + padSpace(30-"eq".length()) + "See what you have equipped");
+        System.out.println("eq / uneq [item]" + padSpace(30-"eq / uneq [item]".length()) + "Equip or unequip an item");
+        System.out.println("st" + padSpace(30-"st".length()) + "Check your stats");
+        System.out.println("g [item]" + padSpace(30-"g [item]".length()) + "Get an item off the floor");
+        System.out.println("h" + padSpace(30-"h".length()) + "Read this help file again");
+        System.out.println("Enjoy!");
+    }
+
+    static public String padSpace(int numSpaces) {
+        String spaces = "";
+        for (int i = 0; i < numSpaces; ++i) {
+            spaces += " ";
+        }
+
+        return spaces;
     }
 
     /** Wait for input from player */
@@ -250,6 +278,22 @@ public class Interface {
                 }
             });
 
+            commandMap.put("h",new Command() {
+                public void runCommand(String args) {
+                    viewHelp();
+                }
+            });
+
+            commandMap.put("drop",new Command() {
+                public void runCommand(String args) {
+                    if (player.drop(args)) {
+                        System.out.println("You drop your " + args);
+                    } else {
+                        System.out.println("Drop what?");
+                    }
+                }
+            });
+
             commandMap.put("i", new Command() {
                 public void runCommand(String args) {
                     viewInventory(player);
@@ -317,7 +361,7 @@ public class Interface {
                 }
             });
 
-            commandMap.put("sc", new Command() {
+            commandMap.put("st", new Command() {
                 public void runCommand(String args) { stats(); }
             });
 

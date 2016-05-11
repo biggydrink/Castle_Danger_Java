@@ -228,7 +228,7 @@ public class World {
 
         // Equipment constructor arguments: (String name, String description, String setting, int attack, int defense, int hp, String equipPlacement)
 
-        Equipment shabbyShirt = new Equipment("Shabby Shirt","A pretty shabby shirt. Should probably shrug this off shoon. Soon.","A shabby pile of rags are on the floor",0,1,0,"Body");
+        Equipment shabbyShirt = new Equipment("Shabby Shirt","A pretty shabby shirt. Should probably shrug this off shoon. Soon.","A shabby shirt lies crumpled on the floor",0,1,0,"Body");
         armorMap.put("shabby",shabbyShirt);
         armorMap.put("shabby shirt",shabbyShirt);
 
