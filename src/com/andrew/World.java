@@ -8,14 +8,10 @@ import java.util.Scanner;
 public class World {
 
     private static Scanner mainScanner = new Scanner(System.in);
-    protected LinkedList<Player> playerList;
-    protected LinkedList<Room> roomList;
-    protected HashMap<String,Item> itemMap;
-    protected HashMap<String,Weapon> weaponMap;
-    protected HashMap<String,Armor> armorMap;
-    protected HashMap<String,Mob> mobMap;
+
 
     public World() {
+        /*
         playerList = new LinkedList<Player>();
         mobMap = createMobs();
         roomList = createRooms();
@@ -28,28 +24,18 @@ public class World {
         roomList.get(0).mobList.add(mobMap.get("super ladybug"));
         roomList.get(0).itemList.add(weaponMap.get("longsword"));
         roomList.get(0).itemList.add(armorMap.get("oozy pants"));
+        */
     }
 
-    public LinkedList<Player> getPlayerList() { return playerList; }
+    /*public LinkedList<Player> getPlayerList() { return playerList; }
     public LinkedList<Room> getRoomList() { return roomList; }
     public HashMap<String,Weapon> getWeaponMap() { return weaponMap; }
     public HashMap<String,Armor> getArmor() { return armorMap; }
-    public HashMap<String,Mob> getMob() { return mobMap; }
+    public HashMap<String,Mob> getMob() { return mobMap; }*/
 
-    /** User selects a name for their character, character created and returned */
-    protected Player createPlayer() {
-        String newName;
-        System.out.println("What is your name, Mr/Ms Hero?");
-        newName = mainScanner.nextLine();
-        Player newPlayerChar = new Player(newName);
-        System.out.println("Welcome to Castle Danger, " + newName);
 
-        playerList.push(newPlayerChar);
 
-        return newPlayerChar;
-    }
-
-    private LinkedList<Room> createRooms() {
+    protected LinkedList<Room> createRooms() {
         LinkedList<Room> roomList = new LinkedList<>();
 
         Room starter = new Room("Deep Dark Forest","You are at the edge of a deep, dark forest to the north, a swampy swamp to the east, a volcano to the\nsouth, and a big fancy-looking palace to the west.");
@@ -133,7 +119,7 @@ public class World {
 
     }
 
-    private HashMap<String,Mob> createMobs() {
+    protected HashMap<String,Mob> createMobs() {
 
         HashMap<String,Mob> mobMap = new HashMap<>();
 
@@ -185,7 +171,7 @@ public class World {
         return mobMap;
     }
 
-    private HashMap<String,Weapon> createWeapons() {
+    protected HashMap<String,Weapon> createWeapons() {
 
         // Weapon constructor arguments: (String name, String description, String setting, int attack, String equipPlacement)
 
@@ -233,7 +219,7 @@ public class World {
     off_hand
     wrist
      */
-    private HashMap<String,Armor> createArmor() {
+    protected HashMap<String,Armor> createArmor() {
 
         HashMap<String,Armor> armorMap = new HashMap<String,Armor>();
 

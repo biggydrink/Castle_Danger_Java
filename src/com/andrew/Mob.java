@@ -11,6 +11,7 @@ public class Mob {
     protected int hp;
     protected int attack;
     protected int defense;
+    protected boolean canMove;
     protected Room currentRoom;
     protected HashMap<String,Item> inventory;
     protected HashMap<String,Item> equipment;
@@ -26,6 +27,7 @@ public class Mob {
         this.attack = attack;
         this.defense = defense;
 
+        canMove = true;
         inventory = new HashMap<String,Item>();
         equipment = new HashMap<String,Item>();
     }
@@ -46,7 +48,59 @@ public class Mob {
 
     /** begins fight between this mob and another mob (can be monster or player character) */
     public void initiateAttack(Mob monster) {
-        System.out.println("Mob initiateAttack() called");
+
+        canMove = false;
+        monster.canMove = false;
+
+        int myAttackVal = attack - monster.getDefense();
+            if (myAttackVal < 0) myAttackVal = 0;
+        int monsterAttackVal = monster.getAttack() - defense;
+            if (monsterAttackVal < 0) monsterAttackVal = 0;
+
+        if (myAttackVal == 0 && monsterAttackVal == 0) {
+            System.out.println("Looks like neither of you would be interested in a fight");
+        } else {
+            while (monster.getHP() > 0 && this.getHP() > 0) {
+                monster.setHP(monster.getHP() - myAttackVal);
+                hp = hp - monsterAttackVal;
+
+                System.out.println(Interface.ANSI_RED + "You hit " + monster.getName() + " " + getAttackSTR(myAttackVal) + Interface.ANSI_RESET);
+                System.out.println(Interface.ANSI_PURPLE + monster.getName() + " hits YOU " + getAttackSTR(monsterAttackVal) + Interface.ANSI_RESET);
+
+                if (monster.getHP() <= 0) {
+                    monster.die();
+                }
+                if (hp <= 0) {
+                    die();
+                }
+            }
+        }
+
+    }
+
+    public void die() {
+        System.out.println(name + " has died");
+    }
+
+    private String getAttackSTR(int attackVal) {
+
+        if (attackVal > 18) {
+            return Interface.ANSI_RED + "HARD!!";
+        } else if (attackVal > 14) {
+            return "omg so hard";
+        } else if (attackVal > 12) {
+            return "... ouch!";
+        } else if (attackVal > 10) {
+            return "pretty hard";
+        } else if (attackVal > 7) {
+            return "kinda hard";
+        } else if (attackVal > 5) {
+            return "kinda";
+        } else if (attackVal > 0) {
+            return "a little bit";
+        } else {
+            return "not hard at all";
+        }
     }
 
     /** Check if an item is in a Mob's inventory */
