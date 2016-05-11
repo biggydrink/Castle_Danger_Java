@@ -14,8 +14,8 @@ public class Player extends Mob {
         int hp;
         int attack;
         int defense;
-        ALREADY INITIALIZED HashMap<String,Item> inventory;
-        ALREADY INITIALIZED HashMap<String,Item> equipment;
+        ALREADY INITIALIZED HashMap<String,Item> mobInventoryMap;
+        ALREADY INITIALIZED HashMap<String,Item> mobEquipmentMap;
         String description;
          */
 

@@ -52,6 +52,13 @@ public class Room {
     public void setEast(Room eastRoom) { this.east = eastRoom; }
     public void setWest(Room westRoom) { this.west = westRoom; }
 
+    /** Check if an item is in the room or not */
+    public boolean itemIsInRoom(String itemName) {
+        if (roomItemMap.containsKey(itemName)) {
+            return true;
+        }
+        return false;
+    }
     public void createMob(String name) {
         //addMob(Interface.mobMap.get(name));
         Mob mapMob = Interface.mobMap.get(name);

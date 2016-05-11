@@ -11,8 +11,8 @@ public class Interface {
     protected static World theWorld = new World();
 
     protected static LinkedList<Player> playerList = new LinkedList<>();
-    protected static HashMap<String,Weapon> weaponMap = theWorld.createWeapons();
-    protected static HashMap<String,Armor> armorMap = theWorld.createArmor();
+    protected static HashMap<String,Equipment> weaponMap = theWorld.createWeapons();
+    protected static HashMap<String,Equipment> armorMap = theWorld.createArmor();
     protected static HashMap<String,Mob> mobMap = theWorld.createMobs();
     protected static LinkedList<Room> roomList = theWorld.createRooms();
 
@@ -43,6 +43,8 @@ public class Interface {
         player = createPlayer();
         player.setCurrentRoom(roomList.get(0));
         player.currentRoom.addItem(weaponMap.get("longsword"));
+        player.currentRoom.addItem(armorMap.get("flimsy pants"));
+        player.currentRoom.addItem(armorMap.get("oozy shirt"));
 
         // Commands
         setting();
@@ -172,7 +174,6 @@ public class Interface {
 
     /** Display player's stats */
     static public void stats() {
-        System.out.println("Player stats() called");
         System.out.println(ANSI_BLACK + player.getDescription() + ANSI_RESET);
         System.out.println("Name: " + ANSI_BLACK + player.getName() + ANSI_RESET);
         System.out.println("HP: " + getHPColor() + player.getHP() + "/" + player.getMaxHP() + ANSI_RESET);
@@ -196,13 +197,19 @@ public class Interface {
 
     static private void viewInventory(Player player) {
         System.out.println("You are carrying: ");
-        if (player.inventory.isEmpty()) {
+        if (player.mobInventoryMap.isEmpty()) {
             System.out.println("...nothing!");
         } else {
-            for (String itemName : player.inventory.keySet()) {
+            System.out.println(player.getInventoryString());
+
+            /*for (String itemName : player.mobInventoryMap.keySet()) {
                 System.out.println(itemName);
-            }
+            }*/
         }
+    }
+
+    static private void viewEquipment(Player player) {
+        System.out.println("You are wearing: ");
 
     }
 
@@ -249,9 +256,45 @@ public class Interface {
                 }
             });
 
+            commandMap.put("eq", new Command() {
+                public void runCommand(String args) {
+                    if (args.equals("")) {
+                        System.out.println("You are wearing: ");
+                        System.out.println(player.getEquipmentString());
+                    } else {
+                        if (player.equip(args)) {
+                            System.out.println("You equip your " + args);
+                        } else {
+                            System.out.println("Equip what?");
+                        }
+                    }
+
+                }
+            });
+
+            commandMap.put("uneq", new Command() {
+                public void runCommand(String args) {
+                    if (player.unequip(args)) {
+                        System.out.println("You unequip your " + args);
+                    } else {
+                        System.out.println("Unequip what?");
+                    }
+                }
+            });
+
             commandMap.put("g", new Command() {
                 public void runCommand(String args) {
-                    player.gainItem(args);
+
+                    String notHere = "";
+                    if (player.gainItem(args)) {
+                        System.out.println("You get a " + args);
+                    } else {
+                        if (!args.equals("")) {
+                            notHere = " That isn't here";
+                        }
+                        System.out.println("Get what?" + notHere);
+
+                    }
                 }
             });
 
