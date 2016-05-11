@@ -11,10 +11,13 @@ public class Mob {
     protected int hp;
     protected int attack;
     protected int defense;
+    protected String defaultWeapon;
+    protected String defaultBody;
+    protected String defaultLegs;
     protected boolean canMove;
     protected Room currentRoom;
     protected HashMap<String,Item> mobInventoryMap;
-    protected HashMap<String,Item> mobEquipmentMap;
+    protected HashMap<String,Equipment> mobEquipmentMap;
     private String[] equipAreas = {"Weapon","Body","Legs"};
 
 
@@ -27,13 +30,39 @@ public class Mob {
         this.hp = maxHP;
         this.attack = attack;
         this.defense = defense;
+        this.defaultWeapon = "";
+        this.defaultBody = "";
+        this.defaultLegs = "";
 
         canMove = true;
         mobInventoryMap = new HashMap<String,Item>();
-        mobEquipmentMap = new HashMap<String,Item>();
+        mobEquipmentMap = new HashMap<String,Equipment>();
         mobEquipmentMap.put("Body",null);
         mobEquipmentMap.put("Legs",null);
         mobEquipmentMap.put("Weapon",null);
+
+    }
+
+    /** Construct that includes attack and defense, used for npcs/monsters */
+    public Mob(String name, String description, String setting, int maxHP, int attack, int defense, String defaultWeapon, String defaultBody, String defaultLegs) {
+        this.name = name;
+        this.description = description;
+        this.setting = setting;
+        this.maxHP = maxHP;
+        this.hp = maxHP;
+        this.attack = attack;
+        this.defense = defense;
+        this.defaultWeapon = defaultWeapon;
+        this.defaultBody = defaultBody;
+        this.defaultLegs = defaultLegs;
+
+        canMove = true;
+        mobInventoryMap = new HashMap<String,Item>();
+        mobEquipmentMap = new HashMap<String,Equipment>();
+
+        if (Interface.weaponMap.containsKey(defaultWeapon)) { equip(Interface.weaponMap.get(defaultWeapon)); }
+        if (Interface.armorMap.containsKey(defaultBody)) { equip(Interface.armorMap.get(defaultBody)); }
+        if (Interface.armorMap.containsKey(defaultLegs)) { equip(Interface.armorMap.get(defaultLegs)); }
 
     }
 
@@ -46,6 +75,9 @@ public class Mob {
     public int getHP() { return hp; }
     public int getAttack() { return attack; }
     public int getDefense() { return defense; }
+    public String getDefaultWeapon() { return defaultWeapon; }
+    public String getDefaultBody() { return defaultBody; }
+    public String getDefaultLegs() { return defaultLegs; }
 
     public void setMaxHP(int newMax) {maxHP = newMax; }
     public void setHP(int newHP) {hp = newHP; }
@@ -89,6 +121,15 @@ public class Mob {
     public void die() {
         System.out.println(name + " has died");
         currentRoom.removeMob(this);
+
+        for (String eq : mobEquipmentMap.keySet()) {
+            if (mobEquipmentMap.get(eq) != null) {
+                Item toDrop = mobEquipmentMap.get(eq);
+                unequip(toDrop.getName());
+                drop(toDrop.getName());
+            }
+        }
+
     }
 
     private String getAttackSTR(int attackVal) {
@@ -126,6 +167,14 @@ public class Mob {
         return false;
     }
 
+    public void equip(Equipment item) {
+        mobEquipmentMap.put(item.getEquipPlacement(),item);
+        setAttack(attack += item.getAttack());
+        setDefense(defense + item.getDefense());
+        setMaxHP(maxHP + item.getHP());
+        setHP(hp + item.getHP());
+    }
+
 
 
     /** Check if an item is in a Mob's inventory */
@@ -149,6 +198,19 @@ public class Mob {
             }
         }
         return false;
+    }
+
+    public String getEquippedItemLocation(String itemName) {
+
+        if (isEquipped(itemName)) {
+            for (Equipment eq : mobEquipmentMap.values()) {
+                if (eq != null && eq.getName().equalsIgnoreCase(itemName)) {
+                    return eq.getEquipPlacement();
+                }
+            }
+        }
+
+        return "";
     }
 
     public String getInventoryString() {
@@ -201,20 +263,19 @@ public class Mob {
     /** Unequips selected item */
     public boolean unequip(String itemName) {
 
+        Equipment toUnEquip;
+
         if (isEquipped(itemName)) {
-            Equipment toUnEquip = null;
-            if (Interface.armorMap.get(itemName) != null) {
-                toUnEquip = Interface.armorMap.get(itemName);
-            } else if (Interface.weaponMap.get(itemName) != null) {
-                toUnEquip = Interface.weaponMap.get(itemName);
-            }
-                mobEquipmentMap.put(toUnEquip.getEquipPlacement(),null);
-                setAttack(attack - toUnEquip.getAttack());
-                setDefense(defense - toUnEquip.getDefense());
-                setMaxHP(maxHP - toUnEquip.getHP());
-                setHP(hp - toUnEquip.getHP());
-                mobInventoryMap.put(itemName.toLowerCase(), toUnEquip);
-                return true;
+
+            toUnEquip = mobEquipmentMap.get(getEquippedItemLocation(itemName));
+
+            mobEquipmentMap.put(toUnEquip.getEquipPlacement(),null);
+            setAttack(attack - toUnEquip.getAttack());
+            setDefense(defense - toUnEquip.getDefense());
+            setMaxHP(maxHP - toUnEquip.getHP());
+            setHP(hp - toUnEquip.getHP());
+            mobInventoryMap.put(itemName.toLowerCase(), toUnEquip);
+            return true;
         }
         return false;
     }
@@ -223,9 +284,9 @@ public class Mob {
     public boolean drop(String itemName) {
 
         if (isInInventory(itemName)) {
-            Item itemToDrop = mobInventoryMap.get(itemName);
+            Item itemToDrop = mobInventoryMap.get(itemName.toLowerCase());
             currentRoom.addItem(itemToDrop);
-            mobInventoryMap.remove(itemName);
+            mobInventoryMap.remove(itemName.toLowerCase());
             return true;
         }
 

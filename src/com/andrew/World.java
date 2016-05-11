@@ -128,7 +128,7 @@ public class World {
         mobMap.put(ladybug.getName().toLowerCase(),ladybug);
         mobMap.put("bug",ladybug);
 
-        Mob superLadybug = new Mob("Giant Ladybug","This ladybug is HUGE, with a gaping mouth that looks like it wants to eat you for lunch.","Whoa, a giant ladybug is here!! How did it get so huge? Why does it have a sword?!?",50,8,2);
+        Mob superLadybug = new Mob("Giant Ladybug","This ladybug is HUGE, with a gaping mouth that looks like it wants to eat you for lunch.","Whoa, a giant ladybug is here!! How did it get so huge? Why does it have a sword?!?",50,8,2,"longsword","polkadot shirt","polkadot pants");
         mobMap.put(superLadybug.getName().toLowerCase(),superLadybug);
         mobMap.put("super",superLadybug);
         mobMap.put("giant",superLadybug);
@@ -209,7 +209,7 @@ public class World {
 
 
     /*
-    main_hand
+    weapon
     body
     legs
 
@@ -236,7 +236,7 @@ public class World {
         armorMap.put("flimsy",flimsyPants);
         armorMap.put("flimsy pants",flimsyPants);
 
-        Equipment polkadotShirt = new Equipment("Polkadot Shirt","Polkadots! On your shirt! Neat!","Awww a cute ladybug on the floor! Wait no, it's a polkadot shirt!",0,2,5,"Body");
+        Equipment polkadotShirt = new Equipment("Polkadot Shirt","Polkadots! On your shirt! Neat!","Polkadot shirt! In the dirt!",0,2,5,"Body");
         armorMap.put("polkadot shirt",polkadotShirt);
         armorMap.put("polka",polkadotShirt);
 
@@ -247,7 +247,7 @@ public class World {
         armorMap.put("oozy shirt",oozyShirt);
         armorMap.put("puddle",oozyShirt);
 
-        Equipment oozyPants = new Equipment("Oozy Pants","These are getting everything they touch a little slimy","Some oozy pants here in a puddle of ooze",0,4,0,"Body");
+        Equipment oozyPants = new Equipment("Oozy Pants","These are getting everything they touch a little slimy","Some oozy pants are here in a puddle of ooze",0,4,0,"Legs");
         armorMap.put("ooze",oozyPants);
         armorMap.put("oozy pants",oozyPants);
 

@@ -42,12 +42,10 @@ public class Interface {
         // Create player,
         player = createPlayer();
         player.setCurrentRoom(roomList.get(0));
-        player.currentRoom.addItem(armorMap.get("flimsy pants"));
-        player.currentRoom.addItem(armorMap.get("shabby shirt"));
-        player.gainItem("flimsy pants");
-        player.gainItem("shabby shirt");
-        player.equip("flimsy pants");
-        player.equip("shabby shirt");
+        player.equip(armorMap.get("oozy pants"));
+        player.equip(armorMap.get("oozy shirt"));
+        player.equip(weaponMap.get("black sword"));
+
 
         // Commands
         setting();
@@ -56,10 +54,6 @@ public class Interface {
             inputCommand();
             prompt();
         }
-
-        player.currentRoom.removeItem(weaponMap.get("longsword"));
-        setting();
-
 
     }
 
@@ -112,7 +106,6 @@ public class Interface {
         cmd = cmdWithArgs[0].toLowerCase();
         args = cmdWithArgs[1].toLowerCase();
 
-        // TODO add a help command
         if (cmd.trim().equals("")) {
             System.out.println("");
         } else {
@@ -172,16 +165,28 @@ public class Interface {
 
         try {
 
-            if (mobMap.containsKey(name)) {
-                System.out.println(mobMap.get(name).getDescription());
-            } else if (armorMap.containsKey(name)) {
-                System.out.println(armorMap.get(name).getDescription());
-            } else if (weaponMap.containsKey(name)) {
-                System.out.println(weaponMap.get(name).getDescription());
+            if (player.currentRoom.roomMobMap.containsKey(name)) {
+                Mob viewingMob = player.currentRoom.roomMobMap.get(name);
+                System.out.println(viewingMob.getDescription());
+                System.out.println(viewingMob.getInventoryString());
+                System.out.println(viewingMob.getEquipmentString());
+
+            } else if (player.currentRoom.roomItemMap.containsKey(name)) {
+                Item viewingItem = player.currentRoom.roomItemMap.get(name);
+                System.out.println(viewingItem.getDescription());
+            } else if (player.isInInventory(name)) {
+                Item viewingItem = player.mobInventoryMap.get(name);
+                System.out.println(viewingItem.getDescription());
+            } else if (player.isEquipped(name)) {
+                //Item viewingItem = player.mobEquipmentMap.get(name);
+                String eqLoc = player.getEquippedItemLocation(name);
+                Item viewingItem = player.mobEquipmentMap.get(eqLoc);
+                System.out.println(viewingItem.getDescription());
             } else {
                 System.out.println("You don't see that here");
             }
 
+            //TODO see if this exception isn't necessary
         } catch (Exception e) {
             System.out.println("Exception: " + e);
         }

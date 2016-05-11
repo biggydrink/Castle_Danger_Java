@@ -62,7 +62,7 @@ public class Room {
     public void createMob(String name) {
         //addMob(Interface.mobMap.get(name));
         Mob mapMob = Interface.mobMap.get(name);
-        Mob newMob = new Mob(mapMob.getName(),mapMob.getDescription(),mapMob.getSetting(),mapMob.getMaxHP(),mapMob.getAttack(),mapMob.getDefense());
+        Mob newMob = new Mob(mapMob.getName(),mapMob.getDescription(),mapMob.getSetting(),mapMob.getMaxHP(),mapMob.getAttack(),mapMob.getDefense(),mapMob.getDefaultWeapon(),mapMob.getDefaultBody(),mapMob.getDefaultLegs());
         newMob.setCurrentRoom(this);
     }
 
