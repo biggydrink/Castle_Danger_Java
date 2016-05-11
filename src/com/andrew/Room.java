@@ -58,6 +58,16 @@ public class Room {
         roomMobMap.remove(mob.getName().toLowerCase());
     }
 
+    public void addItem(Item item) {
+        itemList.add(item);
+        roomItemMap.put(item.getName().toLowerCase(),item);
+    }
+
+    public void removeItem(Item item) {
+        itemList.remove(item);
+        roomItemMap.remove(item.getName().toLowerCase());
+    }
+
     public String showMobs() {
         String mobSettings = "";
         for (Mob mob : mobList) {

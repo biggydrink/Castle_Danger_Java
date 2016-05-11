@@ -21,6 +21,7 @@ public class Interface {
     protected static String cmd;
     protected static String args;
 
+    // ANSI values taken from   http://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";
     public static final String ANSI_RED = "\u001B[31m";
@@ -41,7 +42,9 @@ public class Interface {
         // Create player,
         player = createPlayer();
         player.setCurrentRoom(roomList.get(0));
-        roomList.get(0).addMob(mobMap.get("ladybug"));
+        mobMap.get("ladybug").setCurrentRoom(roomList.get(0));
+        //roomList.get(0).addMob(mobMap.get("ladybug"));
+        player.currentRoom.addItem(weaponMap.get("longsword"));
 
         // Commands
         setting();
@@ -50,6 +53,10 @@ public class Interface {
             inputCommand();
             prompt();
         }
+
+        player.currentRoom.removeItem(weaponMap.get("longsword"));
+        setting();
+
 
     }
 
@@ -231,7 +238,7 @@ public class Interface {
                     //if (args.equals("")) {
                     //    System.out.println("Attack who?");
                     //} else if (player.currentRoom.mobList.contains(args)) {
-                    player.initiateAttack(player.currentRoom.mobList.get(1));
+                    player.initiateAttack(player.currentRoom.mobList.get(0));
                     //} else {
                     //    System.out.println("You don't see that here");
                     //}

@@ -178,28 +178,29 @@ public class World {
 
         HashMap<String,Weapon> weaponMap = new HashMap<String,Weapon>();
 
-        Weapon balloonSword = new Weapon("Balloon Animal Sword","It's a \"sword\" made out of those skinny balloons that balloon animals are made out of. You really should probably find something else to use if you can..","A balloon animal sword is lying here",1,"main_hand");
+        Weapon balloonSword = new Weapon("balloon Animal Sword","It's a \"sword\" made out of those skinny balloons that balloon animals are made out of. You really should probably find something else to use if you can..","A balloon animal sword is lying here",1,"main_hand");
+        weaponMap.put(balloonSword.getName().toLowerCase(),balloonSword);
         weaponMap.put("balloon",balloonSword);
         weaponMap.put("balloon sword",balloonSword);
 
         Weapon longSword = new Weapon("Longsword","Nice, an actual sword, with a blade and everything!","A regular longsword is lying here",4,"main_hand");
-        weaponMap.put("longsword",longSword);
+        weaponMap.put(longSword.getName().toLowerCase(),longSword);
         weaponMap.put("long",longSword);
 
         Weapon greenSword = new Weapon("Green Sword","There's no reason why a green sword would be better than a longsword, but it is","A nice green sword is lying here",7,"main_hand");
+        weaponMap.put(greenSword.getName().toLowerCase(),greenSword);
         weaponMap.put("green",greenSword);
         weaponMap.put("greensword",greenSword);
-        weaponMap.put("green sword",greenSword);
 
         Weapon blackSword = new Weapon("Blackened Sword","This sword didn't used to be black, but it's previous owner was a 5-packs-a-day smoker","A smokey looking, blackened sword is lying here",11,"main_hand");
+        weaponMap.put(blackSword.getName().toLowerCase(),blackSword);
         weaponMap.put("black",blackSword);
         weaponMap.put("blackened",blackSword);
         weaponMap.put("black sword",blackSword);
-        weaponMap.put("blackened sword",blackSword);
 
         Weapon shinyBroadsword = new Weapon("Shiny Broadsword","This broadsword looks like it's been polished kind of an unreasonable amount","A very shiny broadsword lies here",15,"main_hand");
+        weaponMap.put(shinyBroadsword.getName().toLowerCase(),shinyBroadsword);
         weaponMap.put("shiny",shinyBroadsword);
-        weaponMap.put("shiny broadsword",shinyBroadsword);
         weaponMap.put("broad",shinyBroadsword);
 
         return weaponMap;

@@ -80,6 +80,7 @@ public class Mob {
 
     public void die() {
         System.out.println(name + " has died");
+        currentRoom.removeMob(this);
     }
 
     private String getAttackSTR(int attackVal) {
