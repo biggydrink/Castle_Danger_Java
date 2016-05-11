@@ -105,16 +105,36 @@ public class Mob {
         }
     }
 
+    public void gainItem(String itemName) {
+        if (currentRoom.roomItemMap.containsKey(itemName)) {
+            if (Interface.weaponMap.containsKey(itemName)) { // is a weapon
+                Weapon mapWeap = (Weapon)currentRoom.roomItemMap.get(itemName);
+                Weapon newWeap = new Weapon(mapWeap.getName(),mapWeap.getDescription(),mapWeap.getSetting(),mapWeap.getAttack(),mapWeap.getEquipPlacement());
+                inventory.put(newWeap.getName(),newWeap);
+                currentRoom.removeItem(mapWeap);
+            } else if (Interface.armorMap.containsKey(itemName)) { // is a piece of armor
+                Armor mapArmor = (Armor) currentRoom.roomItemMap.get(itemName);
+                Armor newArmor = new Armor(mapArmor.getName(), mapArmor.getDescription(), mapArmor.getSetting(), mapArmor.getDefense(), mapArmor.getHP(), mapArmor.getEquipPlacement());
+                inventory.put(newArmor.getName(),newArmor);
+                currentRoom.removeItem(mapArmor);
+            }
+        }
+    }
+
     /** Check if an item is in a Mob's inventory */
     public boolean isInInventory(String itemName) {
-        System.out.println("Mob isInInventory() called");
+        if (inventory.containsKey(itemName)) {
+            return true;
+        }
 
         return false;
     }
 
     /** Check if an item is equipped by a Mob */
     public boolean isEquipped(String itemName) {
-        System.out.println("Mob isEquipped() callled");
+        if (equipment.containsKey(itemName)) {
+            return true;
+        }
 
         return false;
     }

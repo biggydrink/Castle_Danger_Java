@@ -14,4 +14,8 @@ public class Armor extends Item {
         this.hp = hp;
         this.equipPlacement = equipPlacement;
     }
+
+    public int getDefense() { return defense; }
+    public int getHP() { return hp; }
+    public String getEquipPlacement() { return equipPlacement; }
 }

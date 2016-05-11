@@ -12,4 +12,7 @@ public class Weapon extends Item {
         this.attack = attack;
         this.equipPlacement = equipPlacement;
     }
+
+    public int getAttack() { return attack; }
+    public String getEquipPlacement() { return equipPlacement; }
 }

@@ -194,6 +194,18 @@ public class Interface {
 
     }
 
+    static private void viewInventory(Player player) {
+        System.out.println("You are carrying: ");
+        if (player.inventory.isEmpty()) {
+            System.out.println("...nothing!");
+        } else {
+            for (String itemName : player.inventory.keySet()) {
+                System.out.println(itemName);
+            }
+        }
+
+    }
+
 
 
     private static class UserInterface {
@@ -228,6 +240,18 @@ public class Interface {
                     } else {
                         look((String)args);
                     }
+                }
+            });
+
+            commandMap.put("i", new Command() {
+                public void runCommand(String args) {
+                    viewInventory(player);
+                }
+            });
+
+            commandMap.put("g", new Command() {
+                public void runCommand(String args) {
+                    player.gainItem(args);
                 }
             });
 
