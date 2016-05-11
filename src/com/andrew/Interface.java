@@ -9,12 +9,13 @@ public class Interface {
     public static Scanner userScanner = new Scanner(System.in);
 
     protected static World theWorld = new World();
-    protected static LinkedList<Player> playerList = new LinkedList<Player>();
-    protected static LinkedList<Room> roomList = theWorld.createRooms();
+
+    protected static LinkedList<Player> playerList = new LinkedList<>();
     protected static HashMap<String,Weapon> weaponMap = theWorld.createWeapons();
     protected static HashMap<String,Armor> armorMap = theWorld.createArmor();
     protected static HashMap<String,Mob> mobMap = theWorld.createMobs();
-    //protected static Room currentRoom;
+    protected static LinkedList<Room> roomList = theWorld.createRooms();
+
     protected static Player player;
     protected static UserInterface UI = new UserInterface();
     protected static String cmd;
@@ -40,6 +41,7 @@ public class Interface {
         // Create player,
         player = createPlayer();
         player.setCurrentRoom(roomList.get(0));
+        roomList.get(0).addMob(mobMap.get("ladybug"));
 
         // Commands
         setting();
@@ -229,7 +231,7 @@ public class Interface {
                     //if (args.equals("")) {
                     //    System.out.println("Attack who?");
                     //} else if (player.currentRoom.mobList.contains(args)) {
-                    player.initiateAttack(player.currentRoom.mobList.get(0));
+                    player.initiateAttack(player.currentRoom.mobList.get(1));
                     //} else {
                     //    System.out.println("You don't see that here");
                     //}

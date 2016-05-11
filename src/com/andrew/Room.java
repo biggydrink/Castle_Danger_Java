@@ -1,5 +1,6 @@
 package com.andrew;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Room {
@@ -13,14 +14,18 @@ public class Room {
     Room east;
     Room west;
     LinkedList<Mob> mobList;
+    HashMap<String,Mob> roomMobMap;
     LinkedList<Item> itemList;
+    HashMap<String,Item> roomItemMap;
 
     public Room(String name, String description) {
         this.name = name;
         this.description = description;
 
         mobList = new LinkedList<Mob>();
+        roomMobMap = new HashMap<String,Mob>();
         itemList = new LinkedList<Item>();
+        roomItemMap = new HashMap<String,Item>();
     }
 
     public void setNorth(Room northRoom) {
@@ -41,6 +46,16 @@ public class Room {
         if (exits.equals("")) exits = "No exits!";
 
         return exits;
+    }
+
+    public void addMob(Mob mob) {
+        mobList.add(mob);
+        roomMobMap.put(mob.getName().toLowerCase(),mob);
+    }
+
+    public void removeMob(Mob mob) {
+        mobList.remove(mob);
+        roomMobMap.remove(mob.getName().toLowerCase());
     }
 
     public String showMobs() {

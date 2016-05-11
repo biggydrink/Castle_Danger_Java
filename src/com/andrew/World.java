@@ -125,15 +125,15 @@ public class World {
 
 
         Mob ladybug = new Mob("Ladybug","A cute ladybug with little red spots.","There is a ladybug here",20,5,0);
-        mobMap.put("ladybug",ladybug);
+        mobMap.put(ladybug.getName().toLowerCase(),ladybug);
         mobMap.put("bug",ladybug);
 
         Mob superLadybug = new Mob("Super Ladybug","This ladybug is HUGE, with a gaping mouth that looks like it wants to eat you for lunch.","Whoa, a giant ladybug is here!! How did it get so huge? Why does it have a sword?!?",50,8,2);
-        mobMap.put("super ladybug",superLadybug);
+        mobMap.put(superLadybug.getName().toLowerCase(),superLadybug);
         mobMap.put("super",superLadybug);
 
         Mob willowisp = new Mob("Will'o Wisp","You see nothing more than a floating blue flame.","A ghostly will'o wisp is floating here",50,10,1);
-        mobMap.put("will'o wisp",willowisp);
+        mobMap.put(willowisp.getName().toLowerCase(),willowisp);
         mobMap.put("flame",willowisp);
         mobMap.put("willo",willowisp);
         mobMap.put("wisp",willowisp);
@@ -141,28 +141,29 @@ public class World {
         mobMap.put("will o wisp",willowisp);
 
         Mob swampThing = new Mob("Swamp Thing","Looks just like the monster from the movie, cool!","The Swamp Thing is here!",100,12,5);
-        mobMap.put("swamp thing",swampThing);
+        mobMap.put(swampThing.getName().toLowerCase(),swampThing);
         mobMap.put("swamp",swampThing);
         mobMap.put("thing",swampThing);
 
         Mob volcanoGolem = new Mob("Volcano Golem","Looks like magma and rock come to life","A volcano golem is here",75,8,10);
-        mobMap.put("volcano golem",volcanoGolem);
+        mobMap.put(volcanoGolem.getName().toLowerCase(),volcanoGolem);
         mobMap.put("volcano",volcanoGolem);
         mobMap.put("golem",volcanoGolem);
 
         Mob blackDragon = new Mob("Black Dragon","A huge, black dragon!","A... a black dragon is here!",200,22,15);
-        mobMap.put("black dragon",blackDragon);
+        mobMap.put(blackDragon.getName().toLowerCase(),blackDragon);
         mobMap.put("black",blackDragon);
         mobMap.put("dragon",blackDragon);
 
         Mob foppishGuard = new Mob("Foppish Palace Guard","This guard looks a liiiitle bit too concerned with his appearance","A foppish palace guard is here, fixing his hair in the mirror",125,20,15);
-        mobMap.put("foppish palace guard",foppishGuard);
+        mobMap.put(foppishGuard.getName().toLowerCase(),foppishGuard);
         mobMap.put("foppish",foppishGuard);
         mobMap.put("guard",foppishGuard);
         mobMap.put("palace guard",foppishGuard);
         mobMap.put("foppish guard",foppishGuard);
 
         Mob evilKing = new Mob("The Corrupt and Nasty King (of destruction-ness and killing)","","The Corrupt and Nasty King (of destruction-ness and killing) is here, waiting for you to FINISH HIM",300,35,20);
+        mobMap.put(evilKing.getName().toLowerCase(),evilKing);
         mobMap.put("evil king",evilKing);
         mobMap.put("king",evilKing);
         mobMap.put("corrupt king",evilKing);

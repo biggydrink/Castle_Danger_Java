@@ -147,40 +147,31 @@ public class Mob {
 
     public void goNorth() {
         if (currentRoom.north != null) {
-            currentRoom.mobList.remove(this);
-            currentRoom = currentRoom.north;
-            currentRoom.mobList.add(this);
+            setCurrentRoom(currentRoom.north);
         }
     }
     public void goSouth() {
         if (currentRoom.north != null) {
-            currentRoom.mobList.remove(this);
-            currentRoom = currentRoom.north;
-            currentRoom.mobList.add(this);
+            setCurrentRoom(currentRoom.south);
         }
     }
     public void goEast() {
         if (currentRoom.north != null) {
-            currentRoom.mobList.remove(this);
-            currentRoom = currentRoom.north;
-            currentRoom.mobList.add(this);
+            setCurrentRoom(currentRoom.east);
         }
     }
     public void goWest() {
         if (currentRoom.north != null) {
-            currentRoom.mobList.remove(this);
-            currentRoom = currentRoom.north;
-            currentRoom.mobList.add(this);
+            setCurrentRoom(currentRoom.west);
         }
     }
 
     public void setCurrentRoom(Room newRoom) {
         if (currentRoom != null && !currentRoom.mobList.isEmpty()) {
-            currentRoom.mobList.remove(this);
+            currentRoom.removeMob(this);
         }
 
-        newRoom.mobList.add(this);
-
+        newRoom.addMob(this);
         currentRoom = newRoom;
     }
 

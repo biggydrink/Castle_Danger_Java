@@ -45,9 +45,7 @@ public class Player extends Mob {
     @Override
     public void goNorth() {
         if (currentRoom.north != null) {
-            currentRoom.mobList.remove(this);
-            currentRoom = currentRoom.north;
-            currentRoom.mobList.add(this);
+            setCurrentRoom(currentRoom.north);
         } else {
             System.out.println("You can't go that way!");
         }
@@ -55,9 +53,7 @@ public class Player extends Mob {
     @Override
     public void goSouth() {
         if (currentRoom.south != null) {
-            currentRoom.mobList.remove(this);
-            currentRoom = currentRoom.south;
-            currentRoom.mobList.add(this);
+            setCurrentRoom(currentRoom.south);
         } else {
             System.out.println("You can't go that way!");
         }
@@ -65,9 +61,7 @@ public class Player extends Mob {
     @Override
     public void goEast() {
         if (currentRoom.east != null) {
-            currentRoom.mobList.remove(this);
-            currentRoom = currentRoom.east;
-            currentRoom.mobList.add(this);
+            setCurrentRoom(currentRoom.east);
         } else {
             System.out.println("You can't go that way!");
         }
@@ -75,18 +69,10 @@ public class Player extends Mob {
     @Override
     public void goWest() {
         if (currentRoom.west != null) {
-            currentRoom.mobList.remove(this);
-            currentRoom = currentRoom.west;
-            currentRoom.mobList.add(this);
+            setCurrentRoom(currentRoom.west);
         } else {
             System.out.println("You can't go that way!");
         }
     }
-
-    // HashMap<String,String>
-
-
-
-
 
 }
