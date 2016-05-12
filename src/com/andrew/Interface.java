@@ -34,6 +34,7 @@ public class Interface {
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_WHITE = "\u001B[37m";
 
+    public static Database db = new Database();
 
     protected static Timer timer;
     protected static GameClock clockTick;
@@ -43,17 +44,22 @@ public class Interface {
 
     public static void main(String[] args) {
 
-        // Database db = new Database();
+        String loginName;
+        int id;
+
+
         // CDClient myFirstClient = new CDClient();
         // myFirstClient.connectToServer();
 
-        // Create player,
-        player = createPlayer();
-        player.setCurrentRoom(roomList.get(0));
-        //player.equip(equipmentMap.get("righteous sword"));
-        player.equip(equipmentMap.get("polkadot shirt"));
-        player.equip(equipmentMap.get("polkadot pants"));
-
+        // Create player
+        System.out.println("Welcome to Castle Danger! Enter your name:");
+        loginName = userScanner.nextLine();
+        id = db.getID(loginName);
+        if (id == 0) {
+            player = createPlayer(loginName);
+        } else {
+            login(loginName,id);
+        }
 
         // Commands
         setting();
@@ -70,19 +76,55 @@ public class Interface {
 
     }
 
+    static private void login(String name, int id) {
+        System.out.println("Welcome back! Please enter your password:");
+        String password = userScanner.nextLine();
+        if (db.checkPassword(id,password)) {
+            loadPlayer(name, id);
+        } else {
+            System.out.println("Incorrect password");
+            System.exit(-1);
+        }
+
+    }
+
+    //TODO extend
+    static private void loadPlayer(String name, int id) {
+        player = new Player(name);
+        // Starting Equipment
+        player.equip(equipmentMap.get("polkadot shirt"));
+        player.equip(equipmentMap.get("polkadot pants"));
+        player.setCurrentRoom(roomList.get(0));
+    }
+
 
     /** User selects a name for their character, character created and returned */
-    static protected Player createPlayer() {
-        String newName;
-        System.out.println("What is your name, Mr/Ms Hero?");
-        newName = userScanner.nextLine();
-        Player newPlayerChar = new Player(newName);
-        System.out.println("Welcome to Castle Danger, " + newName + " !");
+    static protected Player createPlayer(String name) {
+        String password = "";
+
+        System.out.println("Looks like you're new - please create a password:");
+        while (password.length() < 6) {
+            System.out.println("Please enter at least 6 characters for your pw");
+            password = userScanner.nextLine();
+        }
+        Player player = new Player(name);
+
+        // Initializations
+        player.setCurrentRoom(roomList.get(0));
+        player.setPassword(password);
+        db.addNewPlayer(player); // add to players table
+        player.setPlayerID(db.getID(player.name)); // query db to get ID, used for loading character
+        // Starting Equipment
+        player.equip(equipmentMap.get("polkadot shirt"));
+        player.equip(equipmentMap.get("polkadot pants"));
+
+        // Welcome & help
+        System.out.println("Welcome to Castle Danger, " + name + " !");
         help();
 
-        playerList.push(newPlayerChar);
+        playerList.push(player);
 
-        return newPlayerChar;
+        return player;
     }
 
     static public void help() {
@@ -179,16 +221,12 @@ public class Interface {
     static public void prompt() {
         // <[room name]: [hp]/[maxhp]HP : [exits]>
         String prompt;
-        double percentHP;
-        percentHP = player.getMaxHP() / player.getHP();
-
 
         prompt = "<" + player.currentRoom.name + " : ";
         prompt += getHPColor() + player.getHP() + "/" + player.getMaxHP() + "HP" + ANSI_RESET + " : ";
         prompt += ANSI_CYAN + player.currentRoom.getExits() + ANSI_RESET + ">";
 
         System.out.print(prompt);
-        //System.out.print("<" + player.currentRoom.name + " : " + player.getHP() + "/" + player.getMaxHP() + "HP : " + player.currentRoom.getExits() + ">");
     }
 
     /** Show description of item/player */
@@ -274,7 +312,14 @@ public class Interface {
 
     }
 
-
+    static private void quit() {
+        System.out.println("Are you sure? Type quit again, or press enter to continue");
+        String response = userScanner.nextLine();
+        if (response.equalsIgnoreCase("quit")) {
+            System.out.println("Bye!");
+            System.exit(-1);
+        }
+    }
 
     private static class UserInterface {
 
@@ -321,6 +366,12 @@ public class Interface {
                         help();
                     }
 
+                }
+            });
+
+            commandMap.put("quit", new Command() {
+                public void runCommand(String args) {
+                    quit();
                 }
             });
 

@@ -8,6 +8,8 @@ import java.util.Random;
 public class Player extends Mob {
 
     private Random playerRand;
+    public int playerID;
+    protected String password;
 
     public Player(String name) {
         /* Abstract class Mob has the following data fields:
@@ -43,6 +45,10 @@ public class Player extends Mob {
     public String getDescription() { return description; }
     public int getAttack() { return attack; }
     public int getDefense() { return defense; }
+    protected String getPassword() { return password; }
+
+    protected void setPlayerID(int id) { playerID = id; }
+    protected void setPassword(String pw) { password = pw; }
 
     @Override
     public void goNorth() {

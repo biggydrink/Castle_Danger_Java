@@ -1,6 +1,8 @@
 package com.andrew;
 
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+
 import java.sql.*;
 
 //TODO add comments
@@ -125,28 +127,17 @@ public class Database {
     }
 
     private void createPlayerTable() {
-        /*
-        CREATE TABLE players (
-                player_key INT AUTO_INCREMENT PRIMARY KEY
-                name VARCHAR(25) UNIQUE NOT NULL
-                maxhp INT NOT NULL
-                hp INT NOT NULL
-                attack INT NOT NULL
-                defense INT NOT NULL
-                description VARCHAR(500) NOT NULL
-                currentRoom VARCHAR(50) NOT NULL
-        );
-        */
-
         String createTableQuery = "CREATE TABLE " + PLAYER_TABLE_NAME + " (" +
-                "player_key INT NOT NULL AUTO_INCREMENT PRIMARY KEY" +
+                "playerID INT NOT NULL AUTO_INCREMENT PRIMARY KEY" +
                 ", name VARCHAR(25) UNIQUE NOT NULL" +
+                ", password VARCHAR(30) NOT NULL" +
                 ", maxhp INT NOT NULL" +
                 ", hp INT NOT NULL" +
                 ", attack INT NOT NULL" +
                 ", defense INT NOT NULL" +
                 ", description VARCHAR(500) NOT NULL" +
-                ", currentRoom VARCHAR(50) NOT NULL" +
+                ", setting VARCHAR(500) NOT NULL" +
+                ", currentRoom INT NOT NULL" +
             ");";
 
         try {
@@ -159,22 +150,10 @@ public class Database {
     }
 
     private void createInventoryTable() {
-        /*
-        CREATE DATABASE inventory (
-                inv_key INT AUTO_INCREMENT PRIMARY KEY
-                player_key INTFOREIGN KEY NOT NULL
-                name VARCHAR(25) NOT NULL
-                description  VARCHAR(500) NOT NULL
-                defense INT
-                hp INT
-                attack INT
-                equipPlacement VARCHAR(20)
-        );
-         */
 
         String createTableQuery = "CREATE TABLE " + INVENTORY_TABLE_NAME + " (" +
                 "inv_key INT AUTO_INCREMENT PRIMARY KEY" +
-                ", player_key INT NOT NULL" +
+                ", playerID INT NOT NULL" +
                 ", name VARCHAR(25) NOT NULL" +
                 ", description VARCHAR(500) NOT NULL" +
                 ", defense INT" +
@@ -193,21 +172,9 @@ public class Database {
     }
 
     private void createEquippedTable() {
-        /*
-        CREATE DATABASE equipment (
-                eq_key INT AUTO_INCREMENT PRIMARY KEY
-                player_key INTFOREIGN KEY NOT NULL
-                name VARCHAR(25) NOT NULL
-                description  VARCHAR(500) NOT NULL
-                defense INT
-                hp INT
-                attack INT
-                equipPlacement VARCHAR(20)
-        );
-         */
         String createTableQuery = "CREATE TABLE " + EQUIPPED_TABLE_NAME + " (" +
                 "eq_key INT AUTO_INCREMENT PRIMARY KEY" +
-                ", player_key INT NOT NULL" +
+                ", playerID INT NOT NULL" +
                 ", name VARCHAR(25) NOT NULL" +
                 ", description VARCHAR(500) NOT NULL" +
                 ", defense INT" +
@@ -223,6 +190,77 @@ public class Database {
             System.out.println(sqle);
             sqle.printStackTrace();
         }
+    }
+
+    public void addNewPlayer(Player player) {
+        String name = player.getName();
+        String password = player.getPassword();
+        int maxHP = player.getMaxHP();
+        int hp = player.getHP();
+        int attack = player.getAttack();
+        int defense = player.getDefense();
+        String description = player.getDescription();
+        String setting = player.getSetting();
+        int room = Interface.roomList.indexOf(player.currentRoom);
+
+
+        // NAME, MAXHP, HP, ATTACK, DEFENSE, DESCR, SETTING, CURRENTROOM
+        String updateQuery = "INSERT INTO " + PLAYER_TABLE_NAME + "(name,password,maxhp,hp,attack,defense,description,setting,currentroom)" +
+                " VALUES ('" +
+                name +
+                "','" + password +
+                "'," + maxHP +
+                "," + hp +
+                "," + attack +
+                "," + defense +
+                ",'" + description +
+                "','" + setting +
+                "'," + room +
+                ");";
+
+        try {
+            statement.execute(updateQuery);
+        } catch (SQLException sqle) {
+            System.out.println("SQL Exception: " + sqle);
+        }
+    }
+
+    public int getID(String name) {
+        String getIDQuery = "SELECT playerID FROM players WHERE name = '" + name + "';";
+        int id = 0;
+
+        try {
+            rs = statement.executeQuery(getIDQuery);
+            while (rs.next()) {
+                id = rs.getInt("playerID");
+            }
+        } catch (MySQLIntegrityConstraintViolationException sqlicv) {
+            System.out.println("Do something more, like cancel");
+        } catch (SQLException sqle) {
+            System.out.println("SQL Exception: " + sqle);
+        }
+
+        return id;
+    }
+
+    public boolean checkPassword(int id, String password) {
+        String checkPWQuery = "SELECT password FROM players WHERE playerid = " + id + ";";
+        String newPW = "";
+
+        try {
+            rs = statement.executeQuery(checkPWQuery);
+            while (rs.next()) {
+                newPW = rs.getString("password");
+            }
+        } catch (SQLException sqle) {
+            System.out.println("SQL Exception: " + sqle);
+        }
+
+        if (password.equals(newPW)) {
+            return true;
+        }
+
+        return false;
     }
 
 }
