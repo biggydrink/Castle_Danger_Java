@@ -67,6 +67,13 @@ public class Room {
         }
         return false;
     }
+    /** Check if a mob is in the room or not */
+    public boolean mobIsInRoom(String mobName) {
+        if (roomMobMap.containsKey(mobName)) {
+            return true;
+        }
+        return false;
+    }
 
     public void createItem(String name) {
         if (name.equals("")) {

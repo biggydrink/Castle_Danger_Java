@@ -3,6 +3,7 @@ package com.andrew;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.Timer;
 
 public class Interface {
 
@@ -12,7 +13,6 @@ public class Interface {
 
     protected static LinkedList<Player> playerList = new LinkedList<>();
     protected static HashMap<String,Equipment> equipmentMap = theWorld.createEquipment();
-    //protected static HashMap<String,Equipment> armorMap = theWorld.createArmor();
     protected static HashMap<String,Mob> mobMap = theWorld.createMobs();
     protected static LinkedList<Room> roomList = theWorld.createRooms();
 
@@ -33,11 +33,11 @@ public class Interface {
     public static final String ANSI_WHITE = "\u001B[37m";
 
 
-    /*
-    timer = new Timer();
-    clockTick = new GameClock(componentManager, snakePanel);
-    timer.scheduleAtFixedRate(clockTick, 0, clockInterval); // Sets up schedule for timer, using clockInterval
-    */
+    protected static Timer timer;
+    protected static GameClock clockTick;
+    protected static long clockInterval = 30000; // milliseconds, 1000 = 1 second
+
+
 
     public static void main(String[] args) {
 
@@ -48,12 +48,20 @@ public class Interface {
         // Create player,
         player = createPlayer();
         player.setCurrentRoom(roomList.get(0));
-        player.equip(equipmentMap.get("righteous sword"));
+        //player.equip(equipmentMap.get("righteous sword"));
+        player.equip(equipmentMap.get("shabby shirt"));
+        player.equip(equipmentMap.get("flimsy pants"));
 
 
         // Commands
         setting();
         prompt();
+
+
+        timer = new Timer();
+        clockTick = new GameClock();
+        timer.scheduleAtFixedRate(clockTick,0,clockInterval); // Sets timer's schedule to clockInterval's milliseconds
+
         while (player.getHP() > 0) {
             inputCommand();
             prompt();
