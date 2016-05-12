@@ -230,6 +230,7 @@ public class Database {
         int id = 0;
 
         try {
+            if (rs != null) rs.close();
             rs = statement.executeQuery(getIDQuery);
             while (rs.next()) {
                 id = rs.getInt("playerID");
@@ -248,6 +249,7 @@ public class Database {
         String newPW = "";
 
         try {
+            if (rs != null) rs.close();
             rs = statement.executeQuery(checkPWQuery);
             while (rs.next()) {
                 newPW = rs.getString("password");
