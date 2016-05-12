@@ -116,6 +116,8 @@ public class Mob {
 
                 System.out.println(Interface.ANSI_RED + "You hit " + monster.getName() + " " + getAttackSTR(myAttackVal) + Interface.ANSI_RESET);
                 System.out.println(Interface.ANSI_PURPLE + monster.getName() + " hits YOU " + getAttackSTR(monsterAttackVal) + Interface.ANSI_RESET);
+                Interface.prompt();
+                System.out.println("");
 
                 //Can include the below for debugging or balance help
                 //System.out.println("Monster attack: " + monsterAttackVal + " | Monster HP: " + monster.getHP());
@@ -126,7 +128,7 @@ public class Mob {
                 // Seems to have the potential for errors, but hopefully with such a short sleep time the potential for problematic interruptions is low
                 // http://stackoverflow.com/questions/3342651/how-can-i-delay-a-java-program-for-a-few-second
                 try {
-                    Thread.sleep(4000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException ie) {
                     System.out.println("Interrupted: " + ie);
                 }

@@ -30,9 +30,10 @@ public class GameClock extends TimerTask {
                 player.setHP(player.getMaxHP());
             }
         }
+        Interface.prompt();
 
         // Populate game again every x number of ticks
-        if (counter % 5 == 0) {
+        if (counter % 2 == 0) {
 
             for (Room room : Interface.roomList) {
                 // Create default items and mobs if they're no longer in the room

@@ -99,6 +99,7 @@ public class Interface {
         player.equip(equipmentMap.get("polkadot shirt"));
         player.equip(equipmentMap.get("polkadot pants"));
         player.setCurrentRoom(roomList.get(0));
+        playerList.push(player);
     }
 
 
