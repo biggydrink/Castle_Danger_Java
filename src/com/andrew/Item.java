@@ -1,6 +1,6 @@
 package com.andrew;
 
-
+//TODO add comments
 public class Item {
     protected String name;
     protected String description;

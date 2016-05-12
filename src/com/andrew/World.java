@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 
+//TODO add comments
 public class World {
 
     public World() {
@@ -103,19 +104,19 @@ public class World {
         mobMap.put(ladybug.getName().toLowerCase(),ladybug);
         mobMap.put("bug",ladybug);
 
-        Mob superLadybug = new Mob("Giant Ladybug","This ladybug is HUGE, with a gaping mouth that looks like it wants to eat you for lunch.","Whoa, a giant ladybug is here!! How did it get so huge? Why does it have a sword?!?",30,6,1,"longsword","polkadot shirt","polkadot pants");
+        Mob superLadybug = new Mob("Giant Ladybug","This ladybug is HUGE, with a gaping mouth that looks like it wants to eat you for lunch.","Whoa, a giant ladybug is here!! How did it get so huge? Why does it have a sword?!?",30,6,0,"longsword","polkadot shirt","polkadot pants");
         mobMap.put(superLadybug.getName().toLowerCase(),superLadybug);
         mobMap.put("super",superLadybug);
         mobMap.put("giant",superLadybug);
 
-        Mob willowisp = new Mob("Wisp","You see nothing more than a floating blue flame.","A ghostly will'o wisp is floating here",50,10,1);
+        Mob willowisp = new Mob("Wisp","You see nothing more than a floating blue flame.","A ghostly will'o wisp is floating here",50,15,3);
         mobMap.put(willowisp.getName().toLowerCase(),willowisp);
         mobMap.put("flame",willowisp);
         mobMap.put("willo",willowisp);
         mobMap.put("willo wisp",willowisp);
         mobMap.put("will o wisp",willowisp);
 
-        Mob swampThing = new Mob("Swamp Thing","Looks just like the monster from the movie, cool!","The Swamp Thing is here!",100,12,5,"green sword","oozy shirt","oozy pants");
+        Mob swampThing = new Mob("Swamp Thing","Looks just like the monster from the movie, cool!","The Swamp Thing is here!",100,5,-5,"green sword","oozy shirt","oozy pants");
         mobMap.put(swampThing.getName().toLowerCase(),swampThing);
         mobMap.put("swamp",swampThing);
         mobMap.put("thing",swampThing);
@@ -155,22 +156,22 @@ public class World {
         equipmentMap.put("balloon",balloonSword);
         equipmentMap.put("balloon sword",balloonSword);
 
-        Equipment longSword = new Equipment("Longsword","Nice, an actual sword, with a blade and everything!","A regular longsword is lying here",4,0,0,"Weapon");
+        Equipment longSword = new Equipment("Longsword","Nice, an actual sword, with a blade and everything!","A regular longsword is lying here",8,0,0,"Weapon");
         equipmentMap.put(longSword.getName().toLowerCase(),longSword);
         equipmentMap.put("long",longSword);
 
-        Equipment greenSword = new Equipment("Green Sword","There's no reason why a green sword would be better than a longsword, but it is","A nice green sword is lying here",7,0,0,"Weapon");
+        Equipment greenSword = new Equipment("Green Sword","There's no reason why a green sword would be better than a longsword, but it is","A nice green sword is lying here",11,0,0,"Weapon");
         equipmentMap.put(greenSword.getName().toLowerCase(),greenSword);
         equipmentMap.put("green",greenSword);
         equipmentMap.put("greensword",greenSword);
 
-        Equipment blackSword = new Equipment("Blackened Sword","This sword didn't used to be black, but it's previous owner was a 5-packs-a-day smoker","A smokey looking, blackened sword is lying here",11,0,0,"Weapon");
+        Equipment blackSword = new Equipment("Blackened Sword","This sword didn't used to be black, but it's previous owner was a 5-packs-a-day smoker","A smokey looking, blackened sword is lying here",15,0,0,"Weapon");
         equipmentMap.put(blackSword.getName().toLowerCase(),blackSword);
         equipmentMap.put("black",blackSword);
         equipmentMap.put("blackened",blackSword);
         equipmentMap.put("black sword",blackSword);
 
-        Equipment shinyBroadsword = new Equipment("Shiny Broadsword","This broadsword looks like it's been polished kind of an unreasonable amount","A very shiny broadsword lies here",15,0,0,"Weapon");
+        Equipment shinyBroadsword = new Equipment("Shiny Broadsword","This broadsword looks like it's been polished kind of an unreasonable amount","A very shiny broadsword lies here",20,0,0,"Weapon");
         equipmentMap.put(shinyBroadsword.getName().toLowerCase(),shinyBroadsword);
         equipmentMap.put("shiny",shinyBroadsword);
         equipmentMap.put("broad",shinyBroadsword);

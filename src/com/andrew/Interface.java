@@ -7,6 +7,8 @@ import java.util.Timer;
 
 public class Interface {
 
+    //TODO add comments
+
     public static Scanner userScanner = new Scanner(System.in);
 
     protected static World theWorld = new World();
@@ -49,14 +51,13 @@ public class Interface {
         player = createPlayer();
         player.setCurrentRoom(roomList.get(0));
         //player.equip(equipmentMap.get("righteous sword"));
-        player.equip(equipmentMap.get("shabby shirt"));
-        player.equip(equipmentMap.get("flimsy pants"));
+        player.equip(equipmentMap.get("polkadot shirt"));
+        player.equip(equipmentMap.get("polkadot pants"));
 
 
         // Commands
         setting();
         prompt();
-
 
         timer = new Timer();
         clockTick = new GameClock();

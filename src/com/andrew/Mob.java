@@ -2,6 +2,7 @@ package com.andrew;
 
 import java.util.HashMap;
 
+//TODO add comments
 public class Mob {
 
     protected String name;
@@ -83,10 +84,16 @@ public class Mob {
     public void setHP(int newHP) {hp = newHP; }
     public void setDefense(int newDefense) { defense = newDefense; }
     public void setAttack(int newAttack) { attack = newAttack; }
+    public void setSetting(String newSetting) { setting = newSetting; }
 
 
     /** begins fight between this mob and another mob (can be monster or player character) */
     public void initiateAttack(Mob monster) {
+        String myOriginalSetting = getSetting();
+        String mobOriginalSetting = monster.getSetting();
+
+        setSetting(getName() + " is here, attacking " + monster.getName());
+        monster.setSetting(monster.getName() + " is fighting with " + getName());
 
         canMove = false;
         monster.canMove = false;
@@ -103,17 +110,38 @@ public class Mob {
                 monster.setHP(monster.getHP() - myAttackVal);
                 hp = hp - monsterAttackVal;
 
+
                 System.out.println(Interface.ANSI_RED + "You hit " + monster.getName() + " " + getAttackSTR(myAttackVal) + Interface.ANSI_RESET);
                 System.out.println(Interface.ANSI_PURPLE + monster.getName() + " hits YOU " + getAttackSTR(monsterAttackVal) + Interface.ANSI_RESET);
 
+                //TODO remove this before submitting
+                System.out.println("Monster attack: " + monsterAttackVal + " | Monster HP: " + monster.getHP());
+                System.out.println("My attack: " + myAttackVal + " | my HP: " + getHP());
+
+                // Got help from this stackoverflow question regarding how to delay a program
+                // Seems to have the potential for errors, but hopefully with such a short sleep time the potential for problematic interruptions is low
+                // http://stackoverflow.com/questions/3342651/how-can-i-delay-a-java-program-for-a-few-second
+                try {
+                    Thread.sleep(4000);
+                } catch (InterruptedException ie) {
+                    System.out.println("Interrupted: " + ie);
+                }
+
+                // Handle deaths, ends loop
                 if (monster.getHP() <= 0) {
                     monster.die();
-                    canMove = true;
                 }
                 if (hp <= 0) {
                     die();
                 }
+
+
             }
+
+            canMove = true;
+            monster.canMove = true;
+            monster.setSetting(mobOriginalSetting);
+            setSetting(myOriginalSetting);
         }
 
     }
@@ -128,6 +156,11 @@ public class Mob {
                 unequip(toDrop.getName());
                 drop(toDrop.getName());
             }
+        }
+
+        for (String inv : mobInventoryMap.keySet()) {
+            Item toDrop = mobInventoryMap.get(inv);
+            drop(toDrop.getName());
         }
 
     }

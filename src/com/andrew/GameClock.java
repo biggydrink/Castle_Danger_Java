@@ -13,26 +13,9 @@ import java.util.TimerTask;
  */
 public class GameClock extends TimerTask {
 
-    /*
-    protected static LinkedList<Player> playerList;
-    protected static HashMap<String,Equipment> equipmentMap;
-    protected static HashMap<String,Mob> mobMap;
-    protected static LinkedList<Room> roomList;
-
-
-*/
     private long counter;
 
-
     public GameClock() {
-        /*
-        playerList = Interface.playerList;
-        equipmentMap = Interface.equipmentMap;
-        HashMap<String,Mob> mobMap = Interface.mobMap;
-        LinkedList<Room> roomList = Interface.roomList;
-
-        */
-
         counter = 0;
     }
 

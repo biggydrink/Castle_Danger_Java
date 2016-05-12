@@ -3,6 +3,7 @@ package com.andrew;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+//TODO add comments
 public class Room {
 
     //TODO look into how trees work, use that to implement room lists and connections

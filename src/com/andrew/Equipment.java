@@ -1,6 +1,6 @@
 package com.andrew;
 
-
+//TODO add comments
 public class Equipment extends Item {
 
     int attack;
