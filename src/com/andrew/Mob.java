@@ -60,9 +60,9 @@ public class Mob {
         mobInventoryMap = new HashMap<String,Item>();
         mobEquipmentMap = new HashMap<String,Equipment>();
 
-        if (Interface.weaponMap.containsKey(defaultWeapon)) { equip(Interface.weaponMap.get(defaultWeapon)); }
-        if (Interface.armorMap.containsKey(defaultBody)) { equip(Interface.armorMap.get(defaultBody)); }
-        if (Interface.armorMap.containsKey(defaultLegs)) { equip(Interface.armorMap.get(defaultLegs)); }
+        if (Interface.equipmentMap.containsKey(defaultWeapon)) { equip(Interface.equipmentMap.get(defaultWeapon)); }
+        if (Interface.equipmentMap.containsKey(defaultBody)) { equip(Interface.equipmentMap.get(defaultBody)); }
+        if (Interface.equipmentMap.containsKey(defaultLegs)) { equip(Interface.equipmentMap.get(defaultLegs)); }
 
     }
 
@@ -155,7 +155,7 @@ public class Mob {
 
     public boolean gainItem(String itemName) {
         if (currentRoom.itemIsInRoom(itemName)) {
-            if (Interface.weaponMap.containsKey(itemName) || Interface.armorMap.containsKey(itemName)) { // is a weapon or item
+            if (Interface.equipmentMap.containsKey(itemName)) { // is a weapon or item
                 Equipment mapWeap = (Equipment)currentRoom.roomItemMap.get(itemName);
                 Equipment newWeap = new Equipment(mapWeap.getName(),mapWeap.getDescription(),mapWeap.getSetting(),mapWeap.getAttack(),mapWeap.getDefense(),mapWeap.getHP(),mapWeap.getEquipPlacement());
                 mobInventoryMap.put(newWeap.getName().toLowerCase(),newWeap);
@@ -245,7 +245,7 @@ public class Mob {
     public boolean equip(String itemName) {
 
         if (isInInventory(itemName)) {
-            if (Interface.armorMap.get(itemName) != null || Interface.weaponMap.get(itemName) != null) { // It's a piece of armor or a weapon
+            if (Interface.equipmentMap.get(itemName) != null) { // It's a piece of armor or a weapon
                 Equipment toEquip = (Equipment) mobInventoryMap.get(itemName);
                 if (alreadyEquipped(toEquip.getEquipPlacement())) {
                     unequip(mobEquipmentMap.get(toEquip.getEquipPlacement()).getName());

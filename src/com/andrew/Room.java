@@ -16,10 +16,12 @@ public class Room {
     LinkedList<String> defaultMobTypes;
     LinkedList<Mob> mobList;
     HashMap<String,Mob> roomMobMap;
+    LinkedList<String> defaultItemTypes;
     LinkedList<Item> itemList;
     HashMap<String,Item> roomItemMap;
 
-    public Room(String name, String description, String defaultMob) {
+    /** Room constructor with default mob/item types */
+    public Room(String name, String description, String defaultMob, String defaultItem) {
         this.name = name;
         this.description = description;
 
@@ -27,6 +29,11 @@ public class Room {
         roomMobMap = new HashMap<String,Mob>();
         itemList = new LinkedList<Item>();
         roomItemMap = new HashMap<String,Item>();
+        defaultItemTypes = new LinkedList<>();
+        defaultItemTypes.add(defaultItem);
+        for (String itemName : defaultItemTypes) {
+            createItem(itemName);
+        }
 
         defaultMobTypes = new LinkedList<>();
         defaultMobTypes.add(defaultMob);
@@ -35,6 +42,7 @@ public class Room {
         }
     }
 
+    /** Room constructor with no default mob/item types */
     public Room(String name, String description) {
         this.name = name;
         this.description = description;
@@ -59,8 +67,22 @@ public class Room {
         }
         return false;
     }
+
+    public void createItem(String name) {
+        if (name.equals("")) {
+            return;
+        }
+        Equipment mapItem = Interface.equipmentMap.get(name);
+        Equipment newItem = new Equipment(mapItem.getName(),mapItem.getDescription(),mapItem.getSetting(),mapItem.getAttack(),mapItem.getDefense(), mapItem.getHP(),mapItem.getEquipPlacement());
+        addItem(newItem);
+    }
+
+
     public void createMob(String name) {
-        //addMob(Interface.mobMap.get(name));
+
+        if (name.equals("")) {
+            return;
+        }
         Mob mapMob = Interface.mobMap.get(name);
         Mob newMob = new Mob(mapMob.getName(),mapMob.getDescription(),mapMob.getSetting(),mapMob.getMaxHP(),mapMob.getAttack(),mapMob.getDefense(),mapMob.getDefaultWeapon(),mapMob.getDefaultBody(),mapMob.getDefaultLegs());
         newMob.setCurrentRoom(this);

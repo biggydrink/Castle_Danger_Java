@@ -11,8 +11,8 @@ public class Interface {
     protected static World theWorld = new World();
 
     protected static LinkedList<Player> playerList = new LinkedList<>();
-    protected static HashMap<String,Equipment> weaponMap = theWorld.createWeapons();
-    protected static HashMap<String,Equipment> armorMap = theWorld.createArmor();
+    protected static HashMap<String,Equipment> equipmentMap = theWorld.createEquipment();
+    //protected static HashMap<String,Equipment> armorMap = theWorld.createArmor();
     protected static HashMap<String,Mob> mobMap = theWorld.createMobs();
     protected static LinkedList<Room> roomList = theWorld.createRooms();
 
@@ -33,6 +33,12 @@ public class Interface {
     public static final String ANSI_WHITE = "\u001B[37m";
 
 
+    /*
+    timer = new Timer();
+    clockTick = new GameClock(componentManager, snakePanel);
+    timer.scheduleAtFixedRate(clockTick, 0, clockInterval); // Sets up schedule for timer, using clockInterval
+    */
+
     public static void main(String[] args) {
 
         // Database db = new Database();
@@ -42,9 +48,7 @@ public class Interface {
         // Create player,
         player = createPlayer();
         player.setCurrentRoom(roomList.get(0));
-        player.equip(armorMap.get("oozy pants"));
-        player.equip(armorMap.get("oozy shirt"));
-        player.equip(weaponMap.get("black sword"));
+        player.equip(equipmentMap.get("righteous sword"));
 
 
         // Commands
@@ -65,14 +69,14 @@ public class Interface {
         newName = userScanner.nextLine();
         Player newPlayerChar = new Player(newName);
         System.out.println("Welcome to Castle Danger, " + newName + " !");
-        viewHelp();
+        help();
 
         playerList.push(newPlayerChar);
 
         return newPlayerChar;
     }
 
-    static public void viewHelp() {
+    static public void help() {
         System.out.println("Here are some basic commands to use in the game:");
         System.out.println(ANSI_BLACK + "Command" + padSpace(30 - "Command".length()) + "Use" + ANSI_RESET);
         System.out.println("l / look" + padSpace(30 - "l / look".length()) + "Look at your surroundings");
@@ -83,8 +87,26 @@ public class Interface {
         System.out.println("eq / uneq [item]" + padSpace(30-"eq / uneq [item]".length()) + "Equip or unequip an item");
         System.out.println("st" + padSpace(30-"st".length()) + "Check your stats");
         System.out.println("g [item]" + padSpace(30-"g [item]".length()) + "Get an item off the floor");
+        System.out.println("h monsters" + padSpace(30-"h monsters".length()) + "See the technical names of the monsters you can attack");
+        System.out.println("h items" + padSpace(30-"h items".length()) + "See the technical names of the items you can pick up");
         System.out.println("h" + padSpace(30-"h".length()) + "Read this help file again");
         System.out.println("Enjoy!");
+    }
+
+    static public void helpItems() {
+        System.out.println("The names of the items you can get in this room are: ");
+        for (String item : player.currentRoom.roomItemMap.keySet()) {
+            System.out.println(ANSI_YELLOW + item + ANSI_RESET);
+        }
+    }
+
+    static public void helpMonsters() {
+        System.out.println("The names of the monsters you can attack in this room are: ");
+        for (String monsterName : player.currentRoom.roomMobMap.keySet()) {
+            if (!monsterName.equalsIgnoreCase(player.getName())) {
+                System.out.println(ANSI_RED + monsterName + ANSI_RESET);
+            }
+        }
     }
 
     static public String padSpace(int numSpaces) {
@@ -235,9 +257,6 @@ public class Interface {
         } else {
             System.out.println(player.getInventoryString());
 
-            /*for (String itemName : player.mobInventoryMap.keySet()) {
-                System.out.println(itemName);
-            }*/
         }
     }
 
@@ -285,7 +304,14 @@ public class Interface {
 
             commandMap.put("h",new Command() {
                 public void runCommand(String args) {
-                    viewHelp();
+                    if (args.equals("items")) {
+                        helpItems();
+                    } else if (args.equals("monsters")) {
+                        helpMonsters();
+                    } else {
+                        help();
+                    }
+
                 }
             });
 
@@ -300,6 +326,11 @@ public class Interface {
             });
 
             commandMap.put("i", new Command() {
+                public void runCommand(String args) {
+                    viewInventory(player);
+                }
+            });
+            commandMap.put("inv", new Command() {
                 public void runCommand(String args) {
                     viewInventory(player);
                 }
