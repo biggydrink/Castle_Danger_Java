@@ -1,7 +1,5 @@
 package com.andrew;
 
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.TimerTask;
 
 /** Tasks to be run every tick, tick timer set in Interface.java.
@@ -48,6 +46,8 @@ public class GameClock extends TimerTask {
                     }
                 }
             }
+
+            //TODO backup players
         }
 
 

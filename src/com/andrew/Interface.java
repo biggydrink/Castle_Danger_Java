@@ -34,6 +34,7 @@ public class Interface {
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_WHITE = "\u001B[37m";
 
+
     public static Database db = new Database();
 
     protected static Timer timer;
@@ -107,12 +108,14 @@ public class Interface {
             System.out.println("Please enter at least 6 characters for your pw");
             password = userScanner.nextLine();
         }
-        Player player = new Player(name);
+        player = new Player(name);
 
         // Initializations
         player.setCurrentRoom(roomList.get(0));
         player.setPassword(password);
         db.addNewPlayer(player); // add to players table
+        db.addNewPlayerEQ(player);
+        // db.addNewPlayerInv(player);
         player.setPlayerID(db.getID(player.name)); // query db to get ID, used for loading character
         // Starting Equipment
         player.equip(equipmentMap.get("polkadot shirt"));
@@ -316,6 +319,7 @@ public class Interface {
         System.out.println("Are you sure? Type quit again, or press enter to continue");
         String response = userScanner.nextLine();
         if (response.equalsIgnoreCase("quit")) {
+            db.savePlayer(player);
             System.out.println("Bye!");
             System.exit(-1);
         }

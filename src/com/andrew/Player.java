@@ -46,6 +46,7 @@ public class Player extends Mob {
     public int getAttack() { return attack; }
     public int getDefense() { return defense; }
     protected String getPassword() { return password; }
+    protected int getID() { return playerID; }
 
     protected void setPlayerID(int id) { playerID = id; }
     protected void setPassword(String pw) { password = pw; }

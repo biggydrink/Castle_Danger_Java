@@ -4,6 +4,7 @@ package com.andrew;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 import java.sql.*;
+import java.util.LinkedList;
 
 //TODO add comments
 public class Database {
@@ -81,8 +82,8 @@ public class Database {
             statement = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
             // Create DB if doesn't exist
-            String createDBQuery = "CREATE DATABASE IF NOT EXISTS " + DB_NAME + ";";
-            statement.executeUpdate(createDBQuery);
+            //String createDBQuery = "CREATE DATABASE IF NOT EXISTS " + DB_NAME + ";";
+            //statement.executeUpdate(createDBQuery);
 
             // Create tables if they don't already exist
             if (!tableExists(PLAYER_TABLE_NAME)) {
@@ -155,10 +156,6 @@ public class Database {
                 "inv_key INT AUTO_INCREMENT PRIMARY KEY" +
                 ", playerID INT NOT NULL" +
                 ", name VARCHAR(25) NOT NULL" +
-                ", description VARCHAR(500) NOT NULL" +
-                ", defense INT" +
-                ", hp INT" +
-                ", attack INT" +
                 ", equipmentPlacement VARCHAR(20)" +
             ");";
 
@@ -175,12 +172,9 @@ public class Database {
         String createTableQuery = "CREATE TABLE " + EQUIPPED_TABLE_NAME + " (" +
                 "eq_key INT AUTO_INCREMENT PRIMARY KEY" +
                 ", playerID INT NOT NULL" +
-                ", name VARCHAR(25) NOT NULL" +
-                ", description VARCHAR(500) NOT NULL" +
-                ", defense INT" +
-                ", hp INT" +
-                ", attack INT" +
-                ", equipmentPlacement VARCHAR(20)" +
+                ", eqWeapon VARCHAR(50) NOT NULL" +
+                ", eqBody VARCHAR(50) NOT NULL" +
+                ", eqLegs VARCHAR(50) NOT NULL" +
                 ");";
 
         try {
@@ -218,10 +212,137 @@ public class Database {
                 "'," + room +
                 ");";
 
+        //String addPlayerInvQuery = "INSERT INTO " + INVENTORY_TABLE_NAME + "(playerid, name, equipmentPlacement)" +
+
+
         try {
             statement.execute(updateQuery);
+            //statement.execute(addPlayerInvQuery);
         } catch (SQLException sqle) {
             System.out.println("SQL Exception: " + sqle);
+        }
+    }
+
+    public void addNewPlayerEQ(Player player) {
+        String eqWeapon = "";
+        String eqBody = "";
+        String eqLegs = "";
+
+
+        if (player.mobEquipmentMap.get("Weapon") != null) {
+            eqWeapon = player.mobEquipmentMap.get("Weapon").getName();
+        }
+        if (player.mobEquipmentMap.get("Body") != null) {
+            eqBody = player.mobEquipmentMap.get("Body").getName();
+        }
+        if (player.mobEquipmentMap.get("Legs") != null) {
+            eqLegs = player.mobEquipmentMap.get("Legs").getName();
+        }
+
+        String addPlayerEQQuery = "INSERT INTO " + EQUIPPED_TABLE_NAME + "(playerid, eqWeapon, eqBody, eqLegs)" +
+                " VALUES (" +
+                getID(player.name) +
+                ",'" + eqWeapon +
+                "','" + eqBody +
+                "','" + eqLegs +
+                "');";
+
+        try {
+            statement.execute(addPlayerEQQuery);
+        } catch (SQLException sqle) {
+            System.out.println("SQL Exception: " + sqle);
+        }
+    }
+
+    public void savePlayer(Player player) {
+
+        // Get player data
+        String name = player.getName();
+        int id = player.getID();
+        String eqWeapon = "";
+        String eqBody = "";
+        String eqLegs = "";
+
+
+        if (player.mobEquipmentMap.get("Weapon") != null) {
+            eqWeapon = player.mobEquipmentMap.get("Weapon").getName();
+        }
+        if (player.mobEquipmentMap.get("Body") != null) {
+            eqBody = player.mobEquipmentMap.get("Body").getName();
+        }
+        if (player.mobEquipmentMap.get("Legs") != null) {
+            eqLegs = player.mobEquipmentMap.get("Legs").getName();
+        }
+        int maxHP = player.getMaxHP();// - Interface.equipmentMap.get(eqWeapon).getHP() - Interface.equipmentMap.get(eqBody).getHP() - Interface.equipmentMap.get(eqLegs).getHP();
+        int hp = player.getHP();
+        int attack = player.getAttack();// - Interface.equipmentMap.get(eqWeapon).getAttack() - Interface.equipmentMap.get(eqBody).getAttack() - Interface.equipmentMap.get(eqLegs).getAttack();
+        int defense = player.getDefense();// - Interface.equipmentMap.get(eqWeapon).getDefense() - Interface.equipmentMap.get(eqBody).getDefense() - Interface.equipmentMap.get(eqLegs).getDefense();
+        String description = player.getDescription();
+        String setting = player.getSetting();
+        int room = Interface.roomList.indexOf(player.currentRoom);
+
+        // Save
+        saveEquipment(player);
+        //saveInventory(player);
+        // Get player inventory
+        //LinkedList<String> invList = new LinkedList<>();
+        //for (String inv : player.mobInventoryMap.keySet()) {
+        //    invList.add(inv);
+        //}
+
+        String saveQuery = "UPDATE " + PLAYER_TABLE_NAME +
+                " SET maxhp = " + maxHP +
+                ",hp = " + hp +
+                ",attack = " + attack +
+                ",description = '" + description +
+                "', setting = '" + setting +
+                "', currentroom = " + room +
+
+//                    maxHP +
+//                    "," + attack +
+//                    "," + defense +
+//                    ",'" + description +
+//                    "','" + setting +
+//                    "'," + room +
+//                    ") " +
+                " WHERE playerID = " + id + ";";
+
+        try {
+            statement.executeUpdate(saveQuery);
+        } catch (SQLException sqle) {
+            System.out.println("playersave Exception: " + sqle);
+        }
+    }
+
+    public void saveEquipment(Player player) {
+        int id = player.getID();
+        // HP, attack, defense are all calculated minus the bonuses from equipment
+
+        String eqWeapon = "";
+        String eqBody = "";
+        String eqLegs = "";
+
+
+        if (player.mobEquipmentMap.get("Weapon") != null) {
+            eqWeapon = player.mobEquipmentMap.get("Weapon").getName();
+        }
+        if (player.mobEquipmentMap.get("Body") != null) {
+            eqBody = player.mobEquipmentMap.get("Body").getName();
+        }
+        if (player.mobEquipmentMap.get("Legs") != null) {
+            eqLegs = player.mobEquipmentMap.get("Legs").getName();
+        }
+
+        String addPlayerEQQuery = "UPDATE " + EQUIPPED_TABLE_NAME +
+                " SET eqWeapon = '" + eqWeapon +
+                "',eqBody = '" + eqBody +
+                "',eqlegs = '" + eqLegs +
+                "' WHERE playerID = " + id + ";";
+
+        try {
+            statement.executeUpdate(addPlayerEQQuery);
+        } catch (SQLException sqle) {
+            System.out.println("eq Exception " + sqle);
         }
     }
 
