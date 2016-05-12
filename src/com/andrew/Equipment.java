@@ -1,6 +1,6 @@
 package com.andrew;
 
-//TODO add comments
+/** Items that are able to be equipped by mobs/players, and influence their stats */
 public class Equipment extends Item {
 
     int attack;

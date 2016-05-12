@@ -1,13 +1,15 @@
 package com.andrew;
 
-//TODO add comments
+/** Basic class for all items in game.
+ * Currently Equipment class extends this, and all items in the game are Equipment, but this is still included
+ * to help with future development (could have potions, scrolls, rocks, whatever
+ */
+
 public class Item {
     protected String name;
     protected String description;
     protected String setting;
 
-    // make a good constructor
-    // could have global list - run a method that could create all the weapons and then add them to the list
 
     public Item(String name, String description, String setting) {
         this.name = name;

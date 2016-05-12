@@ -5,13 +5,12 @@ import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.Timer;
 
-public class Interface {
 
-    //TODO add comments
+public class Interface {
 
     public static Scanner userScanner = new Scanner(System.in);
 
-    protected static World theWorld = new World();
+    protected static World theWorld = new World(); // Use this to make game object info easily accessible
 
     protected static LinkedList<Player> playerList = new LinkedList<>();
     protected static HashMap<String,Equipment> equipmentMap = theWorld.createEquipment();
@@ -37,11 +36,11 @@ public class Interface {
 
     public static Database db = new Database();
 
+    // Timer in this program doesn't control the game, but helps keep it more "alive" - i.e. if you've killed off
+    // all the monsters, they'll be repopulated every so often, you slowly restore health between battles, etc
     protected static Timer timer;
     protected static GameClock clockTick;
     protected static long clockInterval = 30000; // milliseconds, 1000 = 1 second
-
-
 
     public static void main(String[] args) {
 
@@ -74,9 +73,13 @@ public class Interface {
             inputCommand();
             prompt();
         }
-
     }
 
+    /** Interface for logging in the user. If user selects a name that hasn't been logged yet, a new player is created,
+     * otherwise the player's character is loaded from the database.
+     * @param name - player's login name
+     * @param id - player's characters database ID. Taken from the db in main()
+     */
     static private void login(String name, int id) {
         System.out.println("Welcome back! Please enter your password:");
         String password = userScanner.nextLine();
@@ -89,7 +92,7 @@ public class Interface {
 
     }
 
-    //TODO extend
+    /** If player has logged in before, loads their character from the database */
     static private void loadPlayer(String name, int id) {
         player = new Player(name);
         // Starting Equipment
@@ -99,7 +102,7 @@ public class Interface {
     }
 
 
-    /** User selects a name for their character, character created and returned */
+    /** New character creation. Creates the character and gives them some basic equipment */
     static protected Player createPlayer(String name) {
         String password = "";
 
@@ -130,6 +133,7 @@ public class Interface {
         return player;
     }
 
+    /** Displays game commands */
     static public void help() {
         System.out.println("Here are some basic commands to use in the game:");
         System.out.println(ANSI_BLACK + "Command" + padSpace(30 - "Command".length()) + "Use" + ANSI_RESET);
@@ -144,17 +148,27 @@ public class Interface {
         System.out.println("h monsters" + padSpace(30-"h monsters".length()) + "See the technical names of the monsters you can attack");
         System.out.println("h items" + padSpace(30-"h items".length()) + "See the technical names of the items you can pick up");
         System.out.println("h" + padSpace(30-"h".length()) + "Read this help file again");
+        System.out.println("quit" + padSpace(30-"quit".length()) + "Quit the game and save your character");
         System.out.println("Enjoy!");
     }
+    /** Used for making the help() method display text nicely */
+    static private String padSpace(int numSpaces) {
+        String spaces = "";
+        for (int i = 0; i < numSpaces; ++i) {
+            spaces += " ";
+        }
+        return spaces;
+    }
 
-    static public void helpItems() {
+    /** Displays the names of items in the current room so that the player can easily target them */
+    static private void helpItems() {
         System.out.println("The names of the items you can get in this room are: ");
         for (String item : player.currentRoom.roomItemMap.keySet()) {
             System.out.println(ANSI_YELLOW + item + ANSI_RESET);
         }
     }
-
-    static public void helpMonsters() {
+    /** Displays the names of monsters/players in the current room so that the player can easily target them */
+    static private void helpMonsters() {
         System.out.println("The names of the monsters you can attack in this room are: ");
         for (String monsterName : player.currentRoom.roomMobMap.keySet()) {
             if (!monsterName.equalsIgnoreCase(player.getName())) {
@@ -163,17 +177,9 @@ public class Interface {
         }
     }
 
-    static public String padSpace(int numSpaces) {
-        String spaces = "";
-        for (int i = 0; i < numSpaces; ++i) {
-            spaces += " ";
-        }
 
-        return spaces;
-    }
-
-    /** Wait for input from player */
-    static public void inputCommand() {
+    /** Wait for input from player, parse the text, and run the appropriate command */
+    static protected void inputCommand() {
         /* Implementation of inputCommand() using commandMap was inspired by the top response in this stack exchange question:
         http://stackoverflow.com/questions/4480334/how-to-call-a-method-stored-in-a-hashmap-java
         */
@@ -195,7 +201,7 @@ public class Interface {
     }
 
     /** Takes input from the user and parses it into the first word (the command) and the rest (the arguments) */
-    static public String[] parseInput() {
+    static private String[] parseInput() {
         String input;
         String[] listInput;
         String inputCmd;
@@ -220,7 +226,7 @@ public class Interface {
         return cmdWithArgs;
     }
 
-    /** Display main game prompt */
+    /** Display main game prompt with current room name, health, and exits */
     static public void prompt() {
         // <[room name]: [hp]/[maxhp]HP : [exits]>
         String prompt;
@@ -232,9 +238,8 @@ public class Interface {
         System.out.print(prompt);
     }
 
-    /** Show description of item/player */
+    /** Show description of item/player/monster */
     static public void look(String name) {
-
         try {
 
             if (player.currentRoom.roomMobMap.containsKey(name)) {
@@ -257,8 +262,6 @@ public class Interface {
             } else {
                 System.out.println("You don't see that here");
             }
-
-            //TODO see if this exception isn't necessary
         } catch (Exception e) {
             System.out.println("Exception: " + e);
         }
@@ -286,6 +289,7 @@ public class Interface {
         System.out.println("Defense: " + ANSI_BLACK +  player.getDefense() + ANSI_RESET);
     }
 
+    /** Returns appropriate ANSI color for player's current HP. Used in prompt() and stats() */
     static private String getHPColor() {
         double percentHP = (double)player.getHP() / (double)player.getMaxHP();
 
@@ -300,6 +304,7 @@ public class Interface {
 
     }
 
+    /** Show player's inventory */
     static private void viewInventory(Player player) {
         System.out.println("You are carrying: ");
         if (player.mobInventoryMap.isEmpty()) {
@@ -310,11 +315,11 @@ public class Interface {
         }
     }
 
-    static private void viewEquipment(Player player) {
-        System.out.println("You are wearing: ");
+    //static private void viewEquipment(Player player) {
+    //    System.out.println("You are wearing: ");
+    //}
 
-    }
-
+    /** Quit the game. Saves character data */
     static private void quit() {
         System.out.println("Are you sure? Type quit again, or press enter to continue");
         String response = userScanner.nextLine();
@@ -325,6 +330,10 @@ public class Interface {
         }
     }
 
+
+    /** Holds commandMap, which takes commands from inputCommand() and returns appropriate methods
+     *  Implementation inspired by top comment on the below stackoverflow question:
+     *  http://stackoverflow.com/questions/4480334/how-to-call-a-method-stored-in-a-hashmap-java*/
     private static class UserInterface {
 
         interface Command {

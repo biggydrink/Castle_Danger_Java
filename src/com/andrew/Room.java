@@ -3,10 +3,11 @@ package com.andrew;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-//TODO add comments
+/** Game locations
+ * Created and connected together in World.java
+ * Can hold items and mobs. Default items and mobs are included for easy population of the game.
+ */
 public class Room {
-
-    //TODO look into how trees work, use that to implement room lists and connections
 
     String name;
     String description;
@@ -76,7 +77,8 @@ public class Room {
         return false;
     }
 
-    public void createItem(String name) {
+    /** Create an item, usually the room's default */
+    protected void createItem(String name) {
         if (name.equals("")) {
             return;
         }
@@ -85,8 +87,8 @@ public class Room {
         addItem(newItem);
     }
 
-
-    public void createMob(String name) {
+    /** Create a mob, usually the room's default */
+    protected void createMob(String name) {
 
         if (name.equals("")) {
             return;
@@ -96,7 +98,8 @@ public class Room {
         newMob.setCurrentRoom(this);
     }
 
-    public String getExits() {
+    /** Returns a string of available exits, N for North, etc */
+    protected String getExits() {
         String exits = "";
 
         if (north != null) exits += "N";
@@ -109,39 +112,43 @@ public class Room {
         return exits;
     }
 
-    public void addMob(Mob mob) {
+    /** Add a mob to room */
+    protected void addMob(Mob mob) {
         mobList.add(mob);
         roomMobMap.put(mob.getName().toLowerCase(),mob);
     }
 
-    public void removeMob(Mob mob) {
+    /** Remove a mob from room */
+    protected void removeMob(Mob mob) {
         mobList.remove(mob);
         roomMobMap.remove(mob.getName().toLowerCase());
     }
 
-    public void addItem(Item item) {
+    /** Add an item to room */
+    protected void addItem(Item item) {
         itemList.add(item);
         roomItemMap.put(item.getName().toLowerCase(),item);
     }
 
-    public void removeItem(Item item) {
+    /** Remove an item from room */
+    protected void removeItem(Item item) {
         itemList.remove(item);
         roomItemMap.remove(item.getName().toLowerCase());
     }
 
-    public String showMobs(Player player) {
+    /** Return a string of all items in the room. Runs in the Interface.setting() method */
+    protected String showMobs(Player player) {
         String mobSettings = "";
         for (Mob mob : mobList) {
             if (!mob.getName().equals(player.getName())) {
                 mobSettings += mob.getSetting() + "\n";
             }
-
         }
-
         return mobSettings;
     }
 
-    public String showItems() {
+    /** Return a string of all monsters/players in the room. Runs in the Interface.setting() method */
+    protected String showItems() {
         String itemSettings = "";
         for (Item item : itemList) {
             itemSettings += item.getSetting() + "\n";

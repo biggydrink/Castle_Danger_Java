@@ -7,7 +7,8 @@ import java.util.TimerTask;
  *  increase all player's HP by 25% each tick
  *  create all room default mobs/items every 10 ticks
  *
- * Tick default is 1 minute
+ * Recommended tick time is 1 minute, but can be increased for presentation purposes.
+ * Use Interface.clockInterval to change
  */
 public class GameClock extends TimerTask {
 
@@ -30,7 +31,7 @@ public class GameClock extends TimerTask {
             }
         }
 
-
+        // Populate game again every x number of ticks
         if (counter % 5 == 0) {
 
             for (Room room : Interface.roomList) {
@@ -47,7 +48,7 @@ public class GameClock extends TimerTask {
                 }
             }
 
-            //TODO backup players
+            // Future plans to also pre-emptively save all players
         }
 
 

@@ -1,47 +1,10 @@
 package com.andrew;
 
-
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
-
 import java.sql.*;
 
-//TODO add comments
+/** All database info
+ *  Includes methods for creating and updating tables */
 public class Database {
-
-    /*
-    CREATE DATABASE castle_danger;
-    CREATE TABLE players (
-        player_key INT AUTO_INCREMENT PRIMARY KEY
-        name VARCHAR(25) UNIQUE NOT NULL
-        maxhp INT NOT NULL
-        hp INT NOT NULL
-        attack INT NOT NULL
-        defense INT NOT NULL
-        description VARCHAR(500) NOT NULL
-        currentRoom VARCHAR(50) NOT NULL
-    );
-    CREATE DATABASE inventory (
-        inv_key INT AUTO_INCREMENT PRIMARY KEY
-        player_key INTFOREIGN KEY NOT NULL
-        name VARCHAR(25) NOT NULL
-        description  VARCHAR(500) NOT NULL
-        defense INT
-        hp INT
-        attack INT
-        equipPlacement VARCHAR(20)
-    );
-    // Could just add a column to inv "Equipped" ?
-    CREATE DATABASE equipment (
-        eq_key INT AUTO_INCREMENT PRIMARY KEY
-        player_key INTFOREIGN KEY NOT NULL
-        name VARCHAR(25) NOT NULL
-        description  VARCHAR(500) NOT NULL
-        defense INT
-        hp INT
-        attack INT
-        equipPlacement VARCHAR(20)
-    );
-     */
 
     private static String DB_CONNECTION_URL = "jdbc:mysql://localhost:3306/"; //TODO make this not local host
     private static String DB_NAME = "castle_danger";
@@ -61,8 +24,6 @@ public class Database {
     }
 
     private boolean setup() {
-
-        // CREATE DATABASE IF NOT EXISTS dbname;
 
         try {
             // load driver
@@ -106,6 +67,7 @@ public class Database {
         }
     }
 
+    /** Checks if selected table already exists */
     private boolean tableExists(String tableName) {
 
         try {
@@ -126,6 +88,7 @@ public class Database {
         }
     }
 
+    /** Creates players table */
     private void createPlayerTable() {
         String createTableQuery = "CREATE TABLE " + PLAYER_TABLE_NAME + " (" +
                 "playerID INT NOT NULL AUTO_INCREMENT PRIMARY KEY" +
@@ -149,6 +112,7 @@ public class Database {
         }
     }
 
+    /** Creates inventory table */
     private void createInventoryTable() {
 
         String createTableQuery = "CREATE TABLE " + INVENTORY_TABLE_NAME + " (" +
@@ -167,6 +131,7 @@ public class Database {
         }
     }
 
+    /** Creates equipment table */
     private void createEquippedTable() {
         String createTableQuery = "CREATE TABLE " + EQUIPPED_TABLE_NAME + " (" +
                 "eq_key INT AUTO_INCREMENT PRIMARY KEY" +
@@ -185,6 +150,7 @@ public class Database {
         }
     }
 
+    /** Adds new player to players table */
     public void addNewPlayer(Player player) {
         String name = player.getName();
         String password = player.getPassword();
@@ -196,8 +162,6 @@ public class Database {
         String setting = player.getSetting();
         int room = Interface.roomList.indexOf(player.currentRoom);
 
-
-        // NAME, MAXHP, HP, ATTACK, DEFENSE, DESCR, SETTING, CURRENTROOM
         String updateQuery = "INSERT INTO " + PLAYER_TABLE_NAME + "(name,password,maxhp,hp,attack,defense,description,setting,currentroom)" +
                 " VALUES ('" +
                 name +
@@ -211,8 +175,6 @@ public class Database {
                 "'," + room +
                 ");";
 
-        //String addPlayerInvQuery = "INSERT INTO " + INVENTORY_TABLE_NAME + "(playerid, name, equipmentPlacement)" +
-
 
         try {
             statement.execute(updateQuery);
@@ -222,6 +184,7 @@ public class Database {
         }
     }
 
+    /** Adds new player's equipment (even if nothing) equipment table */
     public void addNewPlayerEQ(Player player) {
         String eqWeapon = "";
         String eqBody = "";
@@ -253,6 +216,7 @@ public class Database {
         }
     }
 
+    /** Updates character info */
     public void savePlayer(Player player) {
 
         // Get player data
@@ -282,12 +246,7 @@ public class Database {
 
         // Save
         saveEquipment(player);
-        //saveInventory(player);
-        // Get player inventory
-        //LinkedList<String> invList = new LinkedList<>();
-        //for (String inv : player.mobInventoryMap.keySet()) {
-        //    invList.add(inv);
-        //}
+        //saveInventory(player); // Saving inventory not currently supported
 
         String saveQuery = "UPDATE " + PLAYER_TABLE_NAME +
                 " SET maxhp = " + maxHP +
@@ -296,14 +255,6 @@ public class Database {
                 ",description = '" + description +
                 "', setting = '" + setting +
                 "', currentroom = " + room +
-
-//                    maxHP +
-//                    "," + attack +
-//                    "," + defense +
-//                    ",'" + description +
-//                    "','" + setting +
-//                    "'," + room +
-//                    ") " +
                 " WHERE playerID = " + id + ";";
 
         try {
@@ -313,6 +264,7 @@ public class Database {
         }
     }
 
+    /** Updates characters equipment */
     public void saveEquipment(Player player) {
         int id = player.getID();
         // HP, attack, defense are all calculated minus the bonuses from equipment
@@ -345,6 +297,7 @@ public class Database {
         }
     }
 
+    /** Get character's playerID (from players table) based on name */
     public int getID(String name) {
         String getIDQuery = "SELECT playerID FROM players WHERE name = '" + name + "';";
         int id = 0;
@@ -355,8 +308,6 @@ public class Database {
             while (rs.next()) {
                 id = rs.getInt("playerID");
             }
-        } catch (MySQLIntegrityConstraintViolationException sqlicv) {
-            System.out.println("Do something more, like cancel");
         } catch (SQLException sqle) {
             System.out.println("SQL Exception: " + sqle);
         }
@@ -364,6 +315,7 @@ public class Database {
         return id;
     }
 
+    /** Verifies id/password combination for logging in */
     public boolean checkPassword(int id, String password) {
         String checkPWQuery = "SELECT password FROM players WHERE playerid = " + id + ";";
         String newPW = "";

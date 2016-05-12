@@ -2,7 +2,10 @@ package com.andrew;
 
 import java.util.HashMap;
 
-//TODO add comments
+/** In-game monsters, aka mobs. Some details (having non-players able to move and hold inventory, etc) not yet
+ * implemented but included for future development.
+ *
+ */
 public class Mob {
 
     protected String name;
@@ -114,9 +117,10 @@ public class Mob {
                 System.out.println(Interface.ANSI_RED + "You hit " + monster.getName() + " " + getAttackSTR(myAttackVal) + Interface.ANSI_RESET);
                 System.out.println(Interface.ANSI_PURPLE + monster.getName() + " hits YOU " + getAttackSTR(monsterAttackVal) + Interface.ANSI_RESET);
 
-                //TODO remove this before submitting
-                System.out.println("Monster attack: " + monsterAttackVal + " | Monster HP: " + monster.getHP());
-                System.out.println("My attack: " + myAttackVal + " | my HP: " + getHP());
+                //Can include the below for debugging or balance help
+                //System.out.println("Monster attack: " + monsterAttackVal + " | Monster HP: " + monster.getHP());
+                //System.out.println("My attack: " + myAttackVal + " | my HP: " + getHP());
+
 
                 // Got help from this stackoverflow question regarding how to delay a program
                 // Seems to have the potential for errors, but hopefully with such a short sleep time the potential for problematic interruptions is low
@@ -146,7 +150,8 @@ public class Mob {
 
     }
 
-    public void die() {
+    /** Called when the monster's HP goes below 0 - mob removed from current room and drops all its items */
+    private void die() {
         System.out.println(name + " has died");
         currentRoom.removeMob(this);
 
@@ -165,6 +170,7 @@ public class Mob {
 
     }
 
+    /** Returns a different string to be used in display attacks, depending on how hard you are hitting (or being hit!) */
     private String getAttackSTR(int attackVal) {
 
         if (attackVal > 18) {
@@ -186,6 +192,7 @@ public class Mob {
         }
     }
 
+    /** Picks up an item in the room the monster is in */
     public boolean gainItem(String itemName) {
         if (currentRoom.itemIsInRoom(itemName)) {
             if (Interface.equipmentMap.containsKey(itemName)) { // is a weapon or item
@@ -200,6 +207,8 @@ public class Mob {
         return false;
     }
 
+    /** Shortcut to equip something. Unlike the other equip, item does not need to be in inventory.
+     * Can only be called manually in code */
     public void equip(Equipment item) {
         mobEquipmentMap.put(item.getEquipPlacement(),item);
         setAttack(attack += item.getAttack());
@@ -209,13 +218,11 @@ public class Mob {
     }
 
 
-
     /** Check if an item is in a Mob's inventory */
     public boolean isInInventory(String itemName) {
         if (mobInventoryMap.containsKey(itemName.toLowerCase())) {
             return true;
         }
-
         return false;
     }
 
@@ -233,6 +240,7 @@ public class Mob {
         return false;
     }
 
+    /** Checks where an item is equipped - as a weapon, on the body, or on the legs */
     public String getEquippedItemLocation(String itemName) {
 
         if (isEquipped(itemName)) {
@@ -242,10 +250,10 @@ public class Mob {
                 }
             }
         }
-
         return "";
     }
 
+    /** Puts together a String list of items in inventory, shown by the inv command in Interface's commandMap */
     public String getInventoryString() {
         String invString = "";
 
@@ -274,7 +282,7 @@ public class Mob {
 
     }
 
-    /** Equip selected item */
+    /** Equip selected item. Must be in inventory */
     public boolean equip(String itemName) {
 
         if (isInInventory(itemName)) {
@@ -296,7 +304,8 @@ public class Mob {
         return false;
     }
 
-    public boolean alreadyEquipped(String eqLoc) {
+    /** Checks if something is already equipped in the selected slot */
+    private boolean alreadyEquipped(String eqLoc) {
         if (mobEquipmentMap.get(eqLoc) == null) {
             return false;
         } else {
@@ -324,7 +333,7 @@ public class Mob {
         return false;
     }
 
-    /** Remove an item from inventory */
+    /** Remove an item from inventory, and places it in the room's inventory list */
     public boolean drop(String itemName) {
 
         if (isInInventory(itemName)) {
@@ -344,7 +353,7 @@ public class Mob {
     }
 
 
-
+    /** Movement commands, to try going to the current room's north/south/east/west location */
     public void goNorth() {
         if (currentRoom.north != null) {
             setCurrentRoom(currentRoom.north);
@@ -366,6 +375,7 @@ public class Mob {
         }
     }
 
+    /** Sets current room to any room object */
     public void setCurrentRoom(Room newRoom) {
         if (currentRoom != null && !currentRoom.mobList.isEmpty()) {
             currentRoom.removeMob(this);

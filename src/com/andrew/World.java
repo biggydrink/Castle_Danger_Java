@@ -4,13 +4,16 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 
-//TODO add comments
+/** Convenient class to hold all the object creation needed in the game. Methods return lists or hashmaps of objects
+ * to Interface.java.
+ */
 public class World {
 
     public World() {
 
     }
 
+    // All rooms created here, all editing of rooms done here as well
     protected LinkedList<Room> createRooms() {
         LinkedList<Room> roomList = new LinkedList<>();
 
@@ -95,10 +98,10 @@ public class World {
 
     }
 
+    // All monsters (mobs) created and edited here
     protected HashMap<String,Mob> createMobs() {
 
         HashMap<String,Mob> mobMap = new HashMap<>();
-
 
         Mob ladybug = new Mob("Ladybug","A cute ladybug with little red spots.","There is a ladybug here",20,5,0);
         mobMap.put(ladybug.getName().toLowerCase(),ladybug);
@@ -145,11 +148,14 @@ public class World {
         return mobMap;
     }
 
+    // All equipment in the game created and edited here
     protected HashMap<String,Equipment> createEquipment() {
 
         // Equipment constructor arguments: (String name, String description, String setting, int attack, int defense, int hp, String equipPlacement)
 
         HashMap<String,Equipment> equipmentMap = new HashMap<String,Equipment>();
+
+        // CREATE WEAPONS START
 
         Equipment balloonSword = new Equipment("balloon Animal Sword","It's a \"sword\" made out of those skinny balloons that balloon animals are made out of. You really should probably find something else to use if you can..","A balloon animal sword is lying here",1,0,0,"Weapon");
         equipmentMap.put(balloonSword.getName().toLowerCase(),balloonSword);
@@ -179,6 +185,7 @@ public class World {
         Equipment righteousSword = new Equipment("Righteous Sword","Righteous, dude","Duuuude, a Righteous Sword is on the floor",100,100,100,"Weapon");
         equipmentMap.put(righteousSword.getName().toLowerCase(),righteousSword);
 
+        // CREATE WEAPONS END
 
         // CREATE ARMOR START
 
@@ -242,76 +249,8 @@ public class World {
         equipmentMap.put("legplates",shinyNewLegplates);
         equipmentMap.put("shiny legplates",shinyNewLegplates);
 
+        // CREATE ARMOR END
 
         return equipmentMap;
     }
-
-
-    /*
-    weapon
-    body
-    legs
-
-    head
-    feet
-    hands
-    waist
-    ring1
-    ring2
-    off_hand
-    wrist
-     */
-
-    /*
-    protected HashMap<String,Equipment> createArmor() {
-
-        HashMap<String,Equipment> armorMap = new HashMap<String,Equipment>();
-
-        // Equipment constructor arguments: (String name, String description, String setting, int attack, int defense, int hp, String equipPlacement)
-
-        Equipment shabbyShirt = new Equipment("Shabby Shirt","A pretty shabby shirt. Should probably shrug this off shoon. Soon.","A shabby shirt lies crumpled on the floor",0,1,0,"Body");
-        armorMap.put("shabby",shabbyShirt);
-        armorMap.put("shabby shirt",shabbyShirt);
-
-        Equipment flimsyPants = new Equipment("Flimsy Pants","Looks like you might want to avoid windy areas if you want these to stay on","A flimsy looking pair of pants is on the floor",0,1,0,"Legs");
-        armorMap.put("flimsy",flimsyPants);
-        armorMap.put("flimsy pants",flimsyPants);
-
-        Equipment polkadotShirt = new Equipment("Polkadot Shirt","Polkadots! On your shirt! Neat!","Polkadot shirt! In the dirt!",0,2,5,"Body");
-        armorMap.put("polkadot shirt",polkadotShirt);
-        armorMap.put("polka",polkadotShirt);
-
-        Equipment polkadotPants = new Equipment("Polkadot Pants","Polkadots! On your pants! Great!","Polkadot pants! On the floor!",0,2,5,"Legs");
-        armorMap.put("polkadot pants",polkadotPants);
-
-        Equipment oozyShirt = new Equipment("Oozy Shirt","Oozes like a swamp.","An oozy shirt is lying in a puddle on the floor",0,5,0,"Body");
-        armorMap.put("oozy shirt",oozyShirt);
-        armorMap.put("puddle",oozyShirt);
-
-        Equipment oozyPants = new Equipment("Oozy Pants","These are getting everything they touch a little slimy","Some oozy pants are here in a puddle of ooze",0,4,0,"Legs");
-        armorMap.put("ooze",oozyPants);
-        armorMap.put("oozy pants",oozyPants);
-
-        Equipment charredLeatherVest = new Equipment("Charred Leather Vest","Somehow this vest stayed together despite being clearly burned","A charred, crusty leather vest is here",0,7,15,"Body");
-        armorMap.put(charredLeatherVest.getName().toLowerCase(),charredLeatherVest);
-        armorMap.put("charred vest",charredLeatherVest);
-        armorMap.put("vest",charredLeatherVest);
-        armorMap.put("burned",charredLeatherVest);
-
-        Equipment charredLeatherPants = new Equipment("Charred Leather Pants","The char makes these pants pretty stiff","A charred pair of leather pants lies on the ground",0,5,10,"Legs");
-        armorMap.put("charred pants",charredLeatherPants);
-        armorMap.put("charred leather pants",charredLeatherPants);
-
-        Equipment shinyNewBreastplate = new Equipment("Shiny Breastplate","This armor doubles as a festive mirror!","A shiny reflective breastplate is here",0,10,5,"Body");
-        armorMap.put("shiny breastplate",shinyNewBreastplate);
-        armorMap.put("breastplate",shinyNewBreastplate);
-        armorMap.put("reflective",shinyNewBreastplate);
-
-        Equipment shinyNewLegplates = new Equipment("Shiny Legplates","So shiny they make you nervous about wearing them outside","Some super shiny legplates are on the floor here",0,8,3,"Legs");
-        armorMap.put("legplates",shinyNewLegplates);
-        armorMap.put("shiny legplates",shinyNewLegplates);
-
-        return armorMap;
-    }
-*/
 }

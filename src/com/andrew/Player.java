@@ -2,8 +2,6 @@ package com.andrew;
 
 import java.util.Random;
 
-//TODO add comments
-
 /** Extension of Mob, used for player characters */
 public class Player extends Mob {
 
@@ -28,10 +26,10 @@ public class Player extends Mob {
         this.name = name;
         this.description = "Behold, " + this.name + ". An elite player in this game!";
         this.setting = name + " is standing here.";
-        this.maxHP = playerRand.nextInt(10) + 80; // random max hp between 80 and 90
+        this.maxHP = playerRand.nextInt(10) + 150; // random max hp between 150-160
         this.hp = this.maxHP;
-        this.attack = playerRand.nextInt(2) + 10; // random attack between 10 and 12
-        this.defense = playerRand.nextInt(2) + 5; // random defense between 5 and 7
+        this.attack = playerRand.nextInt(2) + 20; // random attack between 20 and 22
+        this.defense = playerRand.nextInt(2) + 15; // random defense between 15 and 17
 
     }
 
@@ -51,6 +49,7 @@ public class Player extends Mob {
     protected void setPlayerID(int id) { playerID = id; }
     protected void setPassword(String pw) { password = pw; }
 
+    /** Movement commands for Player include warnings if unable to proceed */
     @Override
     public void goNorth() {
         if (currentRoom.north != null) {
