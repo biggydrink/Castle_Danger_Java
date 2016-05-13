@@ -44,7 +44,7 @@ public class World {
         Room volcanoArea3 = new Room("The Volcano","Your footsteps make a crunching sound as you walk across the cooled lava landscape.","golem","");
         Room volcanoArea4 = new Room("The Volcano","Your footsteps make a crunching sound as you walk across the cooled lava landscape. It's starting to get\npretty hot.","golem","");
         Room volcanoArea5 = new Room("The Volcano","The rock isn't so cool anymore, and you're starting to see pockets of lava around. It's REALLY hot\nnow, you're not sure if you can go much farther. There's a cave further to the south.","golem","");
-        Room volcanoArea6 = new Room("The Volcano","Inside the cave there's treasure everywhere, rubies and gold and all the wealth you can imagine. Too bad\nthere's no money in this game.","dragon","");
+        Room volcanoArea6 = new Room("The Volcano","Inside the cave there's treasure everywhere, rubies and gold and all the wealth you can imagine. Too bad\nthere's no money in this game.","black dragon","");
         roomList.add(volcanoArea0); roomList.add(volcanoArea1); roomList.add(volcanoArea2); roomList.add(volcanoArea3); roomList.add(volcanoArea4); roomList.add(volcanoArea5); roomList.add(volcanoArea6);
 
         Room fancyPalace0 = new Room("Entering the Fancy Palace","As you walk into the palace, you become acutely aware of your sweaty, unkempt nature. I mean,\nit's understandable, but really, you DO look out of place. You try to wipe your feet on the welcome mat.","guard","");

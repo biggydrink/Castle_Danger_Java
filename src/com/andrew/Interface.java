@@ -40,7 +40,7 @@ public class Interface {
     // all the monsters, they'll be repopulated every so often, you slowly restore health between battles, etc
     protected static Timer timer;
     protected static GameClock clockTick;
-    protected static long clockInterval = 30000; // milliseconds, 1000 = 1 second
+    protected static long clockInterval = 10000; // milliseconds, 1000 = 1 second
 
     public static void main(String[] args) {
 
@@ -95,6 +95,7 @@ public class Interface {
     /** If player has logged in before, loads their character from the database */
     static private void loadPlayer(String name, int id) {
         player = new Player(name);
+
         // Starting Equipment
         player.equip(equipmentMap.get("polkadot shirt"));
         player.equip(equipmentMap.get("polkadot pants"));
@@ -232,7 +233,7 @@ public class Interface {
         // <[room name]: [hp]/[maxhp]HP : [exits]>
         String prompt;
 
-        prompt = "<" + player.currentRoom.name + " : ";
+        prompt = ANSI_PURPLE + "<" + player.currentRoom.name + " : ";
         prompt += getHPColor() + player.getHP() + "/" + player.getMaxHP() + "HP" + ANSI_RESET + " : ";
         prompt += ANSI_CYAN + player.currentRoom.getExits() + ANSI_RESET + ">";
 
