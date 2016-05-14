@@ -82,7 +82,7 @@ public class Room {
         if (name.equals("")) {
             return;
         }
-        Equipment mapItem = Interface.equipmentMap.get(name);
+        Equipment mapItem = GameInterface.equipmentMap.get(name);
         Equipment newItem = new Equipment(mapItem.getName(),mapItem.getDescription(),mapItem.getSetting(),mapItem.getAttack(),mapItem.getDefense(), mapItem.getHP(),mapItem.getEquipPlacement());
         addItem(newItem);
     }
@@ -93,7 +93,7 @@ public class Room {
         if (name.equals("")) {
             return;
         }
-        Mob mapMob = Interface.mobMap.get(name);
+        Mob mapMob = GameInterface.mobMap.get(name);
         Mob newMob = new Mob(mapMob.getName(),mapMob.getDescription(),mapMob.getSetting(),mapMob.getMaxHP(),mapMob.getAttack(),mapMob.getDefense(),mapMob.getDefaultWeapon(),mapMob.getDefaultBody(),mapMob.getDefaultLegs());
         newMob.setCurrentRoom(this);
     }
@@ -136,7 +136,7 @@ public class Room {
         roomItemMap.remove(item.getName().toLowerCase());
     }
 
-    /** Return a string of all items in the room. Runs in the Interface.setting() method */
+    /** Return a string of all items in the room. Runs in the GameInterface.setting() method */
     protected String showMobs(Player player) {
         String mobSettings = "";
         for (Mob mob : mobList) {
@@ -147,7 +147,7 @@ public class Room {
         return mobSettings;
     }
 
-    /** Return a string of all monsters/players in the room. Runs in the Interface.setting() method */
+    /** Return a string of all monsters/players in the room. Runs in the GameInterface.setting() method */
     protected String showItems() {
         String itemSettings = "";
         for (Item item : itemList) {

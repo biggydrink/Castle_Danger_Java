@@ -6,7 +6,7 @@ import java.util.Scanner;
 import java.util.Timer;
 
 
-public class Interface {
+public class GameInterface {
 
     public static Scanner userScanner = new Scanner(System.in);
 
@@ -75,7 +75,7 @@ public class Interface {
         }
     }
 
-    /** Interface for logging in the user. If user selects a name that hasn't been logged yet, a new player is created,
+    /** GameInterface for logging in the user. If user selects a name that hasn't been logged yet, a new player is created,
      * otherwise the player's character is loaded from the database.
      * @param name - player's login name
      * @param id - player's characters database ID. Taken from the db in main()
@@ -95,10 +95,20 @@ public class Interface {
     /** If player has logged in before, loads their character from the database */
     static private void loadPlayer(String name, int id) {
         player = new Player(name);
+        db.loadPlayer(id);
+        player.setPlayerID(id);
+        // Load eq
+        String[] eqArray = db.loadPlayerEQ(id);
+        for (int i = 0; i < eqArray.length; ++i) {
+            if (!eqArray[i].equals("")) {
+                player.equip(equipmentMap.get(eqArray[i].toLowerCase()));
+            }
+        }
+
 
         // Starting Equipment
-        player.equip(equipmentMap.get("polkadot shirt"));
-        player.equip(equipmentMap.get("polkadot pants"));
+        //player.equip(equipmentMap.get("polkadot shirt"));
+        //player.equip(equipmentMap.get("polkadot pants"));
         player.setCurrentRoom(roomList.get(0));
         playerList.push(player);
     }

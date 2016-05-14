@@ -64,9 +64,9 @@ public class Mob {
         mobInventoryMap = new HashMap<String,Item>();
         mobEquipmentMap = new HashMap<String,Equipment>();
 
-        if (Interface.equipmentMap.containsKey(defaultWeapon)) { equip(Interface.equipmentMap.get(defaultWeapon)); }
-        if (Interface.equipmentMap.containsKey(defaultBody)) { equip(Interface.equipmentMap.get(defaultBody)); }
-        if (Interface.equipmentMap.containsKey(defaultLegs)) { equip(Interface.equipmentMap.get(defaultLegs)); }
+        if (GameInterface.equipmentMap.containsKey(defaultWeapon)) { equip(GameInterface.equipmentMap.get(defaultWeapon)); }
+        if (GameInterface.equipmentMap.containsKey(defaultBody)) { equip(GameInterface.equipmentMap.get(defaultBody)); }
+        if (GameInterface.equipmentMap.containsKey(defaultLegs)) { equip(GameInterface.equipmentMap.get(defaultLegs)); }
 
     }
 
@@ -114,9 +114,9 @@ public class Mob {
                 hp = hp - monsterAttackVal;
 
 
-                System.out.println(Interface.ANSI_RED + "You hit " + monster.getName() + " " + getAttackSTR(myAttackVal) + Interface.ANSI_RESET);
-                System.out.println(Interface.ANSI_PURPLE + monster.getName() + " hits YOU " + getAttackSTR(monsterAttackVal) + Interface.ANSI_RESET);
-                Interface.prompt();
+                System.out.println(GameInterface.ANSI_RED + "You hit " + monster.getName() + " " + getAttackSTR(myAttackVal) + GameInterface.ANSI_RESET);
+                System.out.println(GameInterface.ANSI_PURPLE + monster.getName() + " hits YOU " + getAttackSTR(monsterAttackVal) + GameInterface.ANSI_RESET);
+                GameInterface.prompt();
                 System.out.println("");
 
                 //Can include the below for debugging or balance help
@@ -176,7 +176,7 @@ public class Mob {
     private String getAttackSTR(int attackVal) {
 
         if (attackVal > 18) {
-            return Interface.ANSI_RED + "HARD!!";
+            return GameInterface.ANSI_RED + "HARD!!";
         } else if (attackVal > 14) {
             return "omg so hard";
         } else if (attackVal > 12) {
@@ -197,7 +197,7 @@ public class Mob {
     /** Picks up an item in the room the monster is in */
     public boolean gainItem(String itemName) {
         if (currentRoom.itemIsInRoom(itemName)) {
-            if (Interface.equipmentMap.containsKey(itemName)) { // is a weapon or item
+            if (GameInterface.equipmentMap.containsKey(itemName)) { // is a weapon or item
                 Equipment mapWeap = (Equipment)currentRoom.roomItemMap.get(itemName);
                 Equipment newWeap = new Equipment(mapWeap.getName(),mapWeap.getDescription(),mapWeap.getSetting(),mapWeap.getAttack(),mapWeap.getDefense(),mapWeap.getHP(),mapWeap.getEquipPlacement());
                 mobInventoryMap.put(newWeap.getName().toLowerCase(),newWeap);
@@ -255,7 +255,7 @@ public class Mob {
         return "";
     }
 
-    /** Puts together a String list of items in inventory, shown by the inv command in Interface's commandMap */
+    /** Puts together a String list of items in inventory, shown by the inv command in GameInterface's commandMap */
     public String getInventoryString() {
         String invString = "";
 
@@ -288,7 +288,7 @@ public class Mob {
     public boolean equip(String itemName) {
 
         if (isInInventory(itemName)) {
-            if (Interface.equipmentMap.get(itemName) != null) { // It's a piece of armor or a weapon
+            if (GameInterface.equipmentMap.get(itemName) != null) { // It's a piece of armor or a weapon
                 Equipment toEquip = (Equipment) mobInventoryMap.get(itemName);
                 if (alreadyEquipped(toEquip.getEquipPlacement())) {
                     unequip(mobEquipmentMap.get(toEquip.getEquipPlacement()).getName());

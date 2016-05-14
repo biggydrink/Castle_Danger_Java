@@ -2,13 +2,13 @@ package com.andrew;
 
 import java.util.TimerTask;
 
-/** Tasks to be run every tick, tick timer set in Interface.java.
+/** Tasks to be run every tick, tick timer set in GameInterface.java.
  * Typically:
  *  increase all player's HP by 25% each tick
  *  create all room default mobs/items every 10 ticks
  *
  * Recommended tick time is 1 minute, but can be increased for presentation purposes.
- * Use Interface.clockInterval to change
+ * Use GameInterface.clockInterval to change
  */
 public class GameClock extends TimerTask {
 
@@ -24,7 +24,7 @@ public class GameClock extends TimerTask {
 
         ++ counter;
 
-        for (Player player : Interface.playerList) {
+        for (Player player : GameInterface.playerList) {
             player.setHP(player.getHP() + (int)(player.getHP() * .25));
             if (player.getHP() > player.getMaxHP()) {
                 player.setHP(player.getMaxHP());
@@ -34,7 +34,7 @@ public class GameClock extends TimerTask {
         // Populate game again every x number of ticks
         if (counter % 10 == 0) {
 
-            for (Room room : Interface.roomList) {
+            for (Room room : GameInterface.roomList) {
                 // Create default items and mobs if they're no longer in the room
                 for (String defaultMob : room.defaultMobTypes) {
                     if (!room.mobIsInRoom(defaultMob)) { // mob is no longer in room's roomMobList

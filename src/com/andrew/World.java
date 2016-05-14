@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 
 /** Convenient class to hold all the object creation needed in the game. Methods return lists or hashmaps of objects
- * to Interface.java.
+ * to GameInterface.java.
  */
 public class World {
 

@@ -160,7 +160,7 @@ public class Database {
         int defense = player.getDefense();
         String description = player.getDescription();
         String setting = player.getSetting();
-        int room = Interface.roomList.indexOf(player.currentRoom);
+        int room = GameInterface.roomList.indexOf(player.currentRoom);
 
         String updateQuery = "INSERT INTO " + PLAYER_TABLE_NAME + "(name,password,maxhp,hp,attack,defense,description,setting,currentroom)" +
                 " VALUES ('" +
@@ -236,13 +236,13 @@ public class Database {
         if (player.mobEquipmentMap.get("Legs") != null) {
             eqLegs = player.mobEquipmentMap.get("Legs").getName();
         }
-        int maxHP = player.getMaxHP();// - Interface.equipmentMap.get(eqWeapon).getHP() - Interface.equipmentMap.get(eqBody).getHP() - Interface.equipmentMap.get(eqLegs).getHP();
+        int maxHP = player.getMaxHP();// - GameInterface.equipmentMap.get(eqWeapon).getHP() - GameInterface.equipmentMap.get(eqBody).getHP() - GameInterface.equipmentMap.get(eqLegs).getHP();
         int hp = player.getHP();
-        int attack = player.getAttack();// - Interface.equipmentMap.get(eqWeapon).getAttack() - Interface.equipmentMap.get(eqBody).getAttack() - Interface.equipmentMap.get(eqLegs).getAttack();
-        int defense = player.getDefense();// - Interface.equipmentMap.get(eqWeapon).getDefense() - Interface.equipmentMap.get(eqBody).getDefense() - Interface.equipmentMap.get(eqLegs).getDefense();
+        int attack = player.getAttack();// - GameInterface.equipmentMap.get(eqWeapon).getAttack() - GameInterface.equipmentMap.get(eqBody).getAttack() - GameInterface.equipmentMap.get(eqLegs).getAttack();
+        int defense = player.getDefense();// - GameInterface.equipmentMap.get(eqWeapon).getDefense() - GameInterface.equipmentMap.get(eqBody).getDefense() - GameInterface.equipmentMap.get(eqLegs).getDefense();
         String description = player.getDescription();
         String setting = player.getSetting();
-        int room = Interface.roomList.indexOf(player.currentRoom);
+        int room = GameInterface.roomList.indexOf(player.currentRoom);
 
         // Save
         saveEquipment(player);
@@ -335,6 +335,49 @@ public class Database {
         }
 
         return false;
+    }
+
+    /** Gets player info for loading saved character */
+    public void loadPlayer(int id) {
+        String loadPlayerQuery = "SELECT name, maxhp, hp, attack, defense, description, setting, currentroom" +
+                " FROM " + PLAYER_TABLE_NAME +
+                " WHERE playerID = " + id +
+                ";";
+
+        try {
+            if (rs != null) rs.close();
+            rs = statement.executeQuery(loadPlayerQuery);
+        } catch (SQLException sqle) {
+            System.out.println("Exception: " + sqle);
+        }
+    }
+
+    /** Gets player equipment information for loading saved chracter */
+    public String[] loadPlayerEQ(int id) {
+        String[] eqArray = new String[3];
+        // Fill with blanks to avoid null pointers
+        for (int i = 0; i < eqArray.length; ++i) {
+            eqArray[i] = "";
+        }
+
+        String loadPlayerEQQuery = "SELECT eqWeapon, eqBody, eqLegs" +
+                " FROM " + EQUIPPED_TABLE_NAME +
+                " WHERE playerID = " + id +
+                ";";
+
+        try {
+            if (rs != null) rs.close();
+            rs = statement.executeQuery(loadPlayerEQQuery);
+            rs.next();
+            eqArray[0] = rs.getString("eqWeapon");
+            eqArray[1] = rs.getString("eqBody");
+            eqArray[2] = rs.getString("eqLegs");
+
+        } catch (SQLException sqle) {
+            System.out.println("Exception: " + sqle);
+        }
+
+        return eqArray;
     }
 
 }
