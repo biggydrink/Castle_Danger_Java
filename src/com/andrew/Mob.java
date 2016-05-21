@@ -195,15 +195,26 @@ public class Mob {
     }
 
     /** Picks up an item in the room the monster is in */
-    public boolean gainItem(String itemName) {
+    public boolean gainItemInRoom(String itemName) {
         if (currentRoom.itemIsInRoom(itemName)) {
             if (GameInterface.equipmentMap.containsKey(itemName)) { // is a weapon or item
-                Equipment mapWeap = (Equipment)currentRoom.roomItemMap.get(itemName);
-                Equipment newWeap = new Equipment(mapWeap.getName(),mapWeap.getDescription(),mapWeap.getSetting(),mapWeap.getAttack(),mapWeap.getDefense(),mapWeap.getHP(),mapWeap.getEquipPlacement());
-                mobInventoryMap.put(newWeap.getName().toLowerCase(),newWeap);
-                currentRoom.removeItem(mapWeap);
+                Equipment mapEQ = (Equipment)currentRoom.roomItemMap.get(itemName);
+                Equipment newEQ = new Equipment(mapEQ.getName(),mapEQ.getDescription(),mapEQ.getSetting(),mapEQ.getAttack(),mapEQ.getDefense(),mapEQ.getHP(),mapEQ.getEquipPlacement());
+                mobInventoryMap.put(newEQ.getName().toLowerCase(),newEQ);
+                currentRoom.removeItem(mapEQ);
                 return true;
             }
+        }
+
+        return false;
+    }
+
+    public boolean gainItem(String itemName) {
+        if (GameInterface.equipmentMap.containsKey(itemName)) { // is a weapon or item
+            Equipment mapWeap = GameInterface.equipmentMap.get(itemName);
+            Equipment newWeap = new Equipment(mapWeap.getName(),mapWeap.getDescription(),mapWeap.getSetting(),mapWeap.getAttack(),mapWeap.getDefense(),mapWeap.getHP(),mapWeap.getEquipPlacement());
+            mobInventoryMap.put(newWeap.getName().toLowerCase(),newWeap);
+            return true;
         }
 
         return false;

@@ -54,6 +54,7 @@ public class GameInterface {
         // Create player
         System.out.println("Welcome to Castle Danger! Enter your name:");
         loginName = userScanner.nextLine();
+        // Check for ID - if new player, getID() returns 0. Otherwise ID used to load player stats and inv/equipment
         id = db.getID(loginName);
         if (id == 0) {
             player = createPlayer(loginName);
@@ -65,10 +66,12 @@ public class GameInterface {
         setting();
         prompt();
 
+        // Set up game timer
         timer = new Timer();
         clockTick = new GameClock();
         timer.scheduleAtFixedRate(clockTick,0,clockInterval); // Sets timer's schedule to clockInterval's milliseconds
 
+        // Main game loop
         while (player.getHP() > 0) {
             inputCommand();
             prompt();
@@ -105,6 +108,13 @@ public class GameInterface {
             }
         }
 
+        // Load inventory
+        LinkedList<String> inventoryLoadList = db.loadPlayerInv(id);
+        for (String itemName : inventoryLoadList) {
+            player.gainItem(itemName);
+        }
+
+
 
         // Starting Equipment
         //player.equip(equipmentMap.get("polkadot shirt"));
@@ -128,13 +138,13 @@ public class GameInterface {
         // Initializations
         player.setCurrentRoom(roomList.get(0));
         player.setPassword(password);
-        db.addNewPlayer(player); // add to players table
-        db.addNewPlayerEQ(player);
-        // db.addNewPlayerInv(player);
-        player.setPlayerID(db.getID(player.name)); // query db to get ID, used for loading character
-        // Starting Equipment
         player.equip(equipmentMap.get("polkadot shirt"));
         player.equip(equipmentMap.get("polkadot pants"));
+        // Update db
+        db.addNewPlayer(player); // add to players table
+        player.setPlayerID(db.getID(player.name)); // query db to get ID, used for loading character
+        db.addNewPlayerEQ(player);
+        db.savePlayerInv(player);
 
         // Welcome & help
         System.out.println("Welcome to Castle Danger, " + name + " !");
@@ -451,7 +461,7 @@ public class GameInterface {
                 public void runCommand(String args) {
 
                     String notHere = "";
-                    if (player.gainItem(args)) {
+                    if (player.gainItemInRoom(args)) {
                         System.out.println("You get a " + args);
                     } else {
                         if (!args.equals("")) {

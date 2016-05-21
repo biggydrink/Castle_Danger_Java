@@ -1,6 +1,7 @@
 package com.andrew;
 
 import java.sql.*;
+import java.util.LinkedList;
 
 /** All database info
  *  Includes methods for creating and updating tables */
@@ -216,6 +217,76 @@ public class Database {
         }
     }
 
+    /** Adds new player's inventory (even if nothing) to the inventory table */
+    public void savePlayerInv(Player player) {
+
+        int id = player.getID();
+
+        deletePlayerInv(player);
+
+        if (player.mobInventoryMap.size() == 0) {
+            String addPlayerInvQuery = "INSERT INTO " + INVENTORY_TABLE_NAME + "(playerID, name, equipmentPlacement)" +
+                    " VALUES (" +
+                    id +
+                    ", ''" +
+                    ", ''" +
+                    ");";
+
+            try {
+                statement.execute(addPlayerInvQuery);
+            } catch (SQLException sqle) {
+                System.out.println("SQL Exception: " + sqle);
+            }
+
+        } else {
+            for (String itemName : player.mobInventoryMap.keySet()) {
+
+                String eqPlacement = "";
+
+                try {
+                    Equipment invItem = (Equipment)player.mobInventoryMap.get(itemName);
+                    eqPlacement = invItem.getEquipPlacement();
+                } catch (Exception e) {
+                    System.out.println("Problem casting inventory as Equipment:");
+                    System.out.println(e);
+                }
+
+
+                String addPlayerInvQuery = "INSERT INTO " + INVENTORY_TABLE_NAME + "(playerID, name, equipmentPlacement)" +
+                        " VALUES (" +
+                        id +
+                        ", '" + itemName +
+                        "', '" + eqPlacement +
+                        "');";
+
+                try {
+                    statement.execute(addPlayerInvQuery);
+                } catch (SQLException sqle) {
+                    System.out.println("SQL Exception: " + sqle);
+                }
+            }
+        }
+
+
+    }
+
+    /** Deletes player's inventory from inventory table */
+    public void deletePlayerInv(Player player) {
+        int id = player.getID();
+
+        String deleteQuery = "DELETE FROM " + INVENTORY_TABLE_NAME + " WHERE" +
+                " playerID = " + id +
+                ";";
+
+        try {
+            statement.execute(deleteQuery);
+        } catch (SQLException sqle) {
+            System.out.println("SQL Exception while deleting player inventory:");
+            System.out.println(sqle);
+        }
+
+    }
+
     /** Updates character info */
     public void savePlayer(Player player) {
 
@@ -245,8 +316,8 @@ public class Database {
         int room = GameInterface.roomList.indexOf(player.currentRoom);
 
         // Save
-        saveEquipment(player);
-        //saveInventory(player); // Saving inventory not currently supported
+        savePlayerEquipment(player);
+        savePlayerInv(player); // Saving inventory not currently supported
 
         String saveQuery = "UPDATE " + PLAYER_TABLE_NAME +
                 " SET maxhp = " + maxHP +
@@ -265,7 +336,7 @@ public class Database {
     }
 
     /** Updates characters equipment */
-    public void saveEquipment(Player player) {
+    public void savePlayerEquipment(Player player) {
         int id = player.getID();
         // HP, attack, defense are all calculated minus the bonuses from equipment
 
@@ -296,6 +367,7 @@ public class Database {
             System.out.println("eq Exception " + sqle);
         }
     }
+
 
     /** Get character's playerID (from players table) based on name */
     public int getID(String name) {
@@ -378,6 +450,28 @@ public class Database {
         }
 
         return eqArray;
+    }
+
+    public LinkedList<String> loadPlayerInv(int id) {
+        LinkedList<String> playerInvLoadList = new LinkedList<>();
+
+        String getInvSelectQuery = "SELECT name FROM " + INVENTORY_TABLE_NAME +
+                " WHERE playerid = " + id +
+                ";";
+
+        try {
+            if (rs != null) rs.close();
+            rs = statement.executeQuery(getInvSelectQuery);
+            while (rs.next()) {
+                playerInvLoadList.add(rs.getString(1));
+            }
+        } catch (SQLException sqle) {
+            System.out.println("SQL Exception while loading player inventory:");
+            System.out.println(sqle);
+        }
+
+        return playerInvLoadList;
+
     }
 
 }
