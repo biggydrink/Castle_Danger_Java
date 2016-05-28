@@ -140,8 +140,6 @@ public class Mob {
                 if (hp <= 0) {
                     die();
                 }
-
-
             }
 
             canMove = true;

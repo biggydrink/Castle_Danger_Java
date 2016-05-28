@@ -49,6 +49,15 @@ public class Player extends Mob {
     protected void setPlayerID(int id) { playerID = id; }
     protected void setPassword(String pw) { password = pw; }
 
+    /*
+    // Comment out to have players drop all eq and inv on death
+    @Override
+    public void die() {
+        // Does nothing
+    }
+    */
+
+
     /** Movement commands for Player include warnings if unable to proceed */
     @Override
     public void goNorth() {

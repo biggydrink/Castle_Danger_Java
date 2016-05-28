@@ -290,6 +290,9 @@ public class Database {
     /** Updates character info */
     public void savePlayer(Player player) {
 
+
+        //TODO may not want to save player's current hp, or maybe not save if below 0
+
         // Get player data
         String name = player.getName();
         int id = player.getID();
