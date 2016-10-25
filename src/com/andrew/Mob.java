@@ -25,7 +25,8 @@ public class Mob {
     private String[] equipAreas = {"Weapon","Body","Legs"};
 
 
-    /** Construct that includes attack and defense, used for npcs/monsters */
+    /** Construct that includes attack and defense, used for npcs/monsters
+     *  Equips no weapon, body armor, or leg armor */
     public Mob(String name, String description, String setting, int maxHP, int attack, int defense) {
         this.name = name;
         this.description = description;
@@ -41,13 +42,15 @@ public class Mob {
         canMove = true;
         mobInventoryMap = new HashMap<String,Item>();
         mobEquipmentMap = new HashMap<String,Equipment>();
+
         mobEquipmentMap.put("Body",null);
         mobEquipmentMap.put("Legs",null);
         mobEquipmentMap.put("Weapon",null);
 
     }
 
-    /** Construct that includes attack and defense, used for npcs/monsters */
+    /** Construct that includes attack and defense, used for npcs/monsters
+     *  Includes arguments for default weapon and armor*/
     public Mob(String name, String description, String setting, int maxHP, int attack, int defense, String defaultWeapon, String defaultBody, String defaultLegs) {
         this.name = name;
         this.description = description;
@@ -70,6 +73,7 @@ public class Mob {
 
     }
 
+    // Getters & Setters
     public String getName() {
         return name;
     }
@@ -95,18 +99,24 @@ public class Mob {
         String myOriginalSetting = getSetting();
         String mobOriginalSetting = monster.getSetting();
 
+        // Reset setting strings for both parties (attacking mob + attacked mob)
         setSetting(getName() + " is here, attacking " + monster.getName());
         monster.setSetting(monster.getName() + " is fighting with " + getName());
 
+        // Can't move rooms while attacking or being attacked
         canMove = false;
         monster.canMove = false;
 
+        // Set attack values
         int myAttackVal = attack - monster.getDefense();
-            if (myAttackVal < 0) myAttackVal = 0;
         int monsterAttackVal = monster.getAttack() - defense;
-            if (monsterAttackVal < 0) monsterAttackVal = 0;
 
-        if (myAttackVal == 0 && monsterAttackVal == 0) {
+        // Check for (and don't allow) negative attack values
+        if (myAttackVal < 0) myAttackVal = 0;
+        if (monsterAttackVal < 0) monsterAttackVal = 0;
+
+
+        if (myAttackVal == 0 && monsterAttackVal == 0) { // Don't allow never-ending attacks
             System.out.println("Looks like neither of you would be interested in a fight");
         } else {
             while (monster.getHP() > 0 && this.getHP() > 0) {
@@ -229,70 +239,6 @@ public class Mob {
     }
 
 
-    /** Check if an item is in a Mob's inventory */
-    public boolean isInInventory(String itemName) {
-        if (mobInventoryMap.containsKey(itemName.toLowerCase())) {
-            return true;
-        }
-        return false;
-    }
-
-    /** Check if an item is equipped by a Mob */
-    public boolean isEquipped(String itemName) {
-
-        for (String equipPlace : equipAreas) {
-            if (mobEquipmentMap.get(equipPlace) != null) {
-                String check = mobEquipmentMap.get(equipPlace).getName();
-                if (check.equalsIgnoreCase(itemName)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /** Checks where an item is equipped - as a weapon, on the body, or on the legs */
-    public String getEquippedItemLocation(String itemName) {
-
-        if (isEquipped(itemName)) {
-            for (Equipment eq : mobEquipmentMap.values()) {
-                if (eq != null && eq.getName().equalsIgnoreCase(itemName)) {
-                    return eq.getEquipPlacement();
-                }
-            }
-        }
-        return "";
-    }
-
-    /** Puts together a String list of items in inventory, shown by the inv command in GameInterface's commandMap */
-    public String getInventoryString() {
-        String invString = "";
-
-        for (String itemName : mobInventoryMap.keySet()) {
-            invString += (itemName + "\n");
-        }
-
-        return invString;
-    }
-
-    /** Show currently equipped items */
-    public String getEquipmentString() {
-        String viewEquipment = "";
-
-        for (String equipPlace : equipAreas) {
-            viewEquipment += (equipPlace + "\t\t");
-            if (mobEquipmentMap.get(equipPlace) != null) {
-                viewEquipment += mobEquipmentMap.get(equipPlace).getName();
-            } else {
-                viewEquipment += "[Nothing]";
-            }
-            viewEquipment += "\n";
-        }
-
-        return viewEquipment;
-
-    }
-
     /** Equip selected item. Must be in inventory */
     public boolean equip(String itemName) {
 
@@ -355,12 +301,75 @@ public class Mob {
         }
 
         return false;
-
     }
 
     /** Use an item (if applicable) */
     public void use(String itemName) {
         System.out.println("Mob use() called");
+    }
+
+    /** Check if an item is in a Mob's inventory */
+    public boolean isInInventory(String itemName) {
+        if (mobInventoryMap.containsKey(itemName.toLowerCase())) {
+            return true;
+        }
+        return false;
+    }
+
+    /** Check if an item is equipped by a Mob */
+    public boolean isEquipped(String itemName) {
+
+        for (String equipPlace : equipAreas) {
+            if (mobEquipmentMap.get(equipPlace) != null) {
+                String check = mobEquipmentMap.get(equipPlace).getName();
+                if (check.equalsIgnoreCase(itemName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /** Checks where an item is equipped - as a weapon, on the body, or on the legs */
+    public String getEquippedItemLocation(String itemName) {
+
+        if (isEquipped(itemName)) {
+            for (Equipment eq : mobEquipmentMap.values()) {
+                if (eq != null && eq.getName().equalsIgnoreCase(itemName)) {
+                    return eq.getEquipPlacement();
+                }
+            }
+        }
+        return "";
+    }
+
+    /** Puts together a String list of items in inventory, shown by the inv command in GameInterface's commandMap */
+    public String getInventoryString() {
+        String invString = "";
+
+        for (String itemName : mobInventoryMap.keySet()) {
+            invString += (itemName + "\n");
+        }
+
+        return invString;
+    }
+
+    /** Show currently equipped items */
+    public String getEquipmentString() {
+        String viewEquipment = "";
+
+        for (String equipPlace : equipAreas) {
+            viewEquipment += (equipPlace + "\t\t");
+            if (mobEquipmentMap.get(equipPlace) != null) {
+                viewEquipment += mobEquipmentMap.get(equipPlace).getName();
+            } else {
+                viewEquipment += "[Nothing]";
+            }
+            viewEquipment += "\n";
+        }
+
+        return viewEquipment;
+
     }
 
 

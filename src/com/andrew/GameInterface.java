@@ -124,6 +124,7 @@ public class GameInterface {
 
         System.out.println("Looks like you're new - please create a password:");
         while (password.length() < 6) {
+            // possibleTODO add regular expression check for password
             System.out.println("Please enter at least 6 characters for your pw");
             password = userScanner.nextLine();
         }

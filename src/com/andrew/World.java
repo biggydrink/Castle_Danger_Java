@@ -14,6 +14,9 @@ public class World {
     }
 
     // All rooms created here, all editing of rooms done here as well
+    // TODO figure out how to do room and room maps better
+    //  -maybe 2d array
+    //  -maybe separate file of strings
     protected LinkedList<Room> createRooms() {
         LinkedList<Room> roomList = new LinkedList<>();
 
@@ -149,6 +152,7 @@ public class World {
     }
 
     // All equipment in the game created and edited here
+    // Extra additions to map are quality of life improvements for the player - e.x. can select "balloon sword" by just typing "balloon" instead of full name
     protected HashMap<String,Equipment> createEquipment() {
 
         // Equipment constructor arguments: (String name, String description, String setting, int attack, int defense, int hp, String equipPlacement)
@@ -204,6 +208,9 @@ public class World {
         ring2
         off_hand
         wrist
+
+        Note - if extending equipment slots, may want to have new hashmaps to allow for "shiny" to apply to multiple
+            types of shiny items, e.x. shiny boots, shiny ring, etc.
          */
 
 

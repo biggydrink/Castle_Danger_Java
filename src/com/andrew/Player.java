@@ -5,12 +5,7 @@ import java.util.Random;
 /** Extension of Mob, used for player characters */
 public class Player extends Mob {
 
-    private Random playerRand;
-    public int playerID;
-    protected String password;
-
-    public Player(String name) {
-        /* Abstract class Mob has the following data fields:
+    /* Class Mob has the following data fields:
         String name;
         int maxHP;
         int hp;
@@ -20,6 +15,12 @@ public class Player extends Mob {
         ALREADY INITIALIZED HashMap<String,Item> mobEquipmentMap;
         String description;
          */
+
+    private Random playerRand;
+    public int playerID;
+    protected String password;
+
+    public Player(String name) {
 
         super(name,"","",100,1,1);
         playerRand = new Random();
