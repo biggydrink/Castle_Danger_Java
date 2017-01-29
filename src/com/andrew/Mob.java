@@ -88,10 +88,17 @@ public class Mob {
     public String getDefaultLegs() { return defaultLegs; }
 
     public void setMaxHP(int newMax) {maxHP = newMax; }
-    public void setHP(int newHP) {hp = newHP; }
+    public void setHP(int newHP) {
+        if (newHP > maxHP) {
+            hp = maxHP;
+        } else {
+            hp = newHP;
+        }
+    }
     public void setDefense(int newDefense) { defense = newDefense; }
     public void setAttack(int newAttack) { attack = newAttack; }
     public void setSetting(String newSetting) { setting = newSetting; }
+    public void setDescription(String newDescription) {description = newDescription; }
 
 
     /** begins fight between this mob and another mob (can be monster or player character) */

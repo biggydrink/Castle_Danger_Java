@@ -10,7 +10,7 @@ public class Database {
     private static String DB_CONNECTION_URL = "jdbc:mysql://localhost:3306/"; //TODO make this not local host
     private static String DB_NAME = "castle_danger";
     private static String USER = "root";
-    private static String PASS = "4ig00K1MS$J$!1";
+    private static String PASS = "sharks88";
 
     private static Statement statement = null;
     private static Connection conn = null;
