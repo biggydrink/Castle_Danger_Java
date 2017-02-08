@@ -34,16 +34,6 @@ public class Player extends Mob {
 
     }
 
-    public int getHP() {
-        return hp;
-    }
-    public int getMaxHP() {
-        return maxHP;
-    }
-    public String getName() { return name; }
-    public String getDescription() { return description; }
-    public int getAttack() { return attack; }
-    public int getDefense() { return defense; }
     protected String getPassword() { return password; }
     protected int getID() { return playerID; }
 
