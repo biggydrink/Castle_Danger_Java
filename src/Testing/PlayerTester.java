@@ -18,7 +18,7 @@ public class PlayerTester {
         String testPlayerSetting = testPlayerName + " is standing here.";
         Player testPlayer = new Player(testPlayerName);
 
-        // Testing getters
+        // Tests
         Assert.assertEquals(testPlayer.getName(),testPlayerName);
         Assert.assertTrue((testPlayer.getMaxHP() >= 150 && testPlayer.getMaxHP() <= 160)); // max hp set to 150-160
         Assert.assertEquals(testPlayer.getMaxHP(),testPlayer.getHP()); // hp should be same as maxhp
@@ -26,6 +26,13 @@ public class PlayerTester {
         Assert.assertTrue(testPlayer.getDefense() >= 15 && testPlayer.getDefense() <= 17); // defense between 15 and 7
         Assert.assertEquals(testPlayer.getDescription(),testPlayerDescription);
         Assert.assertEquals(testPlayer.getSetting(),testPlayerSetting);
+    }
+
+    @Test
+    public void testSetters() {
+
+        // Currently only setters are protected,
+
     }
 
 }

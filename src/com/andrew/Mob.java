@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 /** In-game monsters, aka mobs. Some details (having non-players able to move and hold inventory, etc) not yet
  * implemented but included for future development.
- *
+ * This is also a superclass of Player characters
  */
 public class Mob {
 
@@ -405,6 +405,7 @@ public class Mob {
     /** Sets current room to any room object */
     public void setCurrentRoom(Room newRoom) {
         if (currentRoom != null && !currentRoom.mobList.isEmpty()) {
+            // removes mob from your current room before adding to a new one
             currentRoom.removeMob(this);
         }
 

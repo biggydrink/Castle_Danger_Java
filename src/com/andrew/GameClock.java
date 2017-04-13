@@ -31,8 +31,9 @@ public class GameClock extends TimerTask {
             }
         }
 
-        // Populate game again every x number of ticks
-        if (counter % 10 == 0) {
+        // Populate game again every tickCounter number of ticks
+        int tickCounter = 10;
+        if (counter % tickCounter == 0) {
 
             for (Room room : GameInterface.roomList) {
                 // Create default items and mobs if they're no longer in the room

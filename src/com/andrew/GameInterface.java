@@ -10,6 +10,8 @@ public class GameInterface {
 
     public static Scanner userScanner = new Scanner(System.in);
 
+    public static Database db = new Database();
+
     protected static World theWorld = new World(); // Use this to make game object info easily accessible
 
     protected static LinkedList<Player> playerList = new LinkedList<>();
@@ -34,7 +36,6 @@ public class GameInterface {
     public static final String ANSI_WHITE = "\u001B[37m";
 
 
-    public static Database db = new Database();
 
     // Timer in this program doesn't control the game, but helps keep it more "alive" - i.e. if you've killed off
     // all the monsters, they'll be repopulated every so often, you slowly restore health between battles, etc
@@ -124,8 +125,9 @@ public class GameInterface {
 
         System.out.println("Looks like you're new - please create a password:");
         while (password.length() < 6) {
-            // possibleTODO add regular expression check for password
+            // TODO add criteria for passwords (regular expressions or otherwise)
             System.out.println("Please enter at least 6 characters for your pw");
+            // TODO add hashing for passwords
             password = userScanner.nextLine();
         }
         player = new Player(name);
@@ -139,7 +141,7 @@ public class GameInterface {
         db.addNewPlayer(player); // add to players table
         player.setPlayerID(db.getID(player.name)); // query db to get ID, used for loading character
         db.addNewPlayerEQ(player); // add new equipment to eq table
-        db.savePlayerInv(player); // new character has no inventory, but this enteres the player id in the db
+        db.savePlayerInv(player); // new character has no inventory, but this enters the player id in the db
 
         // Welcome & help
         System.out.println("Welcome to Castle Danger, " + name + " !");
@@ -186,14 +188,14 @@ public class GameInterface {
         System.out.println(ANSI_BLACK + "Command" + padSpace(30 - "Command".length()) + "Use" + ANSI_RESET);
         System.out.println("l / look" + padSpace(30 - "l / look".length()) + "Look at your surroundings");
         System.out.println("l / look [something]" + padSpace(30 - "l / look [something]".length()) + "Look at something or someone");
-        System.out.println("n / s / e / w" + padSpace(30-"n / s / e / w".length()) + "Go north, south, east, or west");
+        System.out.println("n / s / e / w" + padSpace(30-"n / s / e / w".length()) + "Go north / go south / go east / go west");
         System.out.println("i / inv" + padSpace(30-"i / inv".length()) + "See what you have in your inventory");
         System.out.println("eq" + padSpace(30-"eq".length()) + "See what you have equipped");
         System.out.println("eq / uneq [item]" + padSpace(30-"eq / uneq [item]".length()) + "Equip or unequip an item");
         System.out.println("st" + padSpace(30-"st".length()) + "Check your stats");
         System.out.println("g [item]" + padSpace(30-"g [item]".length()) + "Get an item off the floor");
-        System.out.println("h monsters" + padSpace(30-"h monsters".length()) + "See the technical names of the monsters you can attack");
-        System.out.println("h items" + padSpace(30-"h items".length()) + "See the technical names of the items you can pick up");
+        System.out.println("h monsters" + padSpace(30-"h monsters".length()) + "See the names of the monsters you can attack");
+        System.out.println("h items" + padSpace(30-"h items".length()) + "See the names of the items you can pick up");
         System.out.println("h" + padSpace(30-"h".length()) + "Read this help file again");
         System.out.println("quit" + padSpace(30-"quit".length()) + "Quit the game and save your character");
         System.out.println("Enjoy!");
@@ -485,7 +487,7 @@ public class GameInterface {
     static public void setting() {
         System.out.println(ANSI_BLACK + player.currentRoom.description + ANSI_RESET);
 
-        if (!player.currentRoom.mobList.isEmpty()) {
+        if (player.currentRoom.mobList.size() > 1) { // current player is always in room, so list is always at least 1
             System.out.print(ANSI_RED + player.currentRoom.showMobs(player) + ANSI_RESET);
         }
         if (!player.currentRoom.itemList.isEmpty()) {
@@ -553,6 +555,9 @@ public class GameInterface {
     /** Displays the names of monsters/players in the current room so that the player can easily target them */
     static private void helpMonsters() {
         System.out.println("The names of the monsters you can attack in this room are: ");
+        if (player.currentRoom.roomMobMap.size() == 1) {
+            System.out.println("There are no monsters in this room.");
+        }
         for (String monsterName : player.currentRoom.roomMobMap.keySet()) {
             if (!monsterName.equalsIgnoreCase(player.getName())) {
                 System.out.println(ANSI_RED + monsterName + ANSI_RESET);
