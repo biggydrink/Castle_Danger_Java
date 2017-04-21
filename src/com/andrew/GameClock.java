@@ -14,7 +14,7 @@ public class GameClock extends TimerTask {
 
     private long counter;
     private double playerGainHpPercent;
-    private int tickCounter;
+    private int tickLimit;
     protected long tickLength;
 
     public GameClock() {
@@ -22,14 +22,12 @@ public class GameClock extends TimerTask {
         counter = 0;
         playerGainHpPercent = 0.07;
         tickLength = 10000; //milliseconds, 1000 = 1 second
-        tickCounter = 2;
+        tickLimit = 2;
     }
 
     @Override
     public void run() {
-        // This method is called every clock tick
-
-
+        // This method is called every clock tick (see tickLength for timing)
         ++ counter;
 
         for (Player player : GameInterface.playerList) {
@@ -37,7 +35,8 @@ public class GameClock extends TimerTask {
         }
 
         // Populate game again every tickCounter number of ticks
-        if (counter % tickCounter == 0) {
+        if (counter % tickLimit == 0) {
+            counter = 0;
 
             for (Room room : GameInterface.roomList) {
                 // Create default items and mobs if they're no longer in the room
@@ -47,13 +46,11 @@ public class GameClock extends TimerTask {
                     }
                 }
                 for (String defaultItem : room.defaultItemTypes) {
-                    if (!room.itemIsInRoom(defaultItem)) { // item is no logner in room's roomItemList
+                    if (!room.itemIsInRoom(defaultItem)) { // item is no longer in room's roomItemList
                         room.createItem(defaultItem);
                     }
                 }
             }
-
-            // Future plans to also pre-emptively save all players
         }
 
 

@@ -5,6 +5,17 @@ import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.Timer;
 
+// Additions
+// Allow 'g all' command
+// Allow look command to be used in directions
+    // Would have to add text to the Room object
+// save all players every tickLimit
+// Reformat World's room array
+// Add some enums?
+    // Equipment slots
+        // Under Equipment class AND maybe Mob class?
+    // NSEW in rooms
+
 
 public class GameInterface {
 
@@ -35,7 +46,20 @@ public class GameInterface {
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_WHITE = "\u001B[37m";
 
-
+    protected static HashMap<String,String> commandShortcuts = new HashMap<>();
+    // Command Shortcuts
+    // l = look
+    // n = north
+    // s = south
+    // e = east
+    // w = west
+    // g = get
+    // eq = equip
+    // uneq = unequip
+    // h = help
+    // i = inventory
+    // inv = inventory
+    // stat = status
 
     // Timer in this program doesn't control the game, but helps keep it more "alive" - i.e. if you've killed off
     // all the monsters, they'll be repopulated every so often, you slowly restore health between battles, etc
@@ -58,6 +82,9 @@ public class GameInterface {
         timer = new Timer();
         clockTick = new GameClock();
         timer.scheduleAtFixedRate(clockTick,0,clockTick.tickLength); // Sets timer's schedule to clockInterval's milliseconds
+
+        // Command input setup
+        populateShortcuts();
 
         while (!quit) {
             // Logging in
@@ -179,9 +206,6 @@ public class GameInterface {
         return loadedPlayer;
     }
 
-
-
-
     /** Displays game commands */
     static public void help() {
         System.out.println("Here are some basic commands to use in the game:");
@@ -231,6 +255,10 @@ public class GameInterface {
         String[] cmdWithArgs = parseInput();
         cmd = cmdWithArgs[0].toLowerCase();
         args = cmdWithArgs[1].toLowerCase();
+
+        if (commandShortcuts.containsKey(cmd)) {
+            cmd = commandShortcuts.get(cmd);
+        }
 
         if (cmd.trim().equals("")) {
             System.out.println("");
@@ -322,6 +350,22 @@ public class GameInterface {
         System.exit(0);
     }
 
+    /** Populate dictionary with shorthand commands, keyed to actual command methods */
+    static private void populateShortcuts() {
+        commandShortcuts.put("l","look");
+        commandShortcuts.put("n","north");
+        commandShortcuts.put("s","south");
+        commandShortcuts.put("e","east");
+        commandShortcuts.put("w","west");
+        commandShortcuts.put("g","get");
+        commandShortcuts.put("eq","equipment");
+        commandShortcuts.put("equip","equipment");
+        commandShortcuts.put("uneq","unequip");
+        commandShortcuts.put("h","help");
+        commandShortcuts.put("i","inventory");
+        commandShortcuts.put("inv","inventory");
+        commandShortcuts.put("stat","status");
+    }
 
     /** Holds commandMap, which takes commands from inputCommand() and returns appropriate methods
      *  Implementation inspired by top comment on the below stackoverflow question:
@@ -336,7 +380,6 @@ public class GameInterface {
 
         public UserInterface() {
             createCommandMap();
-
         }
 
         public void createCommandMap() {
@@ -351,17 +394,7 @@ public class GameInterface {
                 }
             });
 
-            commandMap.put("l", new Command() {
-                public void runCommand(String args) {
-                    if (args.equals("")) {
-                        setting();
-                    } else {
-                        look((String)args);
-                    }
-                }
-            });
-
-            commandMap.put("h",new Command() {
+            commandMap.put("help",new Command() {
                 public void runCommand(String args) {
                     if (args.equals("items")) {
                         helpItems();
@@ -370,7 +403,6 @@ public class GameInterface {
                     } else {
                         help();
                     }
-
                 }
             });
 
@@ -390,18 +422,13 @@ public class GameInterface {
                 }
             });
 
-            commandMap.put("i", new Command() {
-                public void runCommand(String args) {
-                    viewInventory(player);
-                }
-            });
-            commandMap.put("inv", new Command() {
+            commandMap.put("inventory", new Command() {
                 public void runCommand(String args) {
                     viewInventory(player);
                 }
             });
 
-            commandMap.put("eq", new Command() {
+            commandMap.put("equipment", new Command() {
                 public void runCommand(String args) {
                     if (args.equals("")) {
                         System.out.println("You are wearing: ");
@@ -413,11 +440,10 @@ public class GameInterface {
                             System.out.println("Equip what?");
                         }
                     }
-
                 }
             });
 
-            commandMap.put("uneq", new Command() {
+            commandMap.put("unequip", new Command() {
                 public void runCommand(String args) {
                     if (player.unequip(args)) {
                         System.out.println("You unequip your " + args);
@@ -427,9 +453,8 @@ public class GameInterface {
                 }
             });
 
-            commandMap.put("g", new Command() {
+            commandMap.put("get", new Command() {
                 public void runCommand(String args) {
-
                     String notHere = "";
                     if (player.gainItemInRoom(args)) {
                         System.out.println("You get a " + args);
@@ -438,14 +463,12 @@ public class GameInterface {
                             notHere = " That isn't here";
                         }
                         System.out.println("Get what?" + notHere);
-
                     }
                 }
             });
 
             commandMap.put("attack", new Command() {
                 public void runCommand(String args) {
-
                     if (args.equals("")) {
                         if (player.currentRoom.roomMobMap.size() == 1) {
                             System.out.println("You're the only one here!");
@@ -462,25 +485,23 @@ public class GameInterface {
                 }
             });
 
-            commandMap.put("st", new Command() {
+            commandMap.put("status", new Command() {
                 public void runCommand(String args) { stats(); }
             });
 
-            commandMap.put("n", new Command() {
+            commandMap.put("north", new Command() {
                 public void runCommand(String args) { player.goNorth(); setting(); }
             });
-            commandMap.put("s", new Command() {
+            commandMap.put("south", new Command() {
                 public void runCommand(String args) { player.goSouth(); setting(); }
             });
-            commandMap.put("e", new Command() {
+            commandMap.put("east", new Command() {
                 public void runCommand(String args) { player.goEast(); setting(); }
             });
-            commandMap.put("w", new Command() {
+            commandMap.put("west", new Command() {
                 public void runCommand(String args) { player.goWest(); setting(); }
             });
-
         }
-
     }
 
     /** Display currentRoom description */

@@ -25,8 +25,8 @@ public class Mob {
     private String[] equipAreas = {"Weapon","Body","Legs"};
 
 
-    /** Construct that includes attack and defense, used for npcs/monsters
-     *  Equips no weapon, body armor, or leg armor */
+    /** Construct that includes attack and defense
+     *  Equips no weapon or armor */
     public Mob(String name, String description, String setting, int maxHP, int attack, int defense) {
         this.name = name;
         this.description = description;
@@ -49,8 +49,7 @@ public class Mob {
 
     }
 
-    /** Construct that includes attack and defense, used for npcs/monsters
-     *  Includes arguments for default weapon and armor*/
+    /** Construct that includes attack and defense, AND includes arguments for default weapon and armor*/
     public Mob(String name, String description, String setting, int maxHP, int attack, int defense, String defaultWeapon, String defaultBody, String defaultLegs) {
         this.name = name;
         this.description = description;

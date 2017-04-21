@@ -2,7 +2,7 @@ package com.andrew;
 
 /** Basic class for all items in game.
  * Currently Equipment class extends this, and all items in the game are Equipment, but this is still included
- * to help with future development (could have potions, scrolls, rocks, whatever
+ * to help with future development (could have potions, scrolls, rocks, whatever)
  */
 
 public class Item {
