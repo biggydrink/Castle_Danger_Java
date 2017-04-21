@@ -41,7 +41,7 @@ public class GameInterface {
     // all the monsters, they'll be repopulated every so often, you slowly restore health between battles, etc
     protected static Timer timer;
     protected static GameClock clockTick;
-    protected static long clockInterval = 10000; // milliseconds, 1000 = 1 second
+    //protected static long clockInterval = 10000; // milliseconds, 1000 = 1 second
 
     public static void main(String[] args) {
 
@@ -57,7 +57,7 @@ public class GameInterface {
         // Set up game timer
         timer = new Timer();
         clockTick = new GameClock();
-        timer.scheduleAtFixedRate(clockTick,0,clockInterval); // Sets timer's schedule to clockInterval's milliseconds
+        timer.scheduleAtFixedRate(clockTick,0,clockTick.tickLength); // Sets timer's schedule to clockInterval's milliseconds
 
         while (!quit) {
             // Logging in
