@@ -210,6 +210,7 @@ public class Mob {
 
     /** Picks up an item in the room the monster is in */
     public boolean gainItemInRoom(String itemName) {
+        itemName = itemName.toLowerCase();
         if (currentRoom.itemIsInRoom(itemName)) {
             if (GameInterface.equipmentMap.containsKey(itemName)) { // is a weapon or item
                 Equipment mapEQ = (Equipment)currentRoom.roomItemMap.get(itemName);

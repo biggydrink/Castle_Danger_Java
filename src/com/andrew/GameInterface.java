@@ -15,6 +15,8 @@ import java.util.Timer;
     // Equipment slots
         // Under Equipment class AND maybe Mob class?
     // NSEW in rooms
+// When you try move in a direction you can't go, the current room setting is still displayed, which makes you think maybe you DID move
+
 
 
 public class GameInterface {
@@ -456,7 +458,15 @@ public class GameInterface {
             commandMap.put("get", new Command() {
                 public void runCommand(String args) {
                     String notHere = "";
-                    if (player.gainItemInRoom(args)) {
+                    if (args.equalsIgnoreCase("all")) {
+                        int limit = player.currentRoom.itemList.size();
+                        for (int i = 0; i < limit; ++i) {
+                            Item item = player.currentRoom.itemList.get(0);
+                            if (player.gainItemInRoom(item.getName())) {
+                                System.out.println("You get a " + item.getName());
+                            }
+                        }
+                    } else if (player.gainItemInRoom(args)) {
                         System.out.println("You get a " + args);
                     } else {
                         if (!args.equals("")) {
