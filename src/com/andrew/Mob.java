@@ -381,24 +381,36 @@ public class Mob {
 
 
     /** Movement commands, to try going to the current room's north/south/east/west location */
-    public void goNorth() {
+    public boolean goNorth() {
         if (currentRoom.north != null) {
             setCurrentRoom(currentRoom.north);
+            return true;
+        } else {
+            return false;
         }
     }
-    public void goSouth() {
+    public boolean goSouth() {
         if (currentRoom.north != null) {
             setCurrentRoom(currentRoom.south);
+            return true;
+        } else {
+            return false;
         }
     }
-    public void goEast() {
+    public boolean goEast() {
         if (currentRoom.north != null) {
             setCurrentRoom(currentRoom.east);
+            return true;
+        } else {
+            return false;
         }
     }
-    public void goWest() {
+    public boolean goWest() {
         if (currentRoom.north != null) {
             setCurrentRoom(currentRoom.west);
+            return true;
+        } else {
+            return false;
         }
     }
 

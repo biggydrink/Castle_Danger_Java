@@ -51,35 +51,39 @@ public class Player extends Mob {
 
     /** Movement commands for Player include warnings if unable to proceed */
     @Override
-    public void goNorth() {
+    public boolean goNorth() {
         if (currentRoom.north != null) {
             setCurrentRoom(currentRoom.north);
+            return true;
         } else {
-            System.out.println("You can't go that way!");
+            return false;
         }
     }
     @Override
-    public void goSouth() {
+    public boolean goSouth() {
         if (currentRoom.south != null) {
             setCurrentRoom(currentRoom.south);
+            return true;
         } else {
-            System.out.println("You can't go that way!");
+            return false;
         }
     }
     @Override
-    public void goEast() {
+    public boolean goEast() {
         if (currentRoom.east != null) {
             setCurrentRoom(currentRoom.east);
+            return true;
         } else {
-            System.out.println("You can't go that way!");
+            return false;
         }
     }
     @Override
-    public void goWest() {
+    public boolean goWest() {
         if (currentRoom.west != null) {
             setCurrentRoom(currentRoom.west);
+            return true;
         } else {
-            System.out.println("You can't go that way!");
+            return false;
         }
     }
 

@@ -49,19 +49,6 @@ public class GameInterface {
     public static final String ANSI_WHITE = "\u001B[37m";
 
     protected static HashMap<String,String> commandShortcuts = new HashMap<>();
-    // Command Shortcuts
-    // l = look
-    // n = north
-    // s = south
-    // e = east
-    // w = west
-    // g = get
-    // eq = equip
-    // uneq = unequip
-    // h = help
-    // i = inventory
-    // inv = inventory
-    // stat = status
 
     // Timer in this program doesn't control the game, but helps keep it more "alive" - i.e. if you've killed off
     // all the monsters, they'll be repopulated every so often, you slowly restore health between battles, etc
@@ -500,16 +487,40 @@ public class GameInterface {
             });
 
             commandMap.put("north", new Command() {
-                public void runCommand(String args) { player.goNorth(); setting(); }
+                public void runCommand(String args) {
+                    if (player.goNorth()) {
+                        setting();
+                    } else {
+                        System.out.println("You can't go that way.");
+                    }
+                }
             });
             commandMap.put("south", new Command() {
-                public void runCommand(String args) { player.goSouth(); setting(); }
+                public void runCommand(String args) {
+                    if (player.goSouth()) {
+                        setting();
+                    } else {
+                        System.out.println("You can't go that way.");
+                    }
+                }
             });
             commandMap.put("east", new Command() {
-                public void runCommand(String args) { player.goEast(); setting(); }
+                public void runCommand(String args) {
+                    if (player.goEast()) {
+                        setting();
+                    } else {
+                        System.out.println("You can't go that way.");
+                    }
+                }
             });
             commandMap.put("west", new Command() {
-                public void runCommand(String args) { player.goWest(); setting(); }
+                public void runCommand(String args) {
+                    if (player.goWest()) {
+                        setting();
+                    } else {
+                        System.out.println("You can't go that way.");
+                    }
+                }
             });
         }
     }
