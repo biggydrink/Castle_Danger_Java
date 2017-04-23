@@ -161,7 +161,7 @@ public class Database {
         int defense = player.getDefense();
         String description = player.getDescription();
         String setting = player.getSetting();
-        int room = GameInterface.roomList.indexOf(player.currentRoom);
+        int room = Game.roomList.indexOf(player.currentRoom);
 
         String updateQuery = "INSERT INTO " + PLAYER_TABLE_NAME + "(name,password,maxhp,hp,attack,defense,description,setting,currentroom)" +
                 " VALUES ('" +
@@ -316,7 +316,7 @@ public class Database {
         int defense = player.getDefense();// - GameInterface.equipmentMap.get(eqWeapon).getDefense() - GameInterface.equipmentMap.get(eqBody).getDefense() - GameInterface.equipmentMap.get(eqLegs).getDefense();
         String description = player.getDescription();
         String setting = player.getSetting();
-        int room = GameInterface.roomList.indexOf(player.currentRoom);
+        int room = Game.roomList.indexOf(player.currentRoom);
 
         // Save
         savePlayerEquipment(player);

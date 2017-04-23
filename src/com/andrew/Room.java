@@ -82,7 +82,7 @@ public class Room {
         if (name.equals("")) {
             return;
         }
-        Equipment mapItem = GameInterface.equipmentMap.get(name);
+        Equipment mapItem = Game.equipmentMap.get(name);
         Equipment newItem = new Equipment(mapItem.getName(),mapItem.getDescription(),mapItem.getSetting(),mapItem.getAttack(),mapItem.getDefense(), mapItem.getHP(),mapItem.getEquipPlacement());
         addItem(newItem);
     }
@@ -93,7 +93,7 @@ public class Room {
         if (name.equals("")) {
             return;
         }
-        Mob mapMob = GameInterface.mobMap.get(name);
+        Mob mapMob = Game.mobMap.get(name);
         Mob newMob = new Mob(mapMob.getName(),mapMob.getDescription(),mapMob.getSetting(),mapMob.getMaxHP(),mapMob.getAttack(),mapMob.getDefense(),mapMob.getDefaultWeapon(),mapMob.getDefaultBody(),mapMob.getDefaultLegs());
         newMob.setCurrentRoom(this);
     }

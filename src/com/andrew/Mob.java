@@ -74,8 +74,8 @@ public class Mob {
         mobEquipmentList = new LinkedList<Equipment>();
 
         if (GameInterface.equipmentMap.containsKey(defaultWeapon)) { equip(GameInterface.equipmentMap.get(defaultWeapon)); }
-        if (GameInterface.equipmentMap.containsKey(defaultBody)) { equip(GameInterface.equipmentMap.get(defaultBody)); }
-        if (GameInterface.equipmentMap.containsKey(defaultLegs)) { equip(GameInterface.equipmentMap.get(defaultLegs)); }
+        if (GameInterface.equipmentMap.containsKey(defaultBody)) { equip(Game.equipmentMap.get(defaultBody)); }
+        if (GameInterface.equipmentMap.containsKey(defaultLegs)) { equip(Game.equipmentMap.get(defaultLegs)); }
 
     }
 
@@ -219,7 +219,7 @@ public class Mob {
     public boolean gainItemInRoom(String itemName) {
         itemName = itemName.toLowerCase();
         if (currentRoom.itemIsInRoom(itemName)) {
-            if (GameInterface.equipmentMap.containsKey(itemName)) { // is a weapon or item
+            if (Game.equipmentMap.containsKey(itemName)) { // is a weapon or item
                 Equipment mapEQ = (Equipment)currentRoom.roomItemMap.get(itemName);
                 Equipment newEQ = new Equipment(mapEQ.getName(),mapEQ.getDescription(),mapEQ.getSetting(),mapEQ.getAttack(),mapEQ.getDefense(),mapEQ.getHP(),mapEQ.getEquipPlacement());
                 mobInventoryMap.put(newEQ.getName().toLowerCase(),newEQ);
@@ -233,8 +233,8 @@ public class Mob {
     }
 
     public boolean gainItem(String itemName) {
-        if (GameInterface.equipmentMap.containsKey(itemName)) { // is a weapon or item
-            Equipment mapWeap = GameInterface.equipmentMap.get(itemName);
+        if (Game.equipmentMap.containsKey(itemName)) { // is a weapon or item
+            Equipment mapWeap = Game.equipmentMap.get(itemName);
             Equipment newWeap = new Equipment(mapWeap.getName(),mapWeap.getDescription(),mapWeap.getSetting(),mapWeap.getAttack(),mapWeap.getDefense(),mapWeap.getHP(),mapWeap.getEquipPlacement());
             mobInventoryMap.put(newWeap.getName().toLowerCase(),newWeap);
             mobInventoryList.add(newWeap);
@@ -259,7 +259,7 @@ public class Mob {
     /** Equip selected item. Must be in inventory */
     public boolean equip(String itemName) {
 
-        if (isInInventory(itemName) && GameInterface.equipmentMap.get(itemName) != null) { // It's a piece of armor or a weapon
+        if (isInInventory(itemName) && Game.equipmentMap.get(itemName) != null) { // It's a piece of armor or a weapon
             Equipment toEquip = (Equipment) mobInventoryMap.get(itemName);
 
             // Remove if already equipped

@@ -30,7 +30,7 @@ public class GameClock extends TimerTask {
         // This method is called every clock tick (see tickLength for timing)
         ++ counter;
 
-        for (Player player : GameInterface.playerList) {
+        for (Player player : Game.playerList) {
             player.setHP(player.getHP() + (int)(player.getHP() * playerGainHpPercent));
         }
 
@@ -38,7 +38,7 @@ public class GameClock extends TimerTask {
         if (counter % tickLimit == 0) {
             counter = 0;
 
-            for (Room room : GameInterface.roomList) {
+            for (Room room : Game.roomList) {
                 // Create default items and mobs if they're no longer in the room
                 for (String defaultMob : room.defaultMobTypes) {
                     if (!room.mobIsInRoom(defaultMob)) { // mob is no longer in room's roomMobList
