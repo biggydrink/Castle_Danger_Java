@@ -403,10 +403,22 @@ public class GameInterface {
 
             commandMap.put("drop",new Command() {
                 public void runCommand(String args) {
-                    if (player.drop(args)) {
+                    if (args.equals("")) {
+                        System.out.println("Drop what?");
+                    } else if (args.equalsIgnoreCase("all")) {
+
+                        int limit = player.mobInventoryList.size();
+                        for (int i = 0; i < limit; ++i) {
+                            Item itemToDrop = player.mobInventoryList.get(0);
+                            if (player.drop(itemToDrop.getName())) {
+                                System.out.println("You drop your " + itemToDrop.getName());
+                            }
+                        }
+
+                    } else if (player.drop(args)) {
                         System.out.println("You drop your " + args);
                     } else {
-                        System.out.println("Drop what?");
+                        System.out.println("You don't have that");
                     }
                 }
             });

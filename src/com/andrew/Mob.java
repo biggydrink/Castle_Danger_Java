@@ -1,6 +1,7 @@
 package com.andrew;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 
 /** In-game monsters, aka mobs. Some details (having non-players able to move and hold inventory, etc) not yet
  * implemented but included for future development.
@@ -21,7 +22,9 @@ public class Mob {
     protected boolean canMove;
     protected Room currentRoom;
     protected HashMap<String,Item> mobInventoryMap;
+    protected LinkedList<Item> mobInventoryList;
     protected HashMap<String,Equipment> mobEquipmentMap;
+    protected LinkedList<Equipment> mobEquipmentList;
     private String[] equipAreas = {"Weapon","Body","Legs"};
 
 
@@ -41,7 +44,9 @@ public class Mob {
 
         canMove = true;
         mobInventoryMap = new HashMap<String,Item>();
+        mobInventoryList = new LinkedList<Item>();
         mobEquipmentMap = new HashMap<String,Equipment>();
+        mobEquipmentList = new LinkedList<Equipment>();
 
         mobEquipmentMap.put("Body",null);
         mobEquipmentMap.put("Legs",null);
@@ -64,7 +69,9 @@ public class Mob {
 
         canMove = true;
         mobInventoryMap = new HashMap<String,Item>();
+        mobInventoryList = new LinkedList<Item>();
         mobEquipmentMap = new HashMap<String,Equipment>();
+        mobEquipmentList = new LinkedList<Equipment>();
 
         if (GameInterface.equipmentMap.containsKey(defaultWeapon)) { equip(GameInterface.equipmentMap.get(defaultWeapon)); }
         if (GameInterface.equipmentMap.containsKey(defaultBody)) { equip(GameInterface.equipmentMap.get(defaultBody)); }
@@ -216,6 +223,7 @@ public class Mob {
                 Equipment mapEQ = (Equipment)currentRoom.roomItemMap.get(itemName);
                 Equipment newEQ = new Equipment(mapEQ.getName(),mapEQ.getDescription(),mapEQ.getSetting(),mapEQ.getAttack(),mapEQ.getDefense(),mapEQ.getHP(),mapEQ.getEquipPlacement());
                 mobInventoryMap.put(newEQ.getName().toLowerCase(),newEQ);
+                mobInventoryList.add(newEQ);
                 currentRoom.removeItem(mapEQ);
                 return true;
             }
@@ -229,6 +237,7 @@ public class Mob {
             Equipment mapWeap = GameInterface.equipmentMap.get(itemName);
             Equipment newWeap = new Equipment(mapWeap.getName(),mapWeap.getDescription(),mapWeap.getSetting(),mapWeap.getAttack(),mapWeap.getDefense(),mapWeap.getHP(),mapWeap.getEquipPlacement());
             mobInventoryMap.put(newWeap.getName().toLowerCase(),newWeap);
+            mobInventoryList.add(newWeap);
             return true;
         }
 
@@ -239,6 +248,7 @@ public class Mob {
      * Can only be called manually in code */
     public void equip(Equipment item) {
         mobEquipmentMap.put(item.getEquipPlacement(),item);
+        mobEquipmentList.add(item);
         setAttack(attack += item.getAttack());
         setDefense(defense + item.getDefense());
         setMaxHP(maxHP + item.getHP());
@@ -249,23 +259,30 @@ public class Mob {
     /** Equip selected item. Must be in inventory */
     public boolean equip(String itemName) {
 
-        if (isInInventory(itemName)) {
-            if (GameInterface.equipmentMap.get(itemName) != null) { // It's a piece of armor or a weapon
-                Equipment toEquip = (Equipment) mobInventoryMap.get(itemName);
-                if (alreadyEquipped(toEquip.getEquipPlacement())) {
-                    unequip(mobEquipmentMap.get(toEquip.getEquipPlacement()).getName());
-                }
-                mobEquipmentMap.put(toEquip.getEquipPlacement(),toEquip);
-                setAttack(attack += toEquip.getAttack());
-                setDefense(defense + toEquip.getDefense());
-                setMaxHP(maxHP + toEquip.getHP());
-                setHP(hp + toEquip.getHP());
-            }
-            mobInventoryMap.remove(itemName);
-            return true;
-        }
+        if (isInInventory(itemName) && GameInterface.equipmentMap.get(itemName) != null) { // It's a piece of armor or a weapon
+            Equipment toEquip = (Equipment) mobInventoryMap.get(itemName);
 
-        return false;
+            // Remove if already equipped
+            if (alreadyEquipped(toEquip.getEquipPlacement())) {
+                unequip(mobEquipmentMap.get(toEquip.getEquipPlacement()).getName());
+            }
+
+            // Equip item
+            mobEquipmentMap.put(toEquip.getEquipPlacement(),toEquip);
+            mobEquipmentList.add(toEquip);
+            setAttack(attack += toEquip.getAttack());
+            setDefense(defense + toEquip.getDefense());
+            setMaxHP(maxHP + toEquip.getHP());
+            setHP(hp + toEquip.getHP());
+
+            // Remove from inventory
+            mobInventoryMap.remove(itemName);
+            mobInventoryList.remove(toEquip);
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /** Checks if something is already equipped in the selected slot */
@@ -287,11 +304,13 @@ public class Mob {
             toUnEquip = mobEquipmentMap.get(getEquippedItemLocation(itemName));
 
             mobEquipmentMap.put(toUnEquip.getEquipPlacement(),null);
+            mobEquipmentList.remove(toUnEquip);
             setAttack(attack - toUnEquip.getAttack());
             setDefense(defense - toUnEquip.getDefense());
             setMaxHP(maxHP - toUnEquip.getHP());
             setHP(hp - toUnEquip.getHP());
             mobInventoryMap.put(itemName.toLowerCase(), toUnEquip);
+            mobInventoryList.add(toUnEquip);
             return true;
         }
         return false;
@@ -304,6 +323,7 @@ public class Mob {
             Item itemToDrop = mobInventoryMap.get(itemName.toLowerCase());
             currentRoom.addItem(itemToDrop);
             mobInventoryMap.remove(itemName.toLowerCase());
+            mobInventoryList.remove(itemToDrop);
             return true;
         }
 
