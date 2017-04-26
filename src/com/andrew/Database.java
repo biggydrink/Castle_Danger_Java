@@ -193,13 +193,16 @@ public class Database {
 
 
         if (player.mobEquipmentMap.get("Weapon") != null) {
-            eqWeapon = player.mobEquipmentMap.get("Weapon").getName();
+//            eqWeapon = player.mobEquipmentMap.get("Weapon").getName();
+            eqWeapon = player.mobEquipmentMap.get("Weapon").getVariableName();
         }
         if (player.mobEquipmentMap.get("Body") != null) {
-            eqBody = player.mobEquipmentMap.get("Body").getName();
+//            eqBody = player.mobEquipmentMap.get("Body").getName();
+            eqBody = player.mobEquipmentMap.get("Body").getVariableName();
         }
         if (player.mobEquipmentMap.get("Legs") != null) {
-            eqLegs = player.mobEquipmentMap.get("Legs").getName();
+//            eqLegs = player.mobEquipmentMap.get("Legs").getName();
+            eqLegs = player.mobEquipmentMap.get("Legs").getVariableName();
         }
 
         String addPlayerEQQuery = "INSERT INTO " + EQUIPPED_TABLE_NAME + "(playerid, eqWeapon, eqBody, eqLegs)" +
@@ -244,7 +247,7 @@ public class Database {
                 String eqPlacement = "";
 
                 try {
-                    Equipment invItem = (Equipment)player.mobInventoryMap.get(itemName);
+                    Eqpmt invItem = player.mobInventoryMap.get(itemName);
                     eqPlacement = invItem.getEquipPlacement();
                 } catch (Exception e) {
                     System.out.println("Problem casting inventory as Equipment:");
@@ -349,13 +352,16 @@ public class Database {
 
 
         if (player.mobEquipmentMap.get("Weapon") != null) {
-            eqWeapon = player.mobEquipmentMap.get("Weapon").getName();
+//            eqWeapon = player.mobEquipmentMap.get("Weapon").getName();
+            eqWeapon = player.mobEquipmentMap.get("Weapon").getVariableName();
         }
         if (player.mobEquipmentMap.get("Body") != null) {
-            eqBody = player.mobEquipmentMap.get("Body").getName();
+//            eqBody = player.mobEquipmentMap.get("Body").getName();
+            eqBody = player.mobEquipmentMap.get("Body").getVariableName();
         }
         if (player.mobEquipmentMap.get("Legs") != null) {
-            eqLegs = player.mobEquipmentMap.get("Legs").getName();
+//            eqBody = player.mobEquipmentMap.get("Body").getName();
+            eqBody = player.mobEquipmentMap.get("Body").getVariableName();
         }
 
         String addPlayerEQQuery = "UPDATE " + EQUIPPED_TABLE_NAME +

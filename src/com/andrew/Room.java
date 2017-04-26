@@ -18,22 +18,23 @@ public class Room {
     LinkedList<String> defaultMobTypes;
     LinkedList<Mob> mobList;
     HashMap<String,Mob> roomMobMap;
-    LinkedList<String> defaultItemTypes;
-    LinkedList<Item> itemList;
-    HashMap<String,Item> roomItemMap;
+    LinkedList<Eqpmt> defaultItemTypes;
+    LinkedList<Eqpmt> itemList;
+    HashMap<String,Eqpmt> roomItemMap;
 
     /** Room constructor with default mob/item types */
-    public Room(String name, String description, String defaultMob, String defaultItem) {
+    public Room(String name, String description, String defaultMob, Eqpmt defaultItem) {
         this.name = name;
         this.description = description;
 
         mobList = new LinkedList<Mob>();
         roomMobMap = new HashMap<String,Mob>();
-        itemList = new LinkedList<Item>();
-        roomItemMap = new HashMap<String,Item>();
-        defaultItemTypes = new LinkedList<>();
+        itemList = new LinkedList<Eqpmt>();
+        roomItemMap = new HashMap<String,Eqpmt>();
+
+        defaultItemTypes = new LinkedList<Eqpmt>();
         defaultItemTypes.add(defaultItem);
-        for (String itemName : defaultItemTypes) {
+        for (Eqpmt itemName : defaultItemTypes) {
             createItem(itemName);
         }
 
@@ -44,6 +45,40 @@ public class Room {
         }
     }
 
+    /** Room constructor with default mob, no default item */
+    public Room(String name, String description, String defaultMob) {
+        this.name = name;
+        this.description = description;
+
+        mobList = new LinkedList<Mob>();
+        roomMobMap = new HashMap<String,Mob>();
+        itemList = new LinkedList<Eqpmt>();
+        roomItemMap = new HashMap<String,Eqpmt>();
+
+        defaultMobTypes = new LinkedList<>();
+        defaultMobTypes.add(defaultMob);
+        for (String mobName : defaultMobTypes) {
+            createMob(mobName);
+        }
+    }
+
+    /** Room constructor with no default item, no default mob types */
+    public Room(String name, String description, Eqpmt defaultItem) {
+        this.name = name;
+        this.description = description;
+
+        mobList = new LinkedList<Mob>();
+        roomMobMap = new HashMap<String,Mob>();
+        itemList = new LinkedList<Eqpmt>();
+        roomItemMap = new HashMap<String,Eqpmt>();
+
+        defaultItemTypes = new LinkedList<Eqpmt>();
+        defaultItemTypes.add(defaultItem);
+        for (Eqpmt itemName : defaultItemTypes) {
+            createItem(itemName);
+        }
+    }
+
     /** Room constructor with no default mob/item types */
     public Room(String name, String description) {
         this.name = name;
@@ -51,8 +86,8 @@ public class Room {
 
         mobList = new LinkedList<Mob>();
         roomMobMap = new HashMap<String,Mob>();
-        itemList = new LinkedList<Item>();
-        roomItemMap = new HashMap<String,Item>();
+        itemList = new LinkedList<Eqpmt>();
+        roomItemMap = new HashMap<String,Eqpmt>();
     }
 
     public void setNorth(Room northRoom) {
@@ -63,7 +98,7 @@ public class Room {
     public void setWest(Room westRoom) { this.west = westRoom; }
 
     /** Check if an item is in the room or not */
-    public boolean itemIsInRoom(String itemName) {
+    public boolean itemIsInRoom(Eqpmt itemName) {
         if (roomItemMap.containsKey(itemName)) {
             return true;
         }
@@ -78,13 +113,13 @@ public class Room {
     }
 
     /** Create an item, usually the room's default */
-    protected void createItem(String name) {
+    protected void createItem(Eqpmt item) {
         if (name.equals("")) {
             return;
         }
-        Equipment mapItem = GameInterface.equipmentMap.get(name);
-        Equipment newItem = new Equipment(mapItem.getName(),mapItem.getDescription(),mapItem.getSetting(),mapItem.getAttack(),mapItem.getDefense(), mapItem.getHP(),mapItem.getEquipPlacement());
-        addItem(newItem);
+//        Equipment mapItem = GameInterface.equipmentMap.get(name);
+//        Equipment newItem = new Equipment(mapItem.getName(),mapItem.getDescription(),mapItem.getSetting(),mapItem.getAttack(),mapItem.getDefense(), mapItem.getHP(),mapItem.getEquipPlacement());
+        addItem(item);
     }
 
     /** Create a mob, usually the room's default */
@@ -125,13 +160,13 @@ public class Room {
     }
 
     /** Add an item to room */
-    protected void addItem(Item item) {
+    protected void addItem(Eqpmt item) {
         itemList.add(item);
         roomItemMap.put(item.getName().toLowerCase(),item);
     }
 
     /** Remove an item from room */
-    protected void removeItem(Item item) {
+    protected void removeItem(Eqpmt item) {
         itemList.remove(item);
         roomItemMap.remove(item.getName().toLowerCase());
     }
@@ -150,7 +185,7 @@ public class Room {
     /** Return a string of all monsters/players in the room. Runs in the GameInterface.setting() method */
     protected String showItems() {
         String itemSettings = "";
-        for (Item item : itemList) {
+        for (Eqpmt item : itemList) {
             itemSettings += item.getSetting() + "\n";
         }
 

@@ -22,13 +22,12 @@ import java.util.Timer;
 public class GameInterface {
 
     public static Scanner userScanner = new Scanner(System.in);
-
     public static Database db = new Database();
 
     protected static World theWorld = new World(); // Use this to make game object info easily accessible
 
     protected static LinkedList<Player> playerList = new LinkedList<>();
-    protected static HashMap<String,Equipment> equipmentMap = theWorld.createEquipment();
+//    protected static HashMap<String,Eqpmt> equipmentMap = theWorld.createEquipment();
     protected static HashMap<String,Mob> mobMap = theWorld.createMobs();
     protected static LinkedList<Room> roomList = theWorld.createRooms();
 
@@ -151,8 +150,10 @@ public class GameInterface {
         // Initializations
         player.setCurrentRoom(roomList.get(0));
         player.setPassword(password);
-        player.equip(equipmentMap.get("polkadot shirt"));
-        player.equip(equipmentMap.get("polkadot pants"));
+//        player.equip(equipmentMap.get("polkadot shirt"));
+//        player.equip(equipmentMap.get("polkadot pants"));
+        player.equip(Eqpmt.POLKADOTSHIRT);
+        player.equip(Eqpmt.POLKADOTPANTS);
         // Update db
         db.addNewPlayer(player); // add to players table
         player.setPlayerID(db.getID(player.name)); // query db to get ID, used for loading character
@@ -179,14 +180,15 @@ public class GameInterface {
         String[] eqArray = db.loadPlayerEQ(id);
         for (int i = 0; i < eqArray.length; ++i) {
             if (!eqArray[i].equals("")) {
-                loadedPlayer.equip(equipmentMap.get(eqArray[i].toLowerCase()));
+//                loadedPlayer.equip(equipmentMap.get(eqArray[i].toLowerCase()));
+                loadedPlayer.equip(Eqpmt.valueOf(eqArray[i]));
             }
         }
 
         // Load inventory
         LinkedList<String> inventoryLoadList = db.loadPlayerInv(id);
         for (String itemName : inventoryLoadList) {
-            loadedPlayer.gainItem(itemName);
+            loadedPlayer.gainItem(Eqpmt.valueOf(itemName));
         }
 
         loadedPlayer.setCurrentRoom(roomList.get(0));
@@ -409,7 +411,7 @@ public class GameInterface {
 
                         int limit = player.mobInventoryList.size();
                         for (int i = 0; i < limit; ++i) {
-                            Item itemToDrop = player.mobInventoryList.get(0);
+                            Eqpmt itemToDrop = player.mobInventoryList.get(0);
                             if (player.drop(itemToDrop.getName())) {
                                 System.out.println("You drop your " + itemToDrop.getName());
                             }
@@ -460,12 +462,12 @@ public class GameInterface {
                     if (args.equalsIgnoreCase("all")) {
                         int limit = player.currentRoom.itemList.size();
                         for (int i = 0; i < limit; ++i) {
-                            Item item = player.currentRoom.itemList.get(0);
-                            if (player.gainItemInRoom(item.getName())) {
+                            Eqpmt item = player.currentRoom.itemList.get(0);
+                            if (player.gainItemInRoom(Eqpmt.valueOf(item.getVariableName()))) {
                                 System.out.println("You get a " + item.getName());
                             }
                         }
-                    } else if (player.gainItemInRoom(args)) {
+                    } else if (player.gainItemInRoom(Eqpmt.valueOf(args))) {
                         System.out.println("You get a " + args);
                     } else {
                         if (!args.equals("")) {
@@ -580,15 +582,15 @@ public class GameInterface {
                 System.out.println(viewingMob.getEquipmentString());
 
             } else if (player.currentRoom.roomItemMap.containsKey(name)) {
-                Item viewingItem = player.currentRoom.roomItemMap.get(name);
+                Eqpmt viewingItem = player.currentRoom.roomItemMap.get(name);
                 System.out.println(viewingItem.getDescription());
             } else if (player.isInInventory(name)) {
-                Item viewingItem = player.mobInventoryMap.get(name);
+                Eqpmt viewingItem = player.mobInventoryMap.get(name);
                 System.out.println(viewingItem.getDescription());
             } else if (player.isEquipped(name)) {
                 //Item viewingItem = player.mobEquipmentMap.get(name);
                 String eqLoc = player.getEquippedItemLocation(name);
-                Item viewingItem = player.mobEquipmentMap.get(eqLoc);
+                Eqpmt viewingItem = player.mobEquipmentMap.get(eqLoc);
                 System.out.println(viewingItem.getDescription());
             } else {
                 System.out.println("You don't see that here");

@@ -16,15 +16,15 @@ public class Mob {
     protected int hp;
     protected int attack;
     protected int defense;
-    protected String defaultWeapon;
-    protected String defaultBody;
-    protected String defaultLegs;
+    protected Eqpmt defaultWeapon;
+    protected Eqpmt defaultBody;
+    protected Eqpmt defaultLegs;
     protected boolean canMove;
     protected Room currentRoom;
-    protected HashMap<String,Item> mobInventoryMap;
-    protected LinkedList<Item> mobInventoryList;
-    protected HashMap<String,Equipment> mobEquipmentMap;
-    protected LinkedList<Equipment> mobEquipmentList;
+    protected HashMap<String,Eqpmt> mobInventoryMap;
+    protected LinkedList<Eqpmt> mobInventoryList;
+    protected HashMap<String,Eqpmt> mobEquipmentMap;
+    protected LinkedList<Eqpmt> mobEquipmentList;
     private String[] equipAreas = {"Weapon","Body","Legs"};
 
 
@@ -38,15 +38,15 @@ public class Mob {
         this.hp = maxHP;
         this.attack = attack;
         this.defense = defense;
-        this.defaultWeapon = "";
-        this.defaultBody = "";
-        this.defaultLegs = "";
+//        this.defaultWeapon = "";
+//        this.defaultBody = "";
+//        this.defaultLegs = "";
 
         canMove = true;
-        mobInventoryMap = new HashMap<String,Item>();
-        mobInventoryList = new LinkedList<Item>();
-        mobEquipmentMap = new HashMap<String,Equipment>();
-        mobEquipmentList = new LinkedList<Equipment>();
+        mobInventoryMap = new HashMap<String,Eqpmt>();
+        mobInventoryList = new LinkedList<Eqpmt>();
+        mobEquipmentMap = new HashMap<String,Eqpmt>();
+        mobEquipmentList = new LinkedList<Eqpmt>();
 
         mobEquipmentMap.put("Body",null);
         mobEquipmentMap.put("Legs",null);
@@ -55,7 +55,7 @@ public class Mob {
     }
 
     /** Construct that includes attack and defense, AND includes arguments for default weapon and armor*/
-    public Mob(String name, String description, String setting, int maxHP, int attack, int defense, String defaultWeapon, String defaultBody, String defaultLegs) {
+    public Mob(String name, String description, String setting, int maxHP, int attack, int defense, Eqpmt defaultWeapon, Eqpmt defaultBody, Eqpmt defaultLegs) {
         this.name = name;
         this.description = description;
         this.setting = setting;
@@ -68,14 +68,41 @@ public class Mob {
         this.defaultLegs = defaultLegs;
 
         canMove = true;
-        mobInventoryMap = new HashMap<String,Item>();
-        mobInventoryList = new LinkedList<Item>();
-        mobEquipmentMap = new HashMap<String,Equipment>();
-        mobEquipmentList = new LinkedList<Equipment>();
+        mobInventoryMap = new HashMap<String,Eqpmt>();
+        mobInventoryList = new LinkedList<Eqpmt>();
+        mobEquipmentMap = new HashMap<String,Eqpmt>();
+        mobEquipmentList = new LinkedList<Eqpmt>();
 
-        if (GameInterface.equipmentMap.containsKey(defaultWeapon)) { equip(GameInterface.equipmentMap.get(defaultWeapon)); }
-        if (GameInterface.equipmentMap.containsKey(defaultBody)) { equip(GameInterface.equipmentMap.get(defaultBody)); }
-        if (GameInterface.equipmentMap.containsKey(defaultLegs)) { equip(GameInterface.equipmentMap.get(defaultLegs)); }
+//        if (GameInterface.equipmentMap.containsKey(defaultWeapon)) { equip(GameInterface.equipmentMap.get(defaultWeapon)); }
+//        if (GameInterface.equipmentMap.containsKey(defaultBody)) { equip(GameInterface.equipmentMap.get(defaultBody)); }
+//        if (GameInterface.equipmentMap.containsKey(defaultLegs)) { equip(GameInterface.equipmentMap.get(defaultLegs)); }
+        equip(defaultWeapon);
+        equip(defaultBody);
+        equip(defaultLegs);
+
+    }
+
+    /** Construct that includes attack and defense, AND includes arguments for default weapon, but not armor*/
+    public Mob(String name, String description, String setting, int maxHP, int attack, int defense, Eqpmt defaultWeapon) {
+        this.name = name;
+        this.description = description;
+        this.setting = setting;
+        this.maxHP = maxHP;
+        this.hp = maxHP;
+        this.attack = attack;
+        this.defense = defense;
+        this.defaultWeapon = defaultWeapon;
+
+        canMove = true;
+        mobInventoryMap = new HashMap<String,Eqpmt>();
+        mobInventoryList = new LinkedList<Eqpmt>();
+        mobEquipmentMap = new HashMap<String,Eqpmt>();
+        mobEquipmentList = new LinkedList<Eqpmt>();
+
+//        if (GameInterface.equipmentMap.containsKey(defaultWeapon)) { equip(GameInterface.equipmentMap.get(defaultWeapon)); }
+//        if (GameInterface.equipmentMap.containsKey(defaultBody)) { equip(GameInterface.equipmentMap.get(defaultBody)); }
+//        if (GameInterface.equipmentMap.containsKey(defaultLegs)) { equip(GameInterface.equipmentMap.get(defaultLegs)); }
+        equip(defaultWeapon);
 
     }
 
@@ -89,9 +116,9 @@ public class Mob {
     public int getHP() { return hp; }
     public int getAttack() { return attack; }
     public int getDefense() { return defense; }
-    public String getDefaultWeapon() { return defaultWeapon; }
-    public String getDefaultBody() { return defaultBody; }
-    public String getDefaultLegs() { return defaultLegs; }
+    public Eqpmt getDefaultWeapon() { return defaultWeapon; }
+    public Eqpmt getDefaultBody() { return defaultBody; }
+    public Eqpmt getDefaultLegs() { return defaultLegs; }
 
     public void setMaxHP(int newMax) {maxHP = newMax; }
     public void setHP(int newHP) {
@@ -180,14 +207,14 @@ public class Mob {
 
         for (String eq : mobEquipmentMap.keySet()) {
             if (mobEquipmentMap.get(eq) != null) {
-                Item toDrop = mobEquipmentMap.get(eq);
+                Eqpmt toDrop = mobEquipmentMap.get(eq);
                 unequip(toDrop.getName());
                 drop(toDrop.getName());
             }
         }
 
         for (String inv : mobInventoryMap.keySet()) {
-            Item toDrop = mobInventoryMap.get(inv);
+            Eqpmt toDrop = mobInventoryMap.get(inv);
             drop(toDrop.getName());
         }
 
@@ -216,51 +243,59 @@ public class Mob {
     }
 
     /** Picks up an item in the room the monster is in */
-    public boolean gainItemInRoom(String itemName) {
-        itemName = itemName.toLowerCase();
+    public boolean gainItemInRoom(Eqpmt itemName) {
+//        itemName = itemName.toLowerCase();
         if (currentRoom.itemIsInRoom(itemName)) {
-            if (GameInterface.equipmentMap.containsKey(itemName)) { // is a weapon or item
-                Equipment mapEQ = (Equipment)currentRoom.roomItemMap.get(itemName);
-                Equipment newEQ = new Equipment(mapEQ.getName(),mapEQ.getDescription(),mapEQ.getSetting(),mapEQ.getAttack(),mapEQ.getDefense(),mapEQ.getHP(),mapEQ.getEquipPlacement());
-                mobInventoryMap.put(newEQ.getName().toLowerCase(),newEQ);
-                mobInventoryList.add(newEQ);
-                currentRoom.removeItem(mapEQ);
+//            if (GameInterface.equipmentMap.containsKey(itemName)) { // is a weapon or item
+//                Equipment mapEQ = (Equipment)currentRoom.roomItemMap.get(itemName);
+//                Equipment newEQ = new Equipment(mapEQ.getName(),mapEQ.getDescription(),mapEQ.getSetting(),mapEQ.getAttack(),mapEQ.getDefense(),mapEQ.getHP(),mapEQ.getEquipPlacement());
+//                mobInventoryMap.put(newEQ.getName().toLowerCase(),newEQ);
+                mobInventoryMap.put(itemName.getName(),itemName);
+//                mobInventoryList.add(newEQ);
+                mobInventoryList.add(itemName);
+//                currentRoom.removeItem(mapEQ);
+                currentRoom.removeItem(itemName);
                 return true;
             }
-        }
+//        }
 
         return false;
     }
 
-    public boolean gainItem(String itemName) {
-        if (GameInterface.equipmentMap.containsKey(itemName)) { // is a weapon or item
-            Equipment mapWeap = GameInterface.equipmentMap.get(itemName);
-            Equipment newWeap = new Equipment(mapWeap.getName(),mapWeap.getDescription(),mapWeap.getSetting(),mapWeap.getAttack(),mapWeap.getDefense(),mapWeap.getHP(),mapWeap.getEquipPlacement());
-            mobInventoryMap.put(newWeap.getName().toLowerCase(),newWeap);
-            mobInventoryList.add(newWeap);
+    public boolean gainItem(Eqpmt itemName) {
+//        if (GameInterface.equipmentMap.containsKey(itemName)) { // is a weapon or item
+//            Equipment mapWeap = GameInterface.equipmentMap.get(itemName);
+//            Equipment newWeap = new Equipment(mapWeap.getName(),mapWeap.getDescription(),mapWeap.getSetting(),mapWeap.getAttack(),mapWeap.getDefense(),mapWeap.getHP(),mapWeap.getEquipPlacement());
+//            mobInventoryMap.put(newWeap.getName().toLowerCase(),newWeap);
+            mobInventoryMap.put(itemName.getName(),itemName);
+//            mobInventoryList.add(newWeap);
+            mobInventoryList.add(itemName);
+
             return true;
         }
 
-        return false;
-    }
+//        return false;
+//    }
 
     /** Shortcut to equip something. Unlike the other equip, item does not need to be in inventory.
      * Can only be called manually in code */
-    public void equip(Equipment item) {
-        mobEquipmentMap.put(item.getEquipPlacement(),item);
-        mobEquipmentList.add(item);
-        setAttack(attack += item.getAttack());
-        setDefense(defense + item.getDefense());
-        setMaxHP(maxHP + item.getHP());
-        setHP(hp + item.getHP());
+    public void equip(Eqpmt item) {
+        if (item != null) {
+            mobEquipmentMap.put(item.getEquipPlacement(),item);
+            mobEquipmentList.add(item);
+            setAttack(attack += item.getAttack());
+            setDefense(defense + item.getDefense());
+            setMaxHP(maxHP + item.getHP());
+            setHP(hp + item.getHP());
+        }
     }
 
 
     /** Equip selected item. Must be in inventory */
     public boolean equip(String itemName) {
 
-        if (isInInventory(itemName) && GameInterface.equipmentMap.get(itemName) != null) { // It's a piece of armor or a weapon
-            Equipment toEquip = (Equipment) mobInventoryMap.get(itemName);
+//        if (isInInventory(itemName) && GameInterface.equipmentMap.get(itemName) != null) { // It's a piece of armor or a weapon
+            Eqpmt toEquip = mobInventoryMap.get(itemName);
 
             // Remove if already equipped
             if (alreadyEquipped(toEquip.getEquipPlacement())) {
@@ -280,9 +315,9 @@ public class Mob {
             mobInventoryList.remove(toEquip);
 
             return true;
-        } else {
-            return false;
-        }
+//        } else {
+//            return false;
+//        }
     }
 
     /** Checks if something is already equipped in the selected slot */
@@ -297,7 +332,7 @@ public class Mob {
     /** Unequips selected item */
     public boolean unequip(String itemName) {
 
-        Equipment toUnEquip;
+        Eqpmt toUnEquip;
 
         if (isEquipped(itemName)) {
 
@@ -320,7 +355,7 @@ public class Mob {
     public boolean drop(String itemName) {
 
         if (isInInventory(itemName)) {
-            Item itemToDrop = mobInventoryMap.get(itemName.toLowerCase());
+            Eqpmt itemToDrop = mobInventoryMap.get(itemName.toLowerCase());
             currentRoom.addItem(itemToDrop);
             mobInventoryMap.remove(itemName.toLowerCase());
             mobInventoryList.remove(itemToDrop);
@@ -361,7 +396,7 @@ public class Mob {
     public String getEquippedItemLocation(String itemName) {
 
         if (isEquipped(itemName)) {
-            for (Equipment eq : mobEquipmentMap.values()) {
+            for (Eqpmt eq : mobEquipmentMap.values()) {
                 if (eq != null && eq.getName().equalsIgnoreCase(itemName)) {
                     return eq.getEquipPlacement();
                 }

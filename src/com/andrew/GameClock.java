@@ -22,7 +22,7 @@ public class GameClock extends TimerTask {
         counter = 0;
         playerGainHpPercent = 0.07;
         tickLength = 10000; //milliseconds, 1000 = 1 second
-        tickLimit = 2;
+        tickLimit = 100;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class GameClock extends TimerTask {
                         room.createMob(defaultMob);
                     }
                 }
-                for (String defaultItem : room.defaultItemTypes) {
+                for (Eqpmt defaultItem : room.defaultItemTypes) {
                     if (!room.itemIsInRoom(defaultItem)) { // item is no longer in room's roomItemList
                         room.createItem(defaultItem);
                     }

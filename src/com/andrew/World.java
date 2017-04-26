@@ -20,45 +20,45 @@ public class World {
     protected LinkedList<Room> createRooms() {
         LinkedList<Room> roomList = new LinkedList<>();
 
-        Room starter = new Room("Deep Dark Forest","You are at the edge of a deep, dark forest to the north, a swampy swamp to the east, a volcano to the\nsouth, and a big fancy-looking palace to the west.","","");
+        Room starter = new Room("Deep Dark Forest","You are at the edge of a deep, dark forest to the north, a swampy swamp to the east, a volcano to the\nsouth, and a big fancy-looking palace to the west.","");
         roomList.add(starter);
 
-        Room darkForest0 = new Room("Deeper Into the Deep Dark Forest","You're moving deeper into the forest. It looks like the trail leads north and south.","ladybug","longsword");
-        Room darkForest1 = new Room("Even Deeper Into the Deep Dark Forest","Continuing on the trail deeper into the forest. It's starting to get a little\ndarker, and the trees are looking a little bigger","ladybug","longsword");
-        Room darkForest2 = new Room("So Deep Into the Deep Dark Forest","This forest really is deep!","ladybug","longsword");
-        Room darkForest3 = new Room("Pretty Deep Now Into the Deep Dark Forest","It's starting to get dark now too.","ladybug","longsword");
-        Room darkForest4 = new Room("Definitely Very Deep Now Into the Deep Dark Forest","You're quite deep into the forest now. The trees are so massive\nand so thick that it's pretty dark. You think you can see a little bit of a clearing ahead to the north though.","ladybug","longsword");
-        Room darkForest5 = new Room("A Clearing in the Deep Dark Forest","You've found a clearing way into the forest. Looks like something big might have\nknocked down these trees.","giant ladybug","");
+        Room darkForest0 = new Room("Deeper Into the Deep Dark Forest","You're moving deeper into the forest. It looks like the trail leads north and south.","ladybug",Eqpmt.LONGSWORD);
+        Room darkForest1 = new Room("Even Deeper Into the Deep Dark Forest","Continuing on the trail deeper into the forest. It's starting to get a little\ndarker, and the trees are looking a little bigger","ladybug",Eqpmt.LONGSWORD);
+        Room darkForest2 = new Room("So Deep Into the Deep Dark Forest","This forest really is deep!","ladybug",Eqpmt.LONGSWORD);
+        Room darkForest3 = new Room("Pretty Deep Now Into the Deep Dark Forest","It's starting to get dark now too.","ladybug",Eqpmt.LONGSWORD);
+        Room darkForest4 = new Room("Definitely Very Deep Now Into the Deep Dark Forest","You're quite deep into the forest now. The trees are so massive\nand so thick that it's pretty dark. You think you can see a little bit of a clearing ahead to the north though.","ladybug",Eqpmt.LONGSWORD);
+        Room darkForest5 = new Room("A Clearing in the Deep Dark Forest","You've found a clearing way into the forest. Looks like something big might have\nknocked down these trees.","giant ladybug");
         roomList.add(darkForest0); roomList.add(darkForest1); roomList.add(darkForest2); roomList.add(darkForest3); roomList.add(darkForest4); roomList.add(darkForest5);
 
-        Room swampyPlace0 = new Room("Entering the Swampy Swamp","You're entering a murky swamp. There is a path though--looks like it's taking you further\neast.","wisp","");
-        Room swampyPlace1 = new Room("The Swampy Swamp","Further into the swampy swamp. There are lots of mosquitoes around!","wisp","");
-        Room swampyPlace2 = new Room("The Swampy Swamp","You continue to trudge through the swampy swamp. It's pretty... swampy.","wisp","");
-        Room swampyPlace3 = new Room("The Swampy Swamp","You find yourself in yet more of the swampy swampy swamp.","wisp","");
-        Room swampyPlace4 = new Room("The Swampy Swamp","You're starting to get sick of the muck in this swampy swamp. But, there you are, in the thick of it","wisp","");
-        Room swampyPlace5 = new Room("The Swampy Swamp","Swampy swamp swamp swamp, swampy swampy swamp swampy, swampy swampy swampy swamp. Swamp.","wisp","");
-        Room swampyPlace6 = new Room("The Swampy Swamp","FINALLY, it looks like you might be coming to a clearing up ahead. Either that, or it's the swampiest\narea you've found yet!","wisp","");
-        Room swampyPlace7 = new Room("The Swampiest Swamp","Foiled again! Actually this is the swampiest area you've come across yet!","swamp thing","");
+        Room swampyPlace0 = new Room("Entering the Swampy Swamp","You're entering a murky swamp. There is a path though--looks like it's taking you further\neast.","wisp");
+        Room swampyPlace1 = new Room("The Swampy Swamp","Further into the swampy swamp. There are lots of mosquitoes around!","wisp");
+        Room swampyPlace2 = new Room("The Swampy Swamp","You continue to trudge through the swampy swamp. It's pretty... swampy.","wisp");
+        Room swampyPlace3 = new Room("The Swampy Swamp","You find yourself in yet more of the swampy swampy swamp.","wisp");
+        Room swampyPlace4 = new Room("The Swampy Swamp","You're starting to get sick of the muck in this swampy swamp. But, there you are, in the thick of it","wisp");
+        Room swampyPlace5 = new Room("The Swampy Swamp","Swampy swamp swamp swamp, swampy swampy swamp swampy, swampy swampy swampy swamp. Swamp.","wisp");
+        Room swampyPlace6 = new Room("The Swampy Swamp","FINALLY, it looks like you might be coming to a clearing up ahead. Either that, or it's the swampiest\narea you've found yet!","wisp");
+        Room swampyPlace7 = new Room("The Swampiest Swamp","Foiled again! Actually this is the swampiest area you've come across yet!","swamp thing");
         roomList.add(swampyPlace0); roomList.add(swampyPlace1); roomList.add(swampyPlace2); roomList.add(swampyPlace2); roomList.add(swampyPlace3); roomList.add(swampyPlace4); roomList.add(swampyPlace5); roomList.add(swampyPlace6); roomList.add(swampyPlace7);
 
-        Room volcanoArea0 = new Room("Entering the Volcano","You've entered the realm of the volcano. It's quite a blasted landscape, just long fields of almost\nnothing but black, jagged rock.","golem","");
-        Room volcanoArea1 = new Room("The Volcano","Your footsteps make a crunching sound as you walk across the cooled lava landscape.","golem","");
-        Room volcanoArea2 = new Room("The Volcano","Your footsteps make a crunching sound as you walk across the cooled lava landscape.","golem","");
-        Room volcanoArea3 = new Room("The Volcano","Your footsteps make a crunching sound as you walk across the cooled lava landscape.","golem","");
-        Room volcanoArea4 = new Room("The Volcano","Your footsteps make a crunching sound as you walk across the cooled lava landscape. It's starting to get\npretty hot.","golem","");
-        Room volcanoArea5 = new Room("The Volcano","The rock isn't so cool anymore, and you're starting to see pockets of lava around. It's REALLY hot\nnow, you're not sure if you can go much farther. There's a cave further to the south.","golem","");
-        Room volcanoArea6 = new Room("The Volcano","Inside the cave there's treasure everywhere, rubies and gold and all the wealth you can imagine. Too bad\nthere's no money in this game.","black dragon","");
+        Room volcanoArea0 = new Room("Entering the Volcano","You've entered the realm of the volcano. It's quite a blasted landscape, just long fields of almost\nnothing but black, jagged rock.","golem");
+        Room volcanoArea1 = new Room("The Volcano","Your footsteps make a crunching sound as you walk across the cooled lava landscape.","golem");
+        Room volcanoArea2 = new Room("The Volcano","Your footsteps make a crunching sound as you walk across the cooled lava landscape.","golem");
+        Room volcanoArea3 = new Room("The Volcano","Your footsteps make a crunching sound as you walk across the cooled lava landscape.","golem");
+        Room volcanoArea4 = new Room("The Volcano","Your footsteps make a crunching sound as you walk across the cooled lava landscape. It's starting to get\npretty hot.","golem");
+        Room volcanoArea5 = new Room("The Volcano","The rock isn't so cool anymore, and you're starting to see pockets of lava around. It's REALLY hot\nnow, you're not sure if you can go much farther. There's a cave further to the south.","golem");
+        Room volcanoArea6 = new Room("The Volcano","Inside the cave there's treasure everywhere, rubies and gold and all the wealth you can imagine. Too bad\nthere's no money in this game.","black dragon");
         roomList.add(volcanoArea0); roomList.add(volcanoArea1); roomList.add(volcanoArea2); roomList.add(volcanoArea3); roomList.add(volcanoArea4); roomList.add(volcanoArea5); roomList.add(volcanoArea6);
 
-        Room fancyPalace0 = new Room("Entering the Fancy Palace","As you walk into the palace, you become acutely aware of your sweaty, unkempt nature. I mean,\nit's understandable, but really, you DO look out of place. You try to wipe your feet on the welcome mat.","guard","");
-        Room fancyPalace1 = new Room("The Fancy Palace","You find yourself distracted by the giant tapestries and other fancy furnishings in this place. It's\nreally quite... fancy.","guard","");
-        Room fancyPalace2 = new Room("The Fancy Palace","You find yourself distracted by the giant tapestries and other fancy furnishings in this place. It's\nreally quite... fancy.","guard","");
-        Room fancyPalace3 = new Room("The Fancy Palace","You find yourself distracted by the giant tapestries and other fancy furnishings in this place. It's\nreally quite... fancy.","guard","");
-        Room fancyPalace4 = new Room("The Fancy Palace","You find yourself distracted by the giant tapestries and other fancy furnishings in this place. It's\nreally quite... fancy.","guard","");
-        Room fancyPalace5 = new Room("The Fancy Palace","You didn't think it was possible, but this place starts to get MORE fancy (and pretentious).","guard","");
-        Room fancyPalace6 = new Room("The Fancy Palace","It's getting really opulent in here. Somebody apparently thinks they are a pretty big deal.","guard","");
-        Room fancyPalace7 = new Room("The Fancy Palace","The fanciest doors you've ever seen are straight ahead of you.","guard","");
-        Room fancyPalace8 = new Room("The Fancy Palace","You've reached the throme room of the Fancy Palace. This is the fanciest fancy pants place you've ever\nseen or even heard of.","evil king","");
+        Room fancyPalace0 = new Room("Entering the Fancy Palace","As you walk into the palace, you become acutely aware of your sweaty, unkempt nature. I mean,\nit's understandable, but really, you DO look out of place. You try to wipe your feet on the welcome mat.","guard");
+        Room fancyPalace1 = new Room("The Fancy Palace","You find yourself distracted by the giant tapestries and other fancy furnishings in this place. It's\nreally quite... fancy.","guard");
+        Room fancyPalace2 = new Room("The Fancy Palace","You find yourself distracted by the giant tapestries and other fancy furnishings in this place. It's\nreally quite... fancy.","guard");
+        Room fancyPalace3 = new Room("The Fancy Palace","You find yourself distracted by the giant tapestries and other fancy furnishings in this place. It's\nreally quite... fancy.","guard");
+        Room fancyPalace4 = new Room("The Fancy Palace","You find yourself distracted by the giant tapestries and other fancy furnishings in this place. It's\nreally quite... fancy.","guard");
+        Room fancyPalace5 = new Room("The Fancy Palace","You didn't think it was possible, but this place starts to get MORE fancy (and pretentious).","guard");
+        Room fancyPalace6 = new Room("The Fancy Palace","It's getting really opulent in here. Somebody apparently thinks they are a pretty big deal.","guard");
+        Room fancyPalace7 = new Room("The Fancy Palace","The fanciest doors you've ever seen are straight ahead of you.","guard");
+        Room fancyPalace8 = new Room("The Fancy Palace","You've reached the throme room of the Fancy Palace. This is the fanciest fancy pants place you've ever\nseen or even heard of.","evil king");
         roomList.add(fancyPalace0); roomList.add(fancyPalace1); roomList.add(fancyPalace2); roomList.add(fancyPalace3); roomList.add(fancyPalace4); roomList.add(fancyPalace5); roomList.add(fancyPalace6); roomList.add(fancyPalace7); roomList.add(fancyPalace8);
 
         starter.setNorth(darkForest0); starter.setSouth(volcanoArea0); starter.setEast(swampyPlace0); starter.setWest(fancyPalace0);
@@ -110,7 +110,7 @@ public class World {
         mobMap.put(ladybug.getName().toLowerCase(),ladybug);
         mobMap.put("bug",ladybug);
 
-        Mob superLadybug = new Mob("Giant Ladybug","This ladybug is HUGE, with a gaping mouth that looks like it wants to eat you for lunch.","Whoa, a giant ladybug is here!! How did it get so huge? Why does it have a sword?!?",30,6,0,"longsword","polkadot shirt","polkadot pants");
+        Mob superLadybug = new Mob("Giant Ladybug","This ladybug is HUGE, with a gaping mouth that looks like it wants to eat you for lunch.","Whoa, a giant ladybug is here!! How did it get so huge? Why does it have a sword?!?",30,6,0,Eqpmt.LONGSWORD,Eqpmt.POLKADOTSHIRT,Eqpmt.POLKADOTPANTS);
         mobMap.put(superLadybug.getName().toLowerCase(),superLadybug);
         mobMap.put("super",superLadybug);
         mobMap.put("giant",superLadybug);
@@ -122,7 +122,7 @@ public class World {
         mobMap.put("willo wisp",willowisp);
         mobMap.put("will o wisp",willowisp);
 
-        Mob swampThing = new Mob("Swamp Thing","Looks just like the monster from the movie, cool!","The Swamp Thing is here!",100,5,-5,"green sword","oozy shirt","oozy pants");
+        Mob swampThing = new Mob("Swamp Thing","Looks just like the monster from the movie, cool!","The Swamp Thing is here!",100,5,-5,Eqpmt.GREENSWORD,Eqpmt.OOZYSHIRT,Eqpmt.OOZYPANTS);
         mobMap.put(swampThing.getName().toLowerCase(),swampThing);
         mobMap.put("swamp",swampThing);
         mobMap.put("thing",swampThing);
@@ -131,18 +131,18 @@ public class World {
         mobMap.put(volcanoGolem.getName().toLowerCase(),volcanoGolem);
         mobMap.put("volcano",volcanoGolem);
 
-        Mob blackDragon = new Mob("Black Dragon","A huge, black dragon!","A... a black dragon is here!",200,22,15,"black sword","charred leather vest","charred leather pants");
+        Mob blackDragon = new Mob("Black Dragon","A huge, black dragon!","A... a black dragon is here!",200,22,15,Eqpmt.BLACKSWORD,Eqpmt.CHARREDLEATHERVEST,Eqpmt.CHARREDLEATHERPANTS);
         mobMap.put(blackDragon.getName().toLowerCase(),blackDragon);
         mobMap.put("black",blackDragon);
         mobMap.put("dragon",blackDragon);
 
-        Mob foppishGuard = new Mob("Guard","This guard looks a liiiitle bit too concerned with his appearance","A foppish palace guard is here, fixing his hair in the mirror",125,20,15,"longsword","","");
+        Mob foppishGuard = new Mob("Guard","This guard looks a liiiitle bit too concerned with his appearance","A foppish palace guard is here, fixing his hair in the mirror",125,20,15,Eqpmt.LONGSWORD);
         mobMap.put(foppishGuard.getName().toLowerCase(),foppishGuard);
         mobMap.put("foppish",foppishGuard);
         mobMap.put("palace guard",foppishGuard);
         mobMap.put("foppish guard",foppishGuard);
 
-        Mob evilKing = new Mob("Evil King","","The Corrupt and Nasty King (of destruction-ness and killing) is here, waiting for you to FINISH HIM",300,35,20,"shiny broadsword","shiny breastplate","shiny legplates");
+        Mob evilKing = new Mob("Evil King","","The Corrupt and Nasty King (of destruction-ness and killing) is here, waiting for you to FINISH HIM",300,35,20,Eqpmt.SHINYBROADSWORD,Eqpmt.SHINYNEWBREASTPLATE,Eqpmt.SHINYNEWLEGPLATES);
         mobMap.put(evilKing.getName().toLowerCase(),evilKing);
         mobMap.put("king",evilKing);
         mobMap.put("corrupt king",evilKing);
@@ -150,6 +150,8 @@ public class World {
 
         return mobMap;
     }
+
+/*
 
     // All equipment in the game created and edited here
     // Extra additions to map are quality of life improvements for the player - e.x. can select "balloon sword" by just typing "balloon" instead of full name
@@ -213,7 +215,7 @@ public class World {
             types of shiny items, e.x. shiny boots, shiny ring, etc.
          */
 
-
+/*
         Equipment shabbyShirt = new Equipment("Shabby Shirt","A pretty shabby shirt. Should probably shrug this off shoon. Soon.","A shabby shirt lies crumpled on the floor",0,1,0,"Body");
         equipmentMap.put("shabby",shabbyShirt);
         equipmentMap.put("shabby shirt",shabbyShirt);
@@ -260,4 +262,5 @@ public class World {
 
         return equipmentMap;
     }
+*/
 }
