@@ -417,9 +417,10 @@ public class GameInterface {
 
             commandMap.put("help", new Command() {
                 public void runCommand(String args) {
-                    if (args.equals("items")) {
+                    if (args.equalsIgnoreCase("items") || args.equalsIgnoreCase("i")) {
                         helpItems();
-                    } else if (args.equals("monsters")) {
+                    } else if (args.equalsIgnoreCase("monsters") || args.equalsIgnoreCase("mob") ||
+                        args.equalsIgnoreCase("mobs") || args.equalsIgnoreCase("m")) {
                         helpMonsters();
                     } else {
                         help();
@@ -435,22 +436,27 @@ public class GameInterface {
 
             commandMap.put("drop", new Command() {
                 public void runCommand(String args) {
-                    if (args.equals("")) {
-                        System.out.println("Drop what?");
+                    if (Eqpmt.enumExists(args)) {
+                        Eqpmt toDrop = Eqpmt.valueOf(args);
+                        if (player.isInInventory(toDrop)) {
+                            // args is a real item and is in player inventory
+                            player.drop(toDrop);
+                            System.out.println("You drop your " + toDrop.getName());
+                        } else if (player.isEquipped(toDrop)) {
+                            // args is a real item and is not in player inventory, but is equipped
+                            System.out.println("You'll have to unequip that first");
+                        } else {
+                            // args is a real item but is not in player inventory or equipped
+                            System.out.println("You don't have one of those");
+                        }
                     } else if (args.equalsIgnoreCase("all")) {
-
+                        // attempt to drop all items in inventory
                         int limit = player.mobInventoryList.size();
                         for (int i = 0; i < limit; ++i) {
-                            Eqpmt itemToDrop = player.mobInventoryList.get(0);
-                            if (player.drop(itemToDrop.getName())) {
-                                System.out.println("You drop your " + itemToDrop.getName());
-                            }
+                            player.drop(player.mobInventoryList.get(i));
                         }
-
-                    } else if (player.drop(args)) {
-                        System.out.println("You drop your " + args);
                     } else {
-                        System.out.println("You don't have that");
+                        System.out.println("Drop what?");
                     }
                 }
             });
@@ -463,13 +469,23 @@ public class GameInterface {
 
             commandMap.put("equipment", new Command() {
                 public void runCommand(String args) {
+                    // with no argument, shows what player has equipped
                     if (args.equals("")) {
                         System.out.println("You are wearing: ");
                         System.out.println(player.getEquipmentString());
                     } else {
-                        if (player.equip(args)) {
-                            System.out.println("You equip your " + args);
+                        if (Eqpmt.enumExists(args.toUpperCase())) {
+                            Eqpmt toEquip = Eqpmt.valueOf(args);
+                            // If argument is a real item and is in inventory, equip
+                            if (player.isInInventory(toEquip)) {
+                                player.equipFromInv(toEquip);
+                                System.out.println("You equip your " + toEquip.getName());
+                            } else {
+                                // If not in inventory
+                                System.out.println("You're not carrying that");
+                            }
                         } else {
+                            // If argument not a real item
                             System.out.println("Equip what?");
                         }
                     }
@@ -498,21 +514,27 @@ public class GameInterface {
             commandMap.put("get", new Command() {
                 public void runCommand(String args) {
                     String notHere = "";
-                    if (args.equalsIgnoreCase("all")) {
+                    // Get single item
+                    if (Eqpmt.enumExists(args)) {
+                        Eqpmt toGet = Eqpmt.valueOf(args);
+                        if (player.currentRoom.itemIsInRoom(toGet)) {
+                            // arg is a valid item and that item is in the room
+                            player.gainItemInRoom(toGet);
+                        } else {
+                            // arg is a valid item but it is not in the room
+                            System.out.println("You don't see one of those here");
+                        }
+                    } else if (args.equalsIgnoreCase("all")) {
+                        // attempt to get all items in the room
                         int limit = player.currentRoom.itemList.size();
                         for (int i = 0; i < limit; ++i) {
                             Eqpmt item = player.currentRoom.itemList.get(0);
-                            if (player.gainItemInRoom(Eqpmt.valueOf(item.getVariableName()))) {
+                            if (player.gainItemInRoom(item)) {
                                 System.out.println("You get a " + item.getName());
                             }
                         }
-                    } else if (player.gainItemInRoom(Eqpmt.valueOf(args))) {
-                        System.out.println("You get a " + args);
                     } else {
-                        if (!args.equals("")) {
-                            notHere = " That isn't here";
-                        }
-                        System.out.println("Get what?" + notHere);
+                        System.out.println("Get what?");
                     }
                 }
             });
@@ -610,11 +632,10 @@ public class GameInterface {
      */
     static private void viewInventory(Player player) {
         System.out.println("You are carrying: ");
-        if (player.mobInventoryMap.isEmpty()) {
+        if (player.mobInventoryList.isEmpty()) {
             System.out.println("...nothing!");
         } else {
             System.out.println(player.getInventoryString());
-
         }
     }
 
@@ -623,21 +644,22 @@ public class GameInterface {
      */
     static public void look(String name) {
         try {
-
             if (player.currentRoom.roomMobMap.containsKey(name)) {
+                // Looking at a mob
                 Mob viewingMob = player.currentRoom.roomMobMap.get(name);
                 System.out.println(viewingMob.getDescription());
                 System.out.println(viewingMob.getInventoryString());
                 System.out.println(viewingMob.getEquipmentString());
-
             } else if (player.currentRoom.roomItemMap.containsKey(name)) {
+                // Looking at an item in the room
                 Eqpmt viewingItem = player.currentRoom.roomItemMap.get(name);
                 System.out.println(viewingItem.getDescription());
             } else if (player.isInInventory(name)) {
+                // looking at an item in inventory
                 Eqpmt viewingItem = player.mobInventoryMap.get(name);
                 System.out.println(viewingItem.getDescription());
             } else if (player.isEquipped(name)) {
-                //Item viewingItem = player.mobEquipmentMap.get(name);
+                // looking at an equipped item
                 String eqLoc = player.getEquippedItemLocation(name);
                 Eqpmt viewingItem = player.mobEquipmentMap.get(eqLoc);
                 System.out.println(viewingItem.getDescription());
@@ -645,6 +667,7 @@ public class GameInterface {
                 System.out.println("You don't see that here");
             }
         } catch (Exception e) {
+            // why this exception?
             System.out.println("Exception: " + e);
         }
 
