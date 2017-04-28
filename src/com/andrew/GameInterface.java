@@ -8,15 +8,14 @@ import java.util.Timer;
 // Additions
 // Allow 'g all' command
 // Allow look command to be used in directions
-    // Would have to add text to the Room object
+// Would have to add text to the Room object
 // save all players every tickLimit
 // Reformat World's room array
 // Add some enums?
-    // Equipment slots
-        // Under Equipment class AND maybe Mob class?
-    // NSEW in rooms
+// Equipment slots
+// Under Equipment class AND maybe Mob class?
+// NSEW in rooms
 // When you try move in a direction you can't go, the current room setting is still displayed, which makes you think maybe you DID move
-
 
 
 public class GameInterface {
@@ -27,8 +26,8 @@ public class GameInterface {
     protected static World theWorld = new World(); // Use this to make game object info easily accessible
 
     protected static LinkedList<Player> playerList = new LinkedList<>();
-//    protected static HashMap<String,Eqpmt> equipmentMap = theWorld.createEquipment();
-    protected static HashMap<String,Mob> mobMap = theWorld.createMobs();
+//        protected static HashMap<String,Eqpmt> equipmentMap = theWorld.createEquipment();
+    protected static HashMap<String, Mob> mobMap = theWorld.createMobs();
     protected static LinkedList<Room> roomList = theWorld.createRooms();
 
     protected static Player player;
@@ -47,7 +46,7 @@ public class GameInterface {
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_WHITE = "\u001B[37m";
 
-    protected static HashMap<String,String> commandShortcuts = new HashMap<>();
+    protected static HashMap<String, String> commandShortcuts = new HashMap<>();
 
     // Timer in this program doesn't control the game, but helps keep it more "alive" - i.e. if you've killed off
     // all the monsters, they'll be repopulated every so often, you slowly restore health between battles, etc
@@ -69,7 +68,7 @@ public class GameInterface {
         // Set up game timer
         timer = new Timer();
         clockTick = new GameClock();
-        timer.scheduleAtFixedRate(clockTick,0,clockTick.tickLength); // Sets timer's schedule to clockInterval's milliseconds
+        timer.scheduleAtFixedRate(clockTick, 0, clockTick.tickLength); // Sets timer's schedule to clockInterval's milliseconds
 
         // Command input setup
         populateShortcuts();
@@ -83,7 +82,7 @@ public class GameInterface {
             if (id == 0) {
                 player = createPlayer(loginName);
             } else {
-                login(loginName,id);
+                login(loginName, id);
             }
 
             // View location and prompt when game begins
@@ -97,7 +96,7 @@ public class GameInterface {
             System.out.println("(1). Login");
             System.out.println("(2). Quit");
 
-            userChoice = getPositiveIntInput(1,2);
+            userChoice = getPositiveIntInput(1, 2);
             if (userChoice == 2) {
                 quit = true;
             }
@@ -108,7 +107,9 @@ public class GameInterface {
 
     }
 
-    /** Allows inputs and shows game UI while player is alive */
+    /**
+     * Allows inputs and shows game UI while player is alive
+     */
     static public void runGame(Player player) {
         while (player.getHP() > 0) {
             inputCommand();
@@ -116,15 +117,17 @@ public class GameInterface {
         }
     }
 
-    /** GameInterface for logging in the user. If user selects a name that hasn't been logged yet, a new player is created,
+    /**
+     * GameInterface for logging in the user. If user selects a name that hasn't been logged yet, a new player is created,
      * otherwise the player's character is loaded from the database.
+     *
      * @param name - player's login name
-     * @param id - player's characters database ID. Taken from the db in main()
+     * @param id   - player's characters database ID. Taken from the db in main()
      */
     static private void login(String name, int id) {
         System.out.println("Welcome back! Please enter your password:");
         String password = userScanner.nextLine();
-        if (db.checkPassword(id,password)) {
+        if (db.checkPassword(id, password)) {
             player = loadPlayer(name, id);
         } else {
             System.out.println("Incorrect password");
@@ -133,8 +136,10 @@ public class GameInterface {
 
     }
 
-    /** New character creation. Creates the character and gives them some basic equipment. User chooses a password
-     * and the character is added to the database */
+    /**
+     * New character creation. Creates the character and gives them some basic equipment. User chooses a password
+     * and the character is added to the database
+     */
     static protected Player createPlayer(String name) {
         String password = "";
 
@@ -169,7 +174,9 @@ public class GameInterface {
         return player;
     }
 
-    /** If player has logged in before, loads their character from the database */
+    /**
+     * If player has logged in before, loads their character from the database
+     */
     static private Player loadPlayer(String name, int id) {
         Player loadedPlayer = new Player(name);
         db.loadPlayer(id); // not used for anything yet
@@ -197,25 +204,30 @@ public class GameInterface {
         return loadedPlayer;
     }
 
-    /** Displays game commands */
+    /**
+     * Displays game commands
+     */
     static public void help() {
         System.out.println("Here are some basic commands to use in the game:");
         System.out.println(ANSI_BLACK + "Command" + padSpace(30 - "Command".length()) + "Use" + ANSI_RESET);
         System.out.println("l / look" + padSpace(30 - "l / look".length()) + "Look at your surroundings");
         System.out.println("l / look [something]" + padSpace(30 - "l / look [something]".length()) + "Look at something or someone");
-        System.out.println("n / s / e / w" + padSpace(30-"n / s / e / w".length()) + "Go north / go south / go east / go west");
-        System.out.println("i / inv" + padSpace(30-"i / inv".length()) + "See what you have in your inventory");
-        System.out.println("eq" + padSpace(30-"eq".length()) + "See what you have equipped");
-        System.out.println("eq / uneq [item]" + padSpace(30-"eq / uneq [item]".length()) + "Equip or unequip an item");
-        System.out.println("st" + padSpace(30-"st".length()) + "Check your stats");
-        System.out.println("g [item]" + padSpace(30-"g [item]".length()) + "Get an item off the floor");
-        System.out.println("h monsters" + padSpace(30-"h monsters".length()) + "See the names of the monsters you can attack");
-        System.out.println("h items" + padSpace(30-"h items".length()) + "See the names of the items you can pick up");
-        System.out.println("h" + padSpace(30-"h".length()) + "Read this help file again");
-        System.out.println("quit" + padSpace(30-"quit".length()) + "Quit the game and save your character");
+        System.out.println("n / s / e / w" + padSpace(30 - "n / s / e / w".length()) + "Go north / go south / go east / go west");
+        System.out.println("i / inv" + padSpace(30 - "i / inv".length()) + "See what you have in your inventory");
+        System.out.println("eq" + padSpace(30 - "eq".length()) + "See what you have equipped");
+        System.out.println("eq / uneq [item]" + padSpace(30 - "eq / uneq [item]".length()) + "Equip or unequip an item");
+        System.out.println("st" + padSpace(30 - "st".length()) + "Check your stats");
+        System.out.println("g [item]" + padSpace(30 - "g [item]".length()) + "Get an item off the floor");
+        System.out.println("h monsters" + padSpace(30 - "h monsters".length()) + "See the names of the monsters you can attack");
+        System.out.println("h items" + padSpace(30 - "h items".length()) + "See the names of the items you can pick up");
+        System.out.println("h" + padSpace(30 - "h".length()) + "Read this help file again");
+        System.out.println("quit" + padSpace(30 - "quit".length()) + "Quit the game and save your character");
         System.out.println("Enjoy!");
     }
-    /** Used for making the help() method display text nicely */
+
+    /**
+     * Used for making the help() method display text nicely
+     */
     static private String padSpace(int numSpaces) {
         String spaces = "";
         for (int i = 0; i < numSpaces; ++i) {
@@ -224,7 +236,9 @@ public class GameInterface {
         return spaces;
     }
 
-    /** Display main game prompt with current room name, health, and exits */
+    /**
+     * Display main game prompt with current room name, health, and exits
+     */
     static public void prompt() {
         // <[room name]: [hp]/[maxhp]HP : [exits]>
         String prompt;
@@ -237,7 +251,9 @@ public class GameInterface {
     }
 
 
-    /** Wait for input from player, parse the text, and run the appropriate command */
+    /**
+     * Wait for input from player, parse the text, and run the appropriate command
+     */
     static protected void inputCommand() {
         /* Implementation of inputCommand() using commandMap was inspired by the top response in this stack exchange question:
         http://stackoverflow.com/questions/4480334/how-to-call-a-method-stored-in-a-hashmap-java
@@ -263,7 +279,9 @@ public class GameInterface {
         }
     }
 
-    /** Takes input from the user and parses it into the first word (the command) and the rest (the arguments) */
+    /**
+     * Takes input from the user and parses it into the first word (the command) and the rest (the arguments)
+     */
     static private String[] parseInput() {
         String input;
         String[] listInput;
@@ -285,14 +303,16 @@ public class GameInterface {
             }
         }
 
-        String cmdWithArgs[] = {inputCmd,inputArgs};
+        String cmdWithArgs[] = {inputCmd, inputArgs};
         return cmdWithArgs;
     }
 
 
-    /** Returns appropriate ANSI color for player's current HP. Used in prompt() and stats() */
+    /**
+     * Returns appropriate ANSI color for player's current HP. Used in prompt() and stats()
+     */
     static private String getHPColor() {
-        double percentHP = (double)player.getHP() / (double)player.getMaxHP();
+        double percentHP = (double) player.getHP() / (double) player.getMaxHP();
 
         if (percentHP < 0.5) {
             return ANSI_RED;
@@ -305,7 +325,9 @@ public class GameInterface {
 
     }
 
-    /** Reads user input, only allows int options between lower and upper bound */
+    /**
+     * Reads user input, only allows int options between lower and upper bound
+     */
     public static int getPositiveIntInput(int lowerBound, int upperBound) {
         String userInput;
         int userNumber = -1;
@@ -325,7 +347,9 @@ public class GameInterface {
         return userNumber;
     }
 
-    /** Player command to quit the game */
+    /**
+     * Player command to quit the game
+     */
     static private void quit() { //foox
         System.out.println("Are you sure? Type quit again, or press enter to continue");
         String response = userScanner.nextLine();
@@ -334,40 +358,46 @@ public class GameInterface {
         }
     }
 
-    /** Quitting the game */
+    /**
+     * Quitting the game
+     */
     static private void bye() {
         db.savePlayer(player);
         System.out.println("Bye!");
         System.exit(0);
     }
 
-    /** Populate dictionary with shorthand commands, keyed to actual command methods */
+    /**
+     * Populate dictionary with shorthand commands, keyed to actual command methods
+     */
     static private void populateShortcuts() {
-        commandShortcuts.put("l","look");
-        commandShortcuts.put("n","north");
-        commandShortcuts.put("s","south");
-        commandShortcuts.put("e","east");
-        commandShortcuts.put("w","west");
-        commandShortcuts.put("g","get");
-        commandShortcuts.put("eq","equipment");
-        commandShortcuts.put("equip","equipment");
-        commandShortcuts.put("uneq","unequip");
-        commandShortcuts.put("h","help");
-        commandShortcuts.put("i","inventory");
-        commandShortcuts.put("inv","inventory");
-        commandShortcuts.put("stat","status");
+        commandShortcuts.put("l", "look");
+        commandShortcuts.put("n", "north");
+        commandShortcuts.put("s", "south");
+        commandShortcuts.put("e", "east");
+        commandShortcuts.put("w", "west");
+        commandShortcuts.put("g", "get");
+        commandShortcuts.put("eq", "equipment");
+        commandShortcuts.put("equip", "equipment");
+        commandShortcuts.put("uneq", "unequip");
+        commandShortcuts.put("h", "help");
+        commandShortcuts.put("i", "inventory");
+        commandShortcuts.put("inv", "inventory");
+        commandShortcuts.put("stat", "status");
     }
 
-    /** Holds commandMap, which takes commands from inputCommand() and returns appropriate methods
-     *  Implementation inspired by top comment on the below stackoverflow question:
-     *  http://stackoverflow.com/questions/4480334/how-to-call-a-method-stored-in-a-hashmap-java*/
+    /**
+     * Holds commandMap, which takes commands from inputCommand() and returns appropriate methods
+     * Implementation inspired by top comment on the below stackoverflow question:
+     * http://stackoverflow.com/questions/4480334/how-to-call-a-method-stored-in-a-hashmap-java
+     */
     private static class UserInterface {
 
         interface Command {
             void runCommand(String argument);
         }
 
-        HashMap<String, Command> commandMap = new HashMap<String,Command>();
+        HashMap<String, Command> commandMap = new HashMap<String, Command>();
 
         public UserInterface() {
             createCommandMap();
@@ -380,12 +410,12 @@ public class GameInterface {
                     if (args.equals("")) {
                         setting();
                     } else {
-                        look((String)args);
+                        look((String) args);
                     }
                 }
             });
 
-            commandMap.put("help",new Command() {
+            commandMap.put("help", new Command() {
                 public void runCommand(String args) {
                     if (args.equals("items")) {
                         helpItems();
@@ -403,7 +433,7 @@ public class GameInterface {
                 }
             });
 
-            commandMap.put("drop",new Command() {
+            commandMap.put("drop", new Command() {
                 public void runCommand(String args) {
                     if (args.equals("")) {
                         System.out.println("Drop what?");
@@ -497,7 +527,9 @@ public class GameInterface {
             });
 
             commandMap.put("status", new Command() {
-                public void runCommand(String args) { stats(); }
+                public void runCommand(String args) {
+                    stats();
+                }
             });
 
             commandMap.put("north", new Command() {
@@ -539,7 +571,9 @@ public class GameInterface {
         }
     }
 
-    /** Display currentRoom description */
+    /**
+     * Display currentRoom description
+     */
     static public void setting() {
         System.out.println(ANSI_BLACK + player.currentRoom.description + ANSI_RESET);
 
@@ -551,16 +585,20 @@ public class GameInterface {
         }
     }
 
-    /** Display player's stats */
+    /**
+     * Display player's stats
+     */
     static public void stats() {
         System.out.println(ANSI_BLACK + player.getDescription() + ANSI_RESET);
         System.out.println("Name: " + ANSI_BLACK + player.getName() + ANSI_RESET);
         System.out.println("HP: " + getHPColor() + player.getHP() + "/" + player.getMaxHP() + ANSI_RESET);
         System.out.println("Attack: " + ANSI_BLACK + player.getAttack() + ANSI_RESET);
-        System.out.println("Defense: " + ANSI_BLACK +  player.getDefense() + ANSI_RESET);
+        System.out.println("Defense: " + ANSI_BLACK + player.getDefense() + ANSI_RESET);
     }
 
-    /** Show player's inventory */
+    /**
+     * Show player's inventory
+     */
     static private void viewInventory(Player player) {
         System.out.println("You are carrying: ");
         if (player.mobInventoryMap.isEmpty()) {
@@ -571,7 +609,9 @@ public class GameInterface {
         }
     }
 
-    /** Show description of item/player/monster */
+    /**
+     * Show description of item/player/monster
+     */
     static public void look(String name) {
         try {
 
@@ -601,14 +641,19 @@ public class GameInterface {
 
     }
 
-    /** Displays the names of items in the current room so that the player can easily target them */
+    /**
+     * Displays the names of items in the current room so that the player can easily target them
+     */
     static private void helpItems() {
         System.out.println("The names of the items you can get in this room are: ");
         for (String item : player.currentRoom.roomItemMap.keySet()) {
             System.out.println(ANSI_YELLOW + item + ANSI_RESET);
         }
     }
-    /** Displays the names of monsters/players in the current room so that the player can easily target them */
+
+    /**
+     * Displays the names of monsters/players in the current room so that the player can easily target them
+     */
     static private void helpMonsters() {
         System.out.println("The names of the monsters you can attack in this room are: ");
         if (player.currentRoom.roomMobMap.size() == 1) {

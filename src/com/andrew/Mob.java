@@ -480,4 +480,73 @@ public class Mob {
         currentRoom = newRoom;
     }
 
+    private static class Armory {
+
+        Eqpmt body;
+        Eqpmt legs;
+        Eqpmt mainHand;
+
+        void setBody(Eqpmt newBody) {
+            if (body != null) {
+                removeBody();
+            }
+            body = newBody;
+        }
+
+        Eqpmt removeBody() {
+            if (body != null) {
+                Eqpmt oldBody = body;
+                body = null;
+                return oldBody;
+            } else {
+                return null;
+            }
+        }
+
+        void setLegs(Eqpmt newLegs) {
+            if (legs != null) {
+                removeLegs();
+            }
+            legs = newLegs;
+        }
+
+        Eqpmt removeLegs() {
+            if (legs != null) {
+                Eqpmt oldLegs = legs;
+                legs = null;
+                return oldLegs;
+            } else {
+                return null;
+            }
+        }
+
+        void setMainHand(Eqpmt newMainHand) {
+            if (mainHand != null) {
+                removeMainHand();
+            }
+            mainHand = newMainHand;
+        }
+
+        Eqpmt removeMainHand() {
+            if (mainHand != null) {
+                Eqpmt oldMainHand = mainHand;
+                mainHand = null;
+                return oldMainHand;
+            } else {
+                return null;
+            }
+        }
+
+        HashMap<String,Eqpmt> removeAll() {
+            HashMap<String,Eqpmt> eqMap = new HashMap<String,Eqpmt>();
+
+            eqMap.put("body",removeBody());
+            eqMap.put("legs",removeLegs());
+            eqMap.put("mainHand",removeMainHand());
+
+            return eqMap;
+        }
+
+    }
+
 }
