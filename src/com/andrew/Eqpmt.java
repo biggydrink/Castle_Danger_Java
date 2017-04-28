@@ -74,5 +74,19 @@ public enum Eqpmt {
     public int getHP() { return hp; }
     public String getEquipPlacement() { return equipPlacement; }
 
+    // Enum.valueOf() throws:
+    //      an IllegalArgumentException if itemName is not a valid enum
+    //      a NullPointerException if itemName is null
+
+    /** returns true if the string corresponds to an enum constant */
+    // TODO make sure this method is used in all places where global equipmentMap used to be checked
+    public static boolean enumExists(String enumName) {
+        for (Eqpmt eq : values()) {
+            if (enumName.equals(eq.variableName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

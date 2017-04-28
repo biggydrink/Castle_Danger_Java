@@ -21,6 +21,11 @@ public class Mob {
     protected Eqpmt defaultLegs;
     protected boolean canMove;
     protected Room currentRoom;
+
+
+    // Inventory should probably just be a list, not a map
+    // Equipment should probably just be a map, not a list
+        // The equipment map should have default equip slot keys added, with null (or something) as the default value if no other default given
     protected HashMap<String,Eqpmt> mobInventoryMap;
     protected LinkedList<Eqpmt> mobInventoryList;
     protected HashMap<String,Eqpmt> mobEquipmentMap;
@@ -293,8 +298,7 @@ public class Mob {
 
     /** Equip selected item. Must be in inventory */
     public boolean equip(String itemName) {
-
-//        if (isInInventory(itemName) && GameInterface.equipmentMap.get(itemName) != null) { // It's a piece of armor or a weapon
+        if (Eqpmt.enumExists(itemName)) {
             Eqpmt toEquip = mobInventoryMap.get(itemName);
 
             // Remove if already equipped
@@ -315,9 +319,9 @@ public class Mob {
             mobInventoryList.remove(toEquip);
 
             return true;
-//        } else {
-//            return false;
-//        }
+        } else {
+            return false;
+        }
     }
 
     /** Checks if something is already equipped in the selected slot */
@@ -480,6 +484,8 @@ public class Mob {
         currentRoom = newRoom;
     }
 
+    // May end up using this to add structure to how items are equipped in specific slots
+    // Can we use anything else besides null to show a non-equipped state?
     private static class Armory {
 
         Eqpmt body;
