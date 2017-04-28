@@ -26,11 +26,9 @@ public class Mob {
     // Inventory should probably just be a list, not a map
     // Equipment should probably just be a map, not a list
         // The equipment map should have default equip slot keys added, with null (or something) as the default value if no other default given
-    protected HashMap<String,Eqpmt> mobInventoryMap;
     protected LinkedList<Eqpmt> mobInventoryList;
     protected HashMap<String,Eqpmt> mobEquipmentMap;
-    protected LinkedList<Eqpmt> mobEquipmentList;
-    private String[] equipAreas = {"Weapon","Body","Legs"};
+    private String[] equipSlots = {"mainHand","Body","Legs"};
 
 
     /** Construct that includes attack and defense
@@ -43,20 +41,12 @@ public class Mob {
         this.hp = maxHP;
         this.attack = attack;
         this.defense = defense;
-//        this.defaultWeapon = "";
-//        this.defaultBody = "";
-//        this.defaultLegs = "";
 
         canMove = true;
-        mobInventoryMap = new HashMap<String,Eqpmt>();
         mobInventoryList = new LinkedList<Eqpmt>();
         mobEquipmentMap = new HashMap<String,Eqpmt>();
-        mobEquipmentList = new LinkedList<Eqpmt>();
-
-        mobEquipmentMap.put("Body",null);
-        mobEquipmentMap.put("Legs",null);
-        mobEquipmentMap.put("Weapon",null);
-
+        populateEqMap();
+        equipDefaults();
     }
 
     /** Construct that includes attack and defense, AND includes arguments for default weapon and armor*/
@@ -73,17 +63,10 @@ public class Mob {
         this.defaultLegs = defaultLegs;
 
         canMove = true;
-        mobInventoryMap = new HashMap<String,Eqpmt>();
         mobInventoryList = new LinkedList<Eqpmt>();
         mobEquipmentMap = new HashMap<String,Eqpmt>();
-        mobEquipmentList = new LinkedList<Eqpmt>();
-
-//        if (GameInterface.equipmentMap.containsKey(defaultWeapon)) { equip(GameInterface.equipmentMap.get(defaultWeapon)); }
-//        if (GameInterface.equipmentMap.containsKey(defaultBody)) { equip(GameInterface.equipmentMap.get(defaultBody)); }
-//        if (GameInterface.equipmentMap.containsKey(defaultLegs)) { equip(GameInterface.equipmentMap.get(defaultLegs)); }
-        equip(defaultWeapon);
-        equip(defaultBody);
-        equip(defaultLegs);
+        populateEqMap();
+        equipDefaults();
 
     }
 
@@ -99,15 +82,11 @@ public class Mob {
         this.defaultWeapon = defaultWeapon;
 
         canMove = true;
-        mobInventoryMap = new HashMap<String,Eqpmt>();
         mobInventoryList = new LinkedList<Eqpmt>();
         mobEquipmentMap = new HashMap<String,Eqpmt>();
-        mobEquipmentList = new LinkedList<Eqpmt>();
+        populateEqMap();
+        equipDefaults();
 
-//        if (GameInterface.equipmentMap.containsKey(defaultWeapon)) { equip(GameInterface.equipmentMap.get(defaultWeapon)); }
-//        if (GameInterface.equipmentMap.containsKey(defaultBody)) { equip(GameInterface.equipmentMap.get(defaultBody)); }
-//        if (GameInterface.equipmentMap.containsKey(defaultLegs)) { equip(GameInterface.equipmentMap.get(defaultLegs)); }
-        equip(defaultWeapon);
 
     }
 
@@ -138,6 +117,21 @@ public class Mob {
     public void setSetting(String newSetting) { setting = newSetting; }
     public void setDescription(String newDescription) {description = newDescription; }
 
+    /** Populates all eq slots with nulls */
+    private void populateEqMap() {
+        mobEquipmentMap.put("mainHand",null);
+        mobEquipmentMap.put("body",null);
+        mobEquipmentMap.put("legs",null);
+    }
+
+    /** Equip default equipment.
+     * Also adds equipment to the equipmentMap
+     */
+    private void equipDefaults() {
+        equip(defaultWeapon);
+        equip(defaultBody);
+        equip(defaultLegs);
+    }
 
     /** begins fight between this mob and another mob (can be monster or player character) */
     public void initiateAttack(Mob monster) {
@@ -284,22 +278,24 @@ public class Mob {
 
     /** Shortcut to equip something. Unlike the other equip, item does not need to be in inventory.
      * Can only be called manually in code */
-    public void equip(Eqpmt item) {
+    public boolean equip(Eqpmt item) {
         if (item != null) {
             mobEquipmentMap.put(item.getEquipPlacement(),item);
-            mobEquipmentList.add(item);
             setAttack(attack += item.getAttack());
             setDefense(defense + item.getDefense());
             setMaxHP(maxHP + item.getHP());
             setHP(hp + item.getHP());
+
+            return true;
         }
+        return false;
     }
 
 
     /** Equip selected item. Must be in inventory */
     public boolean equip(String itemName) {
         if (Eqpmt.enumExists(itemName)) {
-            Eqpmt toEquip = mobInventoryMap.get(itemName);
+            Eqpmt toEquip = Eqpmt.valueOf(itemName);
 
             // Remove if already equipped
             if (alreadyEquipped(toEquip.getEquipPlacement())) {
@@ -308,14 +304,12 @@ public class Mob {
 
             // Equip item
             mobEquipmentMap.put(toEquip.getEquipPlacement(),toEquip);
-            mobEquipmentList.add(toEquip);
             setAttack(attack += toEquip.getAttack());
             setDefense(defense + toEquip.getDefense());
             setMaxHP(maxHP + toEquip.getHP());
             setHP(hp + toEquip.getHP());
 
             // Remove from inventory
-            mobInventoryMap.remove(itemName);
             mobInventoryList.remove(toEquip);
 
             return true;
@@ -334,9 +328,9 @@ public class Mob {
     }
 
     /** Unequips selected item */
-    public boolean unequip(String itemName) {
+    public boolean unEquip(String itemName) {
 
-        Eqpmt toUnEquip;
+        Eqpmt toUnEquip = Eqpmt.valueOf(itemName);
 
         if (isEquipped(itemName)) {
 
@@ -355,6 +349,22 @@ public class Mob {
         return false;
     }
 
+    public void unEquip(Eqpmt toUnEquip) {
+
+        // Remove from eqMap
+        String eqSlot = toUnEquip.getEquipPlacement();
+        mobEquipmentMap.remove(eqSlot);
+
+        // Reduce stats
+        attack -= toUnEquip.getAttack();
+        defense -= toUnEquip.getDefense();
+        maxHP -= toUnEquip.getHP();
+        hp -= toUnEquip.getHP();
+
+        // Add to inventory
+        mobInventoryList.add(toUnEquip);
+    }
+
     /** Remove an item from inventory, and places it in the room's inventory list */
     public boolean drop(String itemName) {
 
@@ -371,29 +381,42 @@ public class Mob {
 
     /** Use an item (if applicable) */
     public void use(String itemName) {
-        System.out.println("Mob use() called");
+        System.out.println("Mob.use() called");
     }
 
     /** Check if an item is in a Mob's inventory */
     public boolean isInInventory(String itemName) {
-        if (mobInventoryMap.containsKey(itemName.toLowerCase())) {
-            return true;
+
+        for (Eqpmt itemInInv : mobInventoryList) {
+            if (itemInInv.getName().equalsIgnoreCase(itemName)) {
+                return true;
+            }
         }
+
+        return false;
+    }
+
+    /** Check if an item is in a Mob's inventory */
+    public boolean isInInventory(Eqpmt item) {
+
+        for (Eqpmt itemInInv : mobInventoryList) {
+            if (item == itemInInv) {
+                return true;
+            }
+        }
+
         return false;
     }
 
     /** Check if an item is equipped by a Mob */
-    public boolean isEquipped(String itemName) {
+    public boolean isEquipped(Eqpmt toUnEquip) {
 
-        for (String equipPlace : equipAreas) {
-            if (mobEquipmentMap.get(equipPlace) != null) {
-                String check = mobEquipmentMap.get(equipPlace).getName();
-                if (check.equalsIgnoreCase(itemName)) {
-                    return true;
-                }
-            }
+        String eqSlot = toUnEquip.getEquipPlacement();
+        if (!(mobEquipmentMap.get(eqSlot) == toUnEquip)) {
+            return false;
         }
-        return false;
+
+        return true;
     }
 
     /** Checks where an item is equipped - as a weapon, on the body, or on the legs */
@@ -424,7 +447,7 @@ public class Mob {
     public String getEquipmentString() {
         String viewEquipment = "";
 
-        for (String equipPlace : equipAreas) {
+        for (String equipPlace : equipSlots) {
             viewEquipment += (equipPlace + "\t\t");
             if (mobEquipmentMap.get(equipPlace) != null) {
                 viewEquipment += mobEquipmentMap.get(equipPlace).getName();

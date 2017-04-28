@@ -478,10 +478,19 @@ public class GameInterface {
 
             commandMap.put("unequip", new Command() {
                 public void runCommand(String args) {
-                    if (player.unequip(args)) {
-                        System.out.println("You unequip your " + args);
-                    } else {
-                        System.out.println("Unequip what?");
+                    // args must be an item
+                    if (args.equals("") || !Eqpmt.enumExists(args)) {
+                        System.out.println("Unequip what?"); // args is not a valid item
+                    } else if (Eqpmt.enumExists(args)) {
+                        Eqpmt toUnEquip = Eqpmt.valueOf(args.toUpperCase());
+                        if (player.isEquipped(toUnEquip)) {
+                            // args is a valid item that is equipped
+                            player.unEquip(toUnEquip);
+                            System.out.println("You unequip your " + toUnEquip.getName());
+                        } else {
+                            // args is a valid item that is not equipped
+                            System.out.println("You don't have that equipped");
+                        }
                     }
                 }
             });
