@@ -248,7 +248,7 @@ public class Database {
 
                 try {
                     Eqpmt invItem = player.mobInventoryMap.get(itemName);
-                    eqPlacement = invItem.getEquipPlacement();
+                    eqPlacement = invItem.getEquipSlot();
                 } catch (Exception e) {
                     System.out.println("Problem casting inventory as Equipment:");
                     System.out.println(e);

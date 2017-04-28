@@ -118,7 +118,7 @@ public class Room {
             return;
         }
 //        Equipment mapItem = GameInterface.equipmentMap.get(name);
-//        Equipment newItem = new Equipment(mapItem.getName(),mapItem.getDescription(),mapItem.getSetting(),mapItem.getAttack(),mapItem.getDefense(), mapItem.getHP(),mapItem.getEquipPlacement());
+//        Equipment newItem = new Equipment(mapItem.getName(),mapItem.getDescription(),mapItem.getSetting(),mapItem.getAttack(),mapItem.getDefense(), mapItem.getHP(),mapItem.getEquipSlot());
         addItem(item);
     }
 

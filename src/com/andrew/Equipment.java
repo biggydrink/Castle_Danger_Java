@@ -21,5 +21,5 @@
 //    public int getAttack() { return attack; }
 //    public int getDefense() { return defense; }
 //    public int getHP() { return hp; }
-//    public String getEquipPlacement() { return equipPlacement; }
+//    public String getEquipSlot() { return equipPlacement; }
 //}

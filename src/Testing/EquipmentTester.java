@@ -29,7 +29,7 @@
 //        Assert.assertEquals(testEquip.getAttack(),equipmentAttack);
 //        Assert.assertEquals(testEquip.getDefense(),equipmentDefense);
 //        Assert.assertEquals(testEquip.getHP(),equipmentHP);
-//        Assert.assertEquals(testEquip.getEquipPlacement(),equipPlacement);
+//        Assert.assertEquals(testEquip.getEquipSlot(),equipPlacement);
 //
 //
 //    }

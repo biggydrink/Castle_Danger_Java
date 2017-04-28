@@ -7,6 +7,13 @@ import java.util.LinkedList;
  * implemented but included for future development.
  * This is also a superclass of Player characters
  */
+
+// Currently all item/equipment-related methods have been changed to have Eqpmt parameters
+    // Checks for whether an item is in inventory, etc should be done in GameInterface
+    // This will be more clear as we can see the check and its success or failure will result in an obvious
+    // output statement - i.e. if (not an item) || (!isInInventory(item)) -> "You don't have that"
+        // if (is an item) && (is in inventory) -> drop() or whatever
+    // This avoids constant verification of item strings in Mob class
 public class Mob {
 
     protected String name;
@@ -199,22 +206,21 @@ public class Mob {
 
     }
 
-    /** Called when the monster's HP goes below 0 - mob removed from current room and drops all its items */
+    /** Mob removed from current room, all items in inventory and equipped are dropped*/
     private void die() {
         System.out.println(name + " has died");
         currentRoom.removeMob(this);
 
-        for (String eq : mobEquipmentMap.keySet()) {
-            if (mobEquipmentMap.get(eq) != null) {
-                Eqpmt toDrop = mobEquipmentMap.get(eq);
-                unequip(toDrop.getName());
-                drop(toDrop.getName());
+        // Unequip everything
+        for (Eqpmt equippedItem : mobEquipmentMap.values()) {
+            if (equippedItem != null) {
+                unEquip(equippedItem);
             }
         }
 
-        for (String inv : mobInventoryMap.keySet()) {
-            Eqpmt toDrop = mobInventoryMap.get(inv);
-            drop(toDrop.getName());
+        // Drop everything
+        for (Eqpmt inventoryItem : mobInventoryList) {
+            drop(inventoryItem);
         }
 
     }
@@ -242,45 +248,25 @@ public class Mob {
     }
 
     /** Picks up an item in the room the monster is in */
-    public boolean gainItemInRoom(Eqpmt itemName) {
-//        itemName = itemName.toLowerCase();
-        if (currentRoom.itemIsInRoom(itemName)) {
-//            if (GameInterface.equipmentMap.containsKey(itemName)) { // is a weapon or item
-//                Equipment mapEQ = (Equipment)currentRoom.roomItemMap.get(itemName);
-//                Equipment newEQ = new Equipment(mapEQ.getName(),mapEQ.getDescription(),mapEQ.getSetting(),mapEQ.getAttack(),mapEQ.getDefense(),mapEQ.getHP(),mapEQ.getEquipPlacement());
-//                mobInventoryMap.put(newEQ.getName().toLowerCase(),newEQ);
-                mobInventoryMap.put(itemName.getName(),itemName);
-//                mobInventoryList.add(newEQ);
-                mobInventoryList.add(itemName);
-//                currentRoom.removeItem(mapEQ);
-                currentRoom.removeItem(itemName);
-                return true;
-            }
-//        }
+    public boolean gainItemInRoom(Eqpmt item) {
 
+        if (currentRoom.itemIsInRoom(item)) {
+            mobInventoryList.add(item);
+            currentRoom.removeItem(item);
+            return true;
+        }
         return false;
     }
 
-    public boolean gainItem(Eqpmt itemName) {
-//        if (GameInterface.equipmentMap.containsKey(itemName)) { // is a weapon or item
-//            Equipment mapWeap = GameInterface.equipmentMap.get(itemName);
-//            Equipment newWeap = new Equipment(mapWeap.getName(),mapWeap.getDescription(),mapWeap.getSetting(),mapWeap.getAttack(),mapWeap.getDefense(),mapWeap.getHP(),mapWeap.getEquipPlacement());
-//            mobInventoryMap.put(newWeap.getName().toLowerCase(),newWeap);
-            mobInventoryMap.put(itemName.getName(),itemName);
-//            mobInventoryList.add(newWeap);
-            mobInventoryList.add(itemName);
+    /** Gain an item, does not need to be in current room */
+    public void gainItem(Eqpmt item) {
+        mobInventoryList.add(item);
+    }
 
-            return true;
-        }
-
-//        return false;
-//    }
-
-    /** Shortcut to equip something. Unlike the other equip, item does not need to be in inventory.
-     * Can only be called manually in code */
+    /** Shortcut to equip something. Unlike the other equip, item does not need to be in inventory. */
     public boolean equip(Eqpmt item) {
         if (item != null) {
-            mobEquipmentMap.put(item.getEquipPlacement(),item);
+            mobEquipmentMap.put(item.getEquipSlot(),item);
             setAttack(attack += item.getAttack());
             setDefense(defense + item.getDefense());
             setMaxHP(maxHP + item.getHP());
@@ -293,21 +279,22 @@ public class Mob {
 
 
     /** Equip selected item. Must be in inventory */
-    public boolean equip(String itemName) {
-        if (Eqpmt.enumExists(itemName)) {
-            Eqpmt toEquip = Eqpmt.valueOf(itemName);
+    public boolean equipFromInv(Eqpmt toEquip) {
+
+        if (isInInventory(toEquip)) {
+            String eqSlot = toEquip.getEquipSlot();
 
             // Remove if already equipped
-            if (alreadyEquipped(toEquip.getEquipPlacement())) {
-                unequip(mobEquipmentMap.get(toEquip.getEquipPlacement()).getName());
+            if (alreadyEquipped(eqSlot)) {
+                unEquip(mobEquipmentMap.get(eqSlot));
             }
 
             // Equip item
-            mobEquipmentMap.put(toEquip.getEquipPlacement(),toEquip);
-            setAttack(attack += toEquip.getAttack());
-            setDefense(defense + toEquip.getDefense());
-            setMaxHP(maxHP + toEquip.getHP());
-            setHP(hp + toEquip.getHP());
+            mobEquipmentMap.put(toEquip.getEquipSlot(),toEquip);
+            attack += toEquip.getAttack();
+            defense += toEquip.getDefense();
+            maxHP += toEquip.getHP();
+            hp += toEquip.getHP();
 
             // Remove from inventory
             mobInventoryList.remove(toEquip);
@@ -327,32 +314,14 @@ public class Mob {
         }
     }
 
-    /** Unequips selected item */
-    public boolean unEquip(String itemName) {
-
-        Eqpmt toUnEquip = Eqpmt.valueOf(itemName);
-
-        if (isEquipped(itemName)) {
-
-            toUnEquip = mobEquipmentMap.get(getEquippedItemLocation(itemName));
-
-            mobEquipmentMap.put(toUnEquip.getEquipPlacement(),null);
-            mobEquipmentList.remove(toUnEquip);
-            setAttack(attack - toUnEquip.getAttack());
-            setDefense(defense - toUnEquip.getDefense());
-            setMaxHP(maxHP - toUnEquip.getHP());
-            setHP(hp - toUnEquip.getHP());
-            mobInventoryMap.put(itemName.toLowerCase(), toUnEquip);
-            mobInventoryList.add(toUnEquip);
-            return true;
-        }
-        return false;
-    }
-
+    /** Unequips selected item
+     * Item moved to inventory
+     * @param toUnEquip Eqpmt to unequip (must already be equipped to unequip)
+     */
     public void unEquip(Eqpmt toUnEquip) {
 
         // Remove from eqMap
-        String eqSlot = toUnEquip.getEquipPlacement();
+        String eqSlot = toUnEquip.getEquipSlot();
         mobEquipmentMap.remove(eqSlot);
 
         // Reduce stats
@@ -365,17 +334,14 @@ public class Mob {
         mobInventoryList.add(toUnEquip);
     }
 
-    /** Remove an item from inventory, and places it in the room's inventory list */
-    public boolean drop(String itemName) {
+    /** Remove an item from inventory, and place it in the room's inventory list */
+    public boolean drop(Eqpmt toDrop) {
 
-        if (isInInventory(itemName)) {
-            Eqpmt itemToDrop = mobInventoryMap.get(itemName.toLowerCase());
-            currentRoom.addItem(itemToDrop);
-            mobInventoryMap.remove(itemName.toLowerCase());
-            mobInventoryList.remove(itemToDrop);
+        if (isInInventory(toDrop)) {
+            currentRoom.addItem(toDrop);
+            mobInventoryList.remove(toDrop);
             return true;
         }
-
         return false;
     }
 
@@ -411,7 +377,7 @@ public class Mob {
     /** Check if an item is equipped by a Mob */
     public boolean isEquipped(Eqpmt toUnEquip) {
 
-        String eqSlot = toUnEquip.getEquipPlacement();
+        String eqSlot = toUnEquip.getEquipSlot();
         if (!(mobEquipmentMap.get(eqSlot) == toUnEquip)) {
             return false;
         }
@@ -419,25 +385,12 @@ public class Mob {
         return true;
     }
 
-    /** Checks where an item is equipped - as a weapon, on the body, or on the legs */
-    public String getEquippedItemLocation(String itemName) {
-
-        if (isEquipped(itemName)) {
-            for (Eqpmt eq : mobEquipmentMap.values()) {
-                if (eq != null && eq.getName().equalsIgnoreCase(itemName)) {
-                    return eq.getEquipPlacement();
-                }
-            }
-        }
-        return "";
-    }
-
     /** Puts together a String list of items in inventory, shown by the inv command in GameInterface's commandMap */
     public String getInventoryString() {
         String invString = "";
 
-        for (String itemName : mobInventoryMap.keySet()) {
-            invString += (itemName + "\n");
+        for (Eqpmt eqInInv : mobInventoryList) {
+            invString += (eqInInv.getName() + "\n");
         }
 
         return invString;
@@ -505,77 +458,6 @@ public class Mob {
 
         newRoom.addMob(this);
         currentRoom = newRoom;
-    }
-
-    // May end up using this to add structure to how items are equipped in specific slots
-    // Can we use anything else besides null to show a non-equipped state?
-    private static class Armory {
-
-        Eqpmt body;
-        Eqpmt legs;
-        Eqpmt mainHand;
-
-        void setBody(Eqpmt newBody) {
-            if (body != null) {
-                removeBody();
-            }
-            body = newBody;
-        }
-
-        Eqpmt removeBody() {
-            if (body != null) {
-                Eqpmt oldBody = body;
-                body = null;
-                return oldBody;
-            } else {
-                return null;
-            }
-        }
-
-        void setLegs(Eqpmt newLegs) {
-            if (legs != null) {
-                removeLegs();
-            }
-            legs = newLegs;
-        }
-
-        Eqpmt removeLegs() {
-            if (legs != null) {
-                Eqpmt oldLegs = legs;
-                legs = null;
-                return oldLegs;
-            } else {
-                return null;
-            }
-        }
-
-        void setMainHand(Eqpmt newMainHand) {
-            if (mainHand != null) {
-                removeMainHand();
-            }
-            mainHand = newMainHand;
-        }
-
-        Eqpmt removeMainHand() {
-            if (mainHand != null) {
-                Eqpmt oldMainHand = mainHand;
-                mainHand = null;
-                return oldMainHand;
-            } else {
-                return null;
-            }
-        }
-
-        HashMap<String,Eqpmt> removeAll() {
-            HashMap<String,Eqpmt> eqMap = new HashMap<String,Eqpmt>();
-
-            eqMap.put("body",removeBody());
-            eqMap.put("legs",removeLegs());
-            eqMap.put("mainHand",removeMainHand());
-
-            return eqMap;
-        }
-
     }
 
 }
