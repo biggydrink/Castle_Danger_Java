@@ -1,6 +1,7 @@
 package com.andrew;
 
 import java.sql.*;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 /** All database info
@@ -120,7 +121,6 @@ public class Database {
                 "inv_key INT AUTO_INCREMENT PRIMARY KEY" +
                 ", playerID INT NOT NULL" +
                 ", name VARCHAR(25) NOT NULL" +
-                ", equipmentPlacement VARCHAR(20)" +
             ");";
 
         try {
@@ -137,7 +137,7 @@ public class Database {
         String createTableQuery = "CREATE TABLE " + EQUIPPED_TABLE_NAME + " (" +
                 "eq_key INT AUTO_INCREMENT PRIMARY KEY" +
                 ", playerID INT NOT NULL" +
-                ", eqWeapon VARCHAR(50) NOT NULL" +
+                ", eqMainHand VARCHAR(50) NOT NULL" +
                 ", eqBody VARCHAR(50) NOT NULL" +
                 ", eqLegs VARCHAR(50) NOT NULL" +
                 ");";
@@ -187,25 +187,21 @@ public class Database {
 
     /** Adds new player's equipment (even if nothing) equipment table */
     public void addNewPlayerEQ(Player player) {
+
         String eqWeapon = "";
         String eqBody = "";
         String eqLegs = "";
 
+        Eqpmt mainH = player.mobEquipmentMap.get(EquipSlot.MAINHAND);
+        Eqpmt body = player.mobEquipmentMap.get(EquipSlot.BODY);
+        Eqpmt legs = player.mobEquipmentMap.get(EquipSlot.LEGS);
 
-        if (player.mobEquipmentMap.get("Weapon") != null) {
-//            eqWeapon = player.mobEquipmentMap.get("Weapon").getName();
-            eqWeapon = player.mobEquipmentMap.get("Weapon").getVariableName();
-        }
-        if (player.mobEquipmentMap.get("Body") != null) {
-//            eqBody = player.mobEquipmentMap.get("Body").getName();
-            eqBody = player.mobEquipmentMap.get("Body").getVariableName();
-        }
-        if (player.mobEquipmentMap.get("Legs") != null) {
-//            eqLegs = player.mobEquipmentMap.get("Legs").getName();
-            eqLegs = player.mobEquipmentMap.get("Legs").getVariableName();
-        }
+        if (mainH != null) { eqWeapon = mainH.getVariableName(); }
+        if (body != null) { eqWeapon = body.getVariableName(); }
+        if (legs  != null) { eqWeapon = legs.getVariableName(); }
 
-        String addPlayerEQQuery = "INSERT INTO " + EQUIPPED_TABLE_NAME + "(playerid, eqWeapon, eqBody, eqLegs)" +
+
+        String addPlayerEQQuery = "INSERT INTO " + EQUIPPED_TABLE_NAME + "(playerid, eqMainHand, eqBody, eqLegs)" +
                 " VALUES (" +
                 getID(player.name) +
                 ",'" + eqWeapon +
@@ -227,8 +223,8 @@ public class Database {
 
         deletePlayerInv(player);
 
-        if (player.mobInventoryMap.size() == 0) {
-            String addPlayerInvQuery = "INSERT INTO " + INVENTORY_TABLE_NAME + "(playerID, name, equipmentPlacement)" +
+        if (player.mobInventoryList.size() == 0) {
+            String addPlayerInvQuery = "INSERT INTO " + INVENTORY_TABLE_NAME + "(playerID, name)" +
                     " VALUES (" +
                     id +
                     ", ''" +
@@ -242,24 +238,14 @@ public class Database {
             }
 
         } else {
-            for (String itemName : player.mobInventoryMap.keySet()) {
+            for (Eqpmt item : player.mobInventoryList) {
 
-                String eqPlacement = "";
+                String itemName = item.getVariableName();
 
-                try {
-                    Eqpmt invItem = player.mobInventoryMap.get(itemName);
-                    eqPlacement = invItem.getEquipSlot();
-                } catch (Exception e) {
-                    System.out.println("Problem casting inventory as Equipment:");
-                    System.out.println(e);
-                }
-
-
-                String addPlayerInvQuery = "INSERT INTO " + INVENTORY_TABLE_NAME + "(playerID, name, equipmentPlacement)" +
+                String addPlayerInvQuery = "INSERT INTO " + INVENTORY_TABLE_NAME + "(playerID, name)" +
                         " VALUES (" +
                         id +
                         ", '" + itemName +
-                        "', '" + eqPlacement +
                         "');";
 
                 try {
@@ -299,20 +285,6 @@ public class Database {
         // Get player data
         String name = player.getName();
         int id = player.getID();
-        String eqWeapon = "";
-        String eqBody = "";
-        String eqLegs = "";
-
-
-        if (player.mobEquipmentMap.get("Weapon") != null) {
-            eqWeapon = player.mobEquipmentMap.get("Weapon").getName();
-        }
-        if (player.mobEquipmentMap.get("Body") != null) {
-            eqBody = player.mobEquipmentMap.get("Body").getName();
-        }
-        if (player.mobEquipmentMap.get("Legs") != null) {
-            eqLegs = player.mobEquipmentMap.get("Legs").getName();
-        }
         int maxHP = player.getMaxHP();// - GameInterface.equipmentMap.get(eqWeapon).getHP() - GameInterface.equipmentMap.get(eqBody).getHP() - GameInterface.equipmentMap.get(eqLegs).getHP();
         int hp = player.getHP();
         int attack = player.getAttack();// - GameInterface.equipmentMap.get(eqWeapon).getAttack() - GameInterface.equipmentMap.get(eqBody).getAttack() - GameInterface.equipmentMap.get(eqLegs).getAttack();
@@ -346,28 +318,22 @@ public class Database {
         int id = player.getID();
         // HP, attack, defense are all calculated minus the bonuses from equipment
 
-        String eqWeapon = "";
-        String eqBody = "";
-        String eqLegs = "";
+        String eqMainHandName = "";
+        String eqBodyName = "";
+        String eqLegsName = "";
 
+        Eqpmt mainH = player.mobEquipmentMap.get(EquipSlot.MAINHAND);
+        Eqpmt body = player.mobEquipmentMap.get(EquipSlot.BODY);
+        Eqpmt legs = player.mobEquipmentMap.get(EquipSlot.LEGS);
 
-        if (player.mobEquipmentMap.get("Weapon") != null) {
-//            eqWeapon = player.mobEquipmentMap.get("Weapon").getName();
-            eqWeapon = player.mobEquipmentMap.get("Weapon").getVariableName();
-        }
-        if (player.mobEquipmentMap.get("Body") != null) {
-//            eqBody = player.mobEquipmentMap.get("Body").getName();
-            eqBody = player.mobEquipmentMap.get("Body").getVariableName();
-        }
-        if (player.mobEquipmentMap.get("Legs") != null) {
-//            eqBody = player.mobEquipmentMap.get("Body").getName();
-            eqBody = player.mobEquipmentMap.get("Body").getVariableName();
-        }
+        if (mainH != null) { eqMainHandName = mainH.getVariableName(); }
+        if (body != null) { eqBodyName = body.getVariableName(); }
+        if (legs  != null) { eqLegsName = legs.getVariableName(); }
 
         String addPlayerEQQuery = "UPDATE " + EQUIPPED_TABLE_NAME +
-                " SET eqWeapon = '" + eqWeapon +
-                "',eqBody = '" + eqBody +
-                "',eqlegs = '" + eqLegs +
+                " SET eqMainHand = '" + eqMainHandName +
+                "',eqBody = '" + eqBodyName +
+                "',eqlegs = '" + eqLegsName +
                 "' WHERE playerID = " + id + ";";
 
         try {
@@ -434,14 +400,18 @@ public class Database {
     }
 
     /** Gets player equipment information for loading saved chracter */
-    public String[] loadPlayerEQ(int id) {
-        String[] eqArray = new String[3];
-        // Fill with blanks to avoid null pointers
-        for (int i = 0; i < eqArray.length; ++i) {
-            eqArray[i] = "";
+    public HashMap<EquipSlot,Eqpmt> loadPlayerEQ(int id) {
+        HashMap<EquipSlot,Eqpmt> dbEquipmentMap = new HashMap<EquipSlot,Eqpmt>();
+        String mainHandName = "";
+        String bodyName = "";
+        String legsName = "";
+
+
+        for (EquipSlot eqSlot : EquipSlot.values()) {
+            dbEquipmentMap.put(eqSlot,null);
         }
 
-        String loadPlayerEQQuery = "SELECT eqWeapon, eqBody, eqLegs" +
+        String loadPlayerEQQuery = "SELECT eqMainHand, eqBody, eqLegs" +
                 " FROM " + EQUIPPED_TABLE_NAME +
                 " WHERE playerID = " + id +
                 ";";
@@ -450,19 +420,32 @@ public class Database {
             if (rs != null) rs.close();
             rs = statement.executeQuery(loadPlayerEQQuery);
             rs.next();
-            eqArray[0] = rs.getString("eqWeapon");
-            eqArray[1] = rs.getString("eqBody");
-            eqArray[2] = rs.getString("eqLegs");
+            mainHandName = rs.getString("eqWeapon");
+            bodyName = rs.getString("eqBody");
+            legsName = rs.getString("eqLegs");
 
         } catch (SQLException sqle) {
             System.out.println("Exception: " + sqle);
         }
 
-        return eqArray;
+        if (Eqpmt.enumExists(mainHandName)) {
+            Eqpmt mainHand = Eqpmt.valueOf(mainHandName);
+            dbEquipmentMap.put(mainHand.getEquipSlot(),mainHand);
+        }
+        if (Eqpmt.enumExists(bodyName)) {
+            Eqpmt body = Eqpmt.valueOf(bodyName);
+            dbEquipmentMap.put(body.getEquipSlot(),body);
+        }
+        if (Eqpmt.enumExists(legsName)) {
+            Eqpmt legs = Eqpmt.valueOf(legsName);
+            dbEquipmentMap.put(legs.getEquipSlot(),legs);
+        }
+
+        return dbEquipmentMap;
     }
 
-    public LinkedList<String> loadPlayerInv(int id) {
-        LinkedList<String> playerInvLoadList = new LinkedList<>();
+    public LinkedList<Eqpmt> loadPlayerInv(int id) {
+        LinkedList<Eqpmt> playerInvLoadList = new LinkedList<>();
 
         String getInvSelectQuery = "SELECT name FROM " + INVENTORY_TABLE_NAME +
                 " WHERE playerid = " + id +
@@ -472,7 +455,7 @@ public class Database {
             if (rs != null) rs.close();
             rs = statement.executeQuery(getInvSelectQuery);
             while (rs.next()) {
-                playerInvLoadList.add(rs.getString(1));
+                playerInvLoadList.add(Eqpmt.valueOf(rs.getString(1)));
             }
         } catch (SQLException sqle) {
             System.out.println("SQL Exception while loading player inventory:");

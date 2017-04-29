@@ -1,21 +1,17 @@
 package com.andrew;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Scanner;
-import java.util.Timer;
+import java.util.*;
 
 // Additions
 // Allow 'g all' command
 // Allow look command to be used in directions
-// Would have to add text to the Room object
+    // Would have to add text to the Room object
 // save all players every tickLimit
 // Reformat World's room array
 // Add some enums?
-// Equipment slots
-// Under Equipment class AND maybe Mob class?
-// NSEW in rooms
-// When you try move in a direction you can't go, the current room setting is still displayed, which makes you think maybe you DID move
+    // Equipment slots
+    // Under Equipment class AND maybe Mob class?
+    // NSEW in rooms
 
 
 public class GameInterface {

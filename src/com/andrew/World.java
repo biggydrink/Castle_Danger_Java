@@ -157,7 +157,7 @@ public class World {
     // Extra additions to map are quality of life improvements for the player - e.x. can select "balloon sword" by just typing "balloon" instead of full name
     protected HashMap<String,Equipment> createEquipment() {
 
-        // Equipment constructor arguments: (String name, String description, String setting, int attack, int defense, int hp, String equipPlacement)
+        // Equipment constructor arguments: (String name, String description, String setting, int attack, int defense, int hp, String equipSlot)
 
         HashMap<String,Equipment> equipmentMap = new HashMap<String,Equipment>();
 

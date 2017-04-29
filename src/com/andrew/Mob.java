@@ -34,7 +34,8 @@ public class Mob {
     // Equipment should probably just be a map, not a list
         // The equipment map should have default equip slot keys added, with null (or something) as the default value if no other default given
     protected LinkedList<Eqpmt> mobInventoryList;
-    protected HashMap<String,Eqpmt> mobEquipmentMap;
+//    protected HashMap<String,Eqpmt> mobEquipmentMap;
+    protected HashMap<EquipSlot,Eqpmt> mobEquipmentMap;
     private String[] equipSlots = {"mainHand","Body","Legs"};
 
 
@@ -51,7 +52,7 @@ public class Mob {
 
         canMove = true;
         mobInventoryList = new LinkedList<Eqpmt>();
-        mobEquipmentMap = new HashMap<String,Eqpmt>();
+        mobEquipmentMap = new HashMap<EquipSlot,Eqpmt>();
         populateEqMap();
         equipDefaults();
     }
@@ -71,7 +72,7 @@ public class Mob {
 
         canMove = true;
         mobInventoryList = new LinkedList<Eqpmt>();
-        mobEquipmentMap = new HashMap<String,Eqpmt>();
+        mobEquipmentMap = new HashMap<EquipSlot,Eqpmt>();
         populateEqMap();
         equipDefaults();
 
@@ -90,7 +91,7 @@ public class Mob {
 
         canMove = true;
         mobInventoryList = new LinkedList<Eqpmt>();
-        mobEquipmentMap = new HashMap<String,Eqpmt>();
+        mobEquipmentMap = new HashMap<EquipSlot,Eqpmt>();
         populateEqMap();
         equipDefaults();
 
@@ -126,9 +127,9 @@ public class Mob {
 
     /** Populates all eq slots with nulls */
     private void populateEqMap() {
-        mobEquipmentMap.put("mainHand",null);
-        mobEquipmentMap.put("body",null);
-        mobEquipmentMap.put("legs",null);
+        mobEquipmentMap.put(EquipSlot.MAINHAND,null);
+        mobEquipmentMap.put(EquipSlot.BODY,null);
+        mobEquipmentMap.put(EquipSlot.LEGS,null);
     }
 
     /** Equip default equipment.
@@ -282,7 +283,7 @@ public class Mob {
     public boolean equipFromInv(Eqpmt toEquip) {
 
         if (isInInventory(toEquip)) {
-            String eqSlot = toEquip.getEquipSlot();
+            EquipSlot eqSlot = toEquip.getEquipSlot();
 
             // Remove if already equipped
             if (alreadyEquipped(eqSlot)) {
@@ -306,7 +307,7 @@ public class Mob {
     }
 
     /** Checks if something is already equipped in the selected slot */
-    private boolean alreadyEquipped(String eqLoc) {
+    private boolean alreadyEquipped(EquipSlot eqLoc) {
         if (mobEquipmentMap.get(eqLoc) == null) {
             return false;
         } else {
@@ -321,7 +322,7 @@ public class Mob {
     public void unEquip(Eqpmt toUnEquip) {
 
         // Remove from eqMap
-        String eqSlot = toUnEquip.getEquipSlot();
+        EquipSlot eqSlot = toUnEquip.getEquipSlot();
         mobEquipmentMap.remove(eqSlot);
 
         // Reduce stats
@@ -377,7 +378,7 @@ public class Mob {
     /** Check if an item is equipped by a Mob */
     public boolean isEquipped(Eqpmt toUnEquip) {
 
-        String eqSlot = toUnEquip.getEquipSlot();
+        EquipSlot eqSlot = toUnEquip.getEquipSlot();
         if (!(mobEquipmentMap.get(eqSlot) == toUnEquip)) {
             return false;
         }
