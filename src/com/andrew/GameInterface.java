@@ -2,13 +2,24 @@ package com.andrew;
 
 import java.util.*;
 
-//          Removed Room.createItem(Eqpmt Item) - totally redundant with Room.addItem(Eqpmt Item)
-//          Removed references to Room.roomItemMap - using Room.itemList instead
+/*
+Broken things:
+    |Equipping items in inventory (probably does not adequately convert command args to Eqpmt)
+    |Doing anything with items (can't seem to find items, probably also due to converting args to Eqpmt) (applies to get, look, drop)
+    |No feedback when dropping items
+    |Saving equipment (shows polkadot pants in mainhand, nothing else)
+    |Saving items (nothing saved? maybe i just didn't quit correctly though)
+    |Loading equipment (column 'eqWeapon' not found)
+    |eq command formatting (maybe add some more \t)
+    |Mob.die() command (only for mobs that have items - probably has to do with that)
+    |help command not updated for 'st' meaning 'stat'
 
-// TODO fix look() so that player can reference items without having to type Eqpmt.variableName
+
+ */
+
 
 // Additions
-// TODO Allow look command to be used in directions
+// Allow look command to be used in directions
     // Would have to add text to the Room object
 // Save all players every tickLimit
 // Reformat World's room array
@@ -451,7 +462,7 @@ public class GameInterface {
                         // attempt to drop all items in inventory
                         int limit = player.mobInventoryList.size();
                         for (int i = 0; i < limit; ++i) {
-                            player.drop(player.mobInventoryList.get(i));
+                            player.drop(player.mobInventoryList.get(0));
                         }
                     } else {
                         System.out.println("Drop what?");

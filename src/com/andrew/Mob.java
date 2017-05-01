@@ -36,7 +36,6 @@ public class Mob {
     protected LinkedList<Eqpmt> mobInventoryList;
 //    protected HashMap<String,Eqpmt> mobEquipmentMap;
     protected HashMap<EquipSlot,Eqpmt> mobEquipmentMap;
-    private String[] equipSlots = {"mainHand","Body","Legs"};
 
 
     /** Construct that includes attack and defense
@@ -401,10 +400,10 @@ public class Mob {
     public String getEquipmentString() {
         String viewEquipment = "";
 
-        for (String equipPlace : equipSlots) {
-            viewEquipment += (equipPlace + "\t\t");
-            if (mobEquipmentMap.get(equipPlace) != null) {
-                viewEquipment += mobEquipmentMap.get(equipPlace).getName();
+        for (EquipSlot eqSlot : EquipSlot.values()) {
+            viewEquipment += (eqSlot.getName() + "\t\t");
+            if (mobEquipmentMap.get(eqSlot) != null) {
+                viewEquipment += mobEquipmentMap.get(eqSlot).getName();
             } else {
                 viewEquipment += "[Nothing]";
             }
