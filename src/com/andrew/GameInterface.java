@@ -642,26 +642,22 @@ public class GameInterface {
      */
     static public void look(String name) {
         try {
-            if (player.currentRoom.roomMobMap.containsKey(name)) {
-                // Looking at a mob
+            if (player.currentRoom.roomMobMap.containsKey(name)) { // if looking at a mob/player
                 Mob viewingMob = player.currentRoom.roomMobMap.get(name);
                 System.out.println(viewingMob.getDescription());
                 System.out.println(viewingMob.getInventoryString());
                 System.out.println(viewingMob.getEquipmentString());
-            } else if (player.currentRoom.itemIsInRoom(Eqpmt.valueOf(name))) {
-                // TODO check that this works - not sure if valueOf(invalid Eqpmt) will break or just return false
-                // Looking at an item in the room
-                Eqpmt viewingItem = Eqpmt.valueOf(name);
-                System.out.println(viewingItem.getDescription());
-            } else if (player.isInInventory(name)) {
-                // looking at an item in inventory
-                Eqpmt viewingItem = player.mobInventoryMap.get(name);
-                System.out.println(viewingItem.getDescription());
-            } else if (player.isEquipped(name)) {
-                // looking at an equipped item
-                String eqLoc = player.getEquippedItemLocation(name);
-                Eqpmt viewingItem = player.mobEquipmentMap.get(eqLoc);
-                System.out.println(viewingItem.getDescription());
+            } else if (Eqpmt.isInLookStrings(name)){ // If args is some kind of item
+                // I feel there is definitely a way to improve this
+                for (Eqpmt item : Eqpmt.values()) {
+                    if (player.currentRoom.itemIsInRoom(item) || player.isInInventory(item) || player.isEquipped(item)) {
+                        for (String shorthand : item.lookStrings) {
+                            if (shorthand.equalsIgnoreCase(name)) {
+                                System.out.println(item.getDescription());
+                            }
+                        }
+                    }
+                }
             } else {
                 System.out.println("You don't see that here");
             }
@@ -669,7 +665,6 @@ public class GameInterface {
             // why this exception?
             System.out.println("Exception: " + e);
         }
-
     }
 
     /**

@@ -1,5 +1,7 @@
 package com.andrew;
 
+import java.util.HashMap;
+
 /**
  * Created by Andrew on 4/25/2017.
  */
@@ -52,6 +54,7 @@ public enum Eqpmt {
     int defense;
     int hp;
     EquipSlot equipSlot;
+    String[] lookStrings;
 
 
     Eqpmt(String variableName, String name, String description, String setting, int attack, int defense, int hp, EquipSlot equipSlot) {
@@ -63,6 +66,7 @@ public enum Eqpmt {
         this.hp = hp;
         this.equipSlot = equipSlot;
         this.attack = attack;
+        lookStrings = description.split(" ");
     }
 
     public String getSetting() { return setting; }
@@ -79,11 +83,22 @@ public enum Eqpmt {
     //      a NullPointerException if itemName is null
 
     /** returns true if the string corresponds to an enum constant */
-    // TODO make sure this method is used in all places where global equipmentMap used to be checked
     public static boolean enumExists(String enumName) {
         for (Eqpmt eq : values()) {
             if (enumName.equals(eq.variableName)) {
                 return true;
+            }
+        }
+        return false;
+    }
+
+    /** returns true if given arg corresponds to a lookString in at least one Eqpmt */
+    public static boolean isInLookStrings(String name) {
+        for (Eqpmt eq : values()) {
+            for (String lookStr : eq.lookStrings) {
+                if (name.equalsIgnoreCase(lookStr)) {
+                    return true;
+                }
             }
         }
         return false;
