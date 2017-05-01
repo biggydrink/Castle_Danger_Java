@@ -9,6 +9,8 @@ import java.util.LinkedList;
  */
 public class Room {
 
+    // Should roomMobMap be removed?
+
     String name;
     String description;
     Room north;
@@ -20,7 +22,6 @@ public class Room {
     HashMap<String,Mob> roomMobMap;
     LinkedList<Eqpmt> defaultItemTypes;
     LinkedList<Eqpmt> itemList;
-    HashMap<String,Eqpmt> roomItemMap;
 
     /** Room constructor with default mob/item types */
     public Room(String name, String description, String defaultMob, Eqpmt defaultItem) {
@@ -30,12 +31,11 @@ public class Room {
         mobList = new LinkedList<Mob>();
         roomMobMap = new HashMap<String,Mob>();
         itemList = new LinkedList<Eqpmt>();
-        roomItemMap = new HashMap<String,Eqpmt>();
 
         defaultItemTypes = new LinkedList<Eqpmt>();
         defaultItemTypes.add(defaultItem);
         for (Eqpmt itemName : defaultItemTypes) {
-            createItem(itemName);
+            addItem(itemName);
         }
 
         defaultMobTypes = new LinkedList<>();
@@ -53,7 +53,6 @@ public class Room {
         mobList = new LinkedList<Mob>();
         roomMobMap = new HashMap<String,Mob>();
         itemList = new LinkedList<Eqpmt>();
-        roomItemMap = new HashMap<String,Eqpmt>();
 
         defaultMobTypes = new LinkedList<>();
         defaultMobTypes.add(defaultMob);
@@ -70,12 +69,11 @@ public class Room {
         mobList = new LinkedList<Mob>();
         roomMobMap = new HashMap<String,Mob>();
         itemList = new LinkedList<Eqpmt>();
-        roomItemMap = new HashMap<String,Eqpmt>();
 
         defaultItemTypes = new LinkedList<Eqpmt>();
         defaultItemTypes.add(defaultItem);
         for (Eqpmt itemName : defaultItemTypes) {
-            createItem(itemName);
+            addItem(itemName);
         }
     }
 
@@ -87,7 +85,6 @@ public class Room {
         mobList = new LinkedList<Mob>();
         roomMobMap = new HashMap<String,Mob>();
         itemList = new LinkedList<Eqpmt>();
-        roomItemMap = new HashMap<String,Eqpmt>();
     }
 
     public void setNorth(Room northRoom) {
@@ -98,9 +95,11 @@ public class Room {
     public void setWest(Room westRoom) { this.west = westRoom; }
 
     /** Check if an item is in the room or not */
-    public boolean itemIsInRoom(Eqpmt itemName) {
-        if (roomItemMap.containsKey(itemName)) {
-            return true;
+    public boolean itemIsInRoom(Eqpmt item) {
+        for (int i = 0; i < itemList.size(); ++i) {
+            if (itemList.get(i) == item) {
+                return true;
+            }
         }
         return false;
     }
@@ -110,16 +109,6 @@ public class Room {
             return true;
         }
         return false;
-    }
-
-    /** Create an item, usually the room's default */
-    protected void createItem(Eqpmt item) {
-        if (name.equals("")) {
-            return;
-        }
-//        Equipment mapItem = GameInterface.equipmentMap.get(name);
-//        Equipment newItem = new Equipment(mapItem.getName(),mapItem.getDescription(),mapItem.getSetting(),mapItem.getAttack(),mapItem.getDefense(), mapItem.getHP(),mapItem.getEquipSlot());
-        addItem(item);
     }
 
     /** Create a mob, usually the room's default */
@@ -162,13 +151,15 @@ public class Room {
     /** Add an item to room */
     protected void addItem(Eqpmt item) {
         itemList.add(item);
-        roomItemMap.put(item.getName().toLowerCase(),item);
     }
 
     /** Remove an item from room */
-    protected void removeItem(Eqpmt item) {
-        itemList.remove(item);
-        roomItemMap.remove(item.getName().toLowerCase());
+    protected boolean removeItem(Eqpmt item) {
+        if (itemIsInRoom(item)) {
+            itemList.remove(item);
+            return true;
+        }
+        return false;
     }
 
     /** Return a string of all items in the room. Runs in the GameInterface.setting() method */

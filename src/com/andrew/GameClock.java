@@ -47,7 +47,7 @@ public class GameClock extends TimerTask {
                 }
                 for (Eqpmt defaultItem : room.defaultItemTypes) {
                     if (!room.itemIsInRoom(defaultItem)) { // item is no longer in room's roomItemList
-                        room.createItem(defaultItem);
+                        room.addItem(defaultItem);
                     }
                 }
             }

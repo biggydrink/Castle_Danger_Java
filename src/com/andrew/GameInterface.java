@@ -2,16 +2,23 @@ package com.andrew;
 
 import java.util.*;
 
+//          Removed Room.createItem(Eqpmt Item) - totally redundant with Room.addItem(Eqpmt Item)
+//          Removed references to Room.roomItemMap - using Room.itemList instead
+
+// TODO fix look() so that player can reference items without having to type Eqpmt.variableName
+// TODO fix loadPlayer() to reflect changes to db.loadPlayer()
+
 // Additions
-// Allow 'g all' command
-// Allow look command to be used in directions
+// TODO Allow look command to be used in directions
     // Would have to add text to the Room object
-// save all players every tickLimit
+// Save all players every tickLimit
 // Reformat World's room array
 // Add some enums?
     // Equipment slots
-    // Under Equipment class AND maybe Mob class?
-    // NSEW in rooms
+    // Under Equipment class
+    // Instead of room class maybe
+    // AND maybe Mob class?
+    // NSEW in rooms? may not be necessary
 
 
 public class GameInterface {
@@ -22,7 +29,6 @@ public class GameInterface {
     protected static World theWorld = new World(); // Use this to make game object info easily accessible
 
     protected static LinkedList<Player> playerList = new LinkedList<>();
-//        protected static HashMap<String,Eqpmt> equipmentMap = theWorld.createEquipment();
     protected static HashMap<String, Mob> mobMap = theWorld.createMobs();
     protected static LinkedList<Room> roomList = theWorld.createRooms();
 
@@ -48,7 +54,6 @@ public class GameInterface {
     // all the monsters, they'll be repopulated every so often, you slowly restore health between battles, etc
     protected static Timer timer;
     protected static GameClock clockTick;
-    //protected static long clockInterval = 10000; // milliseconds, 1000 = 1 second
 
     public static void main(String[] args) {
 
@@ -646,9 +651,10 @@ public class GameInterface {
                 System.out.println(viewingMob.getDescription());
                 System.out.println(viewingMob.getInventoryString());
                 System.out.println(viewingMob.getEquipmentString());
-            } else if (player.currentRoom.roomItemMap.containsKey(name)) {
+            } else if (player.currentRoom.itemIsInRoom(Eqpmt.valueOf(name))) {
+                // TODO check that this works - not sure if valueOf(invalid Eqpmt) will break or just return false
                 // Looking at an item in the room
-                Eqpmt viewingItem = player.currentRoom.roomItemMap.get(name);
+                Eqpmt viewingItem = Eqpmt.valueOf(name);
                 System.out.println(viewingItem.getDescription());
             } else if (player.isInInventory(name)) {
                 // looking at an item in inventory
@@ -674,8 +680,8 @@ public class GameInterface {
      */
     static private void helpItems() {
         System.out.println("The names of the items you can get in this room are: ");
-        for (String item : player.currentRoom.roomItemMap.keySet()) {
-            System.out.println(ANSI_YELLOW + item + ANSI_RESET);
+        for (Eqpmt item : player.currentRoom.itemList) {
+            System.out.println(ANSI_YELLOW + item.getName() + ANSI_RESET);
         }
     }
 
