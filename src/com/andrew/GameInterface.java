@@ -6,7 +6,6 @@ import java.util.*;
 //          Removed references to Room.roomItemMap - using Room.itemList instead
 
 // TODO fix look() so that player can reference items without having to type Eqpmt.variableName
-// TODO fix loadPlayer() to reflect changes to db.loadPlayer()
 
 // Additions
 // TODO Allow look command to be used in directions
@@ -180,23 +179,21 @@ public class GameInterface {
      */
     static private Player loadPlayer(String name, int id) {
         Player loadedPlayer = new Player(name);
-        db.loadPlayer(id); // not used for anything yet
+//        loadedPlayer = db.loadPlayer(id); // not used for anything yet
         loadedPlayer.setPlayerID(id);
 
-
         // Load eq
-        String[] eqArray = db.loadPlayerEQ(id);
-        for (int i = 0; i < eqArray.length; ++i) {
-            if (!eqArray[i].equals("")) {
-//                loadedPlayer.equip(equipmentMap.get(eqArray[i].toLowerCase()));
-                loadedPlayer.equip(Eqpmt.valueOf(eqArray[i]));
-            }
+        HashMap<EquipSlot,Eqpmt> loadedEqMap = db.loadPlayerEQ(id);
+
+        for (EquipSlot eqSlot : EquipSlot.values()) {
+            loadedPlayer.equip(loadedEqMap.get(eqSlot));
         }
 
         // Load inventory
-        LinkedList<String> inventoryLoadList = db.loadPlayerInv(id);
-        for (String itemName : inventoryLoadList) {
-            loadedPlayer.gainItem(Eqpmt.valueOf(itemName));
+        LinkedList<Eqpmt> inventoryLoadList = db.loadPlayerInv(id);
+        for (Eqpmt item : inventoryLoadList) {
+            loadedPlayer.gainItem(item);
+
         }
 
         loadedPlayer.setCurrentRoom(roomList.get(0));

@@ -454,6 +454,7 @@ public class Database {
         try {
             if (rs != null) rs.close();
             rs = statement.executeQuery(getInvSelectQuery);
+            // TODO is rs.getString(1) correct?
             while (rs.next()) {
                 playerInvLoadList.add(Eqpmt.valueOf(rs.getString(1)));
             }
