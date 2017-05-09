@@ -118,7 +118,7 @@ public class Room {
             return;
         }
         Mob mapMob = GameInterface.mobMap.get(name);
-        Mob newMob = new Mob(mapMob.getName(),mapMob.getDescription(),mapMob.getSetting(),mapMob.getMaxHP(),mapMob.getAttack(),mapMob.getDefense(),mapMob.getDefaultWeapon(),mapMob.getDefaultBody(),mapMob.getDefaultLegs());
+        Mob newMob = new Mob(mapMob.getName(),mapMob.getDescription(),mapMob.getSetting(),mapMob.getMaxHP(),mapMob.getAttack(),mapMob.getDefense(),mapMob.getDefaultWeapon(),mapMob.getDefaultBody(),mapMob.getDefaultLegs(),mapMob.getDictKeys());
         newMob.setCurrentRoom(this);
     }
 
@@ -140,12 +140,18 @@ public class Room {
     protected void addMob(Mob mob) {
         mobList.add(mob);
         roomMobMap.put(mob.getName().toLowerCase(),mob);
+        for (String mobShortHand : mob.getDictKeys().split(",")) {
+            roomMobMap.put(mobShortHand,mob);
+        }
     }
 
     /** Remove a mob from room */
     protected void removeMob(Mob mob) {
         mobList.remove(mob);
         roomMobMap.remove(mob.getName().toLowerCase());
+        for (String mobShortHand : mob.getDictKeys().split(",")) {
+            roomMobMap.remove(mobShortHand,mob);
+        }
     }
 
     /** Add an item to room */

@@ -28,6 +28,7 @@ public class Mob {
     protected Eqpmt defaultLegs;
     protected boolean canMove;
     protected Room currentRoom;
+    protected String dictKeys;
 
 
     // Inventory should probably just be a list, not a map
@@ -40,7 +41,7 @@ public class Mob {
 
     /** Construct that includes attack and defense
      *  Equips no weapon or armor */
-    public Mob(String name, String description, String setting, int maxHP, int attack, int defense) {
+    public Mob(String name, String description, String setting, int maxHP, int attack, int defense, String dictKeys) {
         this.name = name;
         this.description = description;
         this.setting = setting;
@@ -48,6 +49,7 @@ public class Mob {
         this.hp = maxHP;
         this.attack = attack;
         this.defense = defense;
+        this.dictKeys = dictKeys;
 
         canMove = true;
         mobInventoryList = new LinkedList<Eqpmt>();
@@ -57,7 +59,7 @@ public class Mob {
     }
 
     /** Construct that includes attack and defense, AND includes arguments for default weapon and armor*/
-    public Mob(String name, String description, String setting, int maxHP, int attack, int defense, Eqpmt defaultWeapon, Eqpmt defaultBody, Eqpmt defaultLegs) {
+    public Mob(String name, String description, String setting, int maxHP, int attack, int defense, Eqpmt defaultWeapon, Eqpmt defaultBody, Eqpmt defaultLegs, String dictKeys) {
         this.name = name;
         this.description = description;
         this.setting = setting;
@@ -68,6 +70,7 @@ public class Mob {
         this.defaultWeapon = defaultWeapon;
         this.defaultBody = defaultBody;
         this.defaultLegs = defaultLegs;
+        this.dictKeys = dictKeys;
 
         canMove = true;
         mobInventoryList = new LinkedList<Eqpmt>();
@@ -78,7 +81,7 @@ public class Mob {
     }
 
     /** Construct that includes attack and defense, AND includes arguments for default weapon, but not armor*/
-    public Mob(String name, String description, String setting, int maxHP, int attack, int defense, Eqpmt defaultWeapon) {
+    public Mob(String name, String description, String setting, int maxHP, int attack, int defense, Eqpmt defaultWeapon, String dictKeys) {
         this.name = name;
         this.description = description;
         this.setting = setting;
@@ -87,6 +90,7 @@ public class Mob {
         this.attack = attack;
         this.defense = defense;
         this.defaultWeapon = defaultWeapon;
+        this.dictKeys = dictKeys;
 
         canMove = true;
         mobInventoryList = new LinkedList<Eqpmt>();
@@ -110,6 +114,7 @@ public class Mob {
     public Eqpmt getDefaultWeapon() { return defaultWeapon; }
     public Eqpmt getDefaultBody() { return defaultBody; }
     public Eqpmt getDefaultLegs() { return defaultLegs; }
+    public String getDictKeys() { return dictKeys; }
 
     public void setMaxHP(int newMax) {maxHP = newMax; }
     public void setHP(int newHP) {
