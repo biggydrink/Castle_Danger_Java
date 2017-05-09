@@ -397,7 +397,7 @@ public class GameInterface {
     /**
      * Player command to quit the game
      */
-    static private void quit() { //foox
+    static private void quit() {
         System.out.println("Are you sure? Type quit again, or press enter to continue");
         String response = userScanner.nextLine();
         if (response.equalsIgnoreCase("quit")) {
@@ -561,17 +561,8 @@ public class GameInterface {
             commandMap.put("get", new Command() {
                 public void runCommand(String args) {
                     String notHere = "";
-                    // Get single item
-                    if (Eqpmt.enumExists(args)) {
-                        Eqpmt toGet = Eqpmt.valueOf(args);
-                        if (player.currentRoom.itemIsInRoom(toGet)) {
-                            // arg is a valid item and that item is in the room
-                            player.gainItemInRoom(toGet);
-                        } else {
-                            // arg is a valid item but it is not in the room
-                            System.out.println("You don't see one of those here");
-                        }
-                    } else if (args.equalsIgnoreCase("all")) {
+
+                    if (args.equalsIgnoreCase("all")) {
                         // attempt to get all items in the room
                         int limit = player.currentRoom.itemList.size();
                         for (int i = 0; i < limit; ++i) {
@@ -581,7 +572,14 @@ public class GameInterface {
                             }
                         }
                     } else {
-                        System.out.println("Get what?");
+                        LinkedList<Eqpmt> possibleItems = findPossibleItemsInRoom(args);
+                        int itemIndicator = getItemNumberIndicator(args);
+
+                        if (possibleItems.isEmpty()) {
+                            System.out.println("Get what?");
+                        } else {
+                            player.gainItemInRoom(possibleItems.get(itemIndicator));
+                        }
                     }
                 }
             });
@@ -691,14 +689,8 @@ public class GameInterface {
      */
     static public void look(String name) {
         try {
-            String[] splitName = name.split(" ");
-            int itemIndicator;
             // Get item indicator if there is one (e.x. 2.sword for 2nd sword item)
-            try {
-                itemIndicator = Integer.getInteger(splitName[0]);
-            } catch (NumberFormatException nfe) {
-                itemIndicator = 0;
-            }
+            int itemIndicator = getItemNumberIndicator(name);
 
             if (player.currentRoom.roomMobMap.containsKey(name)) { // if looking at a mob/player
                 Mob viewingMob = player.currentRoom.roomMobMap.get(name);
@@ -761,4 +753,23 @@ public class GameInterface {
         return possibleItems;
     }
 
+    /**
+     * Attempts to split a user's input by a . and return the number
+     * Expects input following '#.itemName' such as '2.sword'. In that example, 2 would be returned
+     * Default is 0
+     * @param userArgs user input from the game's UI
+     * @return user number if given in form of #.itemName. Default return is 0
+     */
+    static private int getItemNumberIndicator(String userArgs) {
+        String[] splitName = userArgs.split(".");
+        int itemIndicator;
+        // Get item indicator if there is one (e.x. 2.sword for 2nd sword item)
+        try {
+            itemIndicator = Integer.getInteger(splitName[0]);
+        } catch (NumberFormatException nfe) {
+            itemIndicator = 0;
+        }
+
+        return itemIndicator;
+    }
 }

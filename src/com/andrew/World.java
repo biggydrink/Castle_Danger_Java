@@ -107,21 +107,21 @@ public class World {
         HashMap<String,Mob> mobMap = new HashMap<>();
 
         Mob ladybug = new Mob("Ladybug","A cute ladybug with little red spots.","There is a ladybug here",20,5,0, "ladybug,bug,lady");
-        for (String mobDictKey : ladybug.getDictKeys()) { mobMap.put(mobDictKey,ladybug); }
+        for (String mobDictKey : ladybug.getDictKeysArray()) { mobMap.put(mobDictKey,ladybug); }
         Mob superLadybug = new Mob("Giant Ladybug","This ladybug is HUGE, with a gaping mouth that looks like it wants to eat you for lunch.","Whoa, a giant ladybug is here!! How did it get so huge? Why does it have a sword?!?",30,6,0,Eqpmt.LONGSWORD,Eqpmt.POLKADOTSHIRT,Eqpmt.POLKADOTPANTS,"ladybug,giant ladybug,giant,bug,lady");
-        for (String mobDictKey : superLadybug.getDictKeys()) { mobMap.put(mobDictKey,superLadybug); }
+        for (String mobDictKey : superLadybug.getDictKeysArray()) { mobMap.put(mobDictKey,superLadybug); }
         Mob willowisp = new Mob("Wisp","You see nothing more than a floating blue flame.","A ghostly will'o wisp is floating here",50,15,3,"wisp,will'o wisp,willo,flame,will o wisp");
-        for (String mobDictKey : willowisp.getDictKeys()) { mobMap.put(mobDictKey,willowisp); }
+        for (String mobDictKey : willowisp.getDictKeysArray()) { mobMap.put(mobDictKey,willowisp); }
         Mob swampThing = new Mob("Swamp Thing","Looks just like the monster from the movie, cool!","The Swamp Thing is here!",100,5,-5,Eqpmt.GREENSWORD,Eqpmt.OOZYSHIRT,Eqpmt.OOZYPANTS,"swamp thing,swamp,thing");
-        for (String mobDictKey : swampThing.getDictKeys()) { mobMap.put(mobDictKey,swampThing); }
+        for (String mobDictKey : swampThing.getDictKeysArray()) { mobMap.put(mobDictKey,swampThing); }
         Mob volcanoGolem = new Mob("Volcano Golem","Looks like magma and rock come to life","A volcano golem is here",75,8,10,"volcano golem,volcano,golem");
-        for (String mobDictKey : volcanoGolem.getDictKeys()) { mobMap.put(mobDictKey,volcanoGolem); }
+        for (String mobDictKey : volcanoGolem.getDictKeysArray()) { mobMap.put(mobDictKey,volcanoGolem); }
         Mob blackDragon = new Mob("Black Dragon","A huge, black dragon!","A... a black dragon is here!",200,22,15,Eqpmt.BLACKSWORD,Eqpmt.CHARREDLEATHERVEST,Eqpmt.CHARREDLEATHERPANTS,"dragon,black,black dragon");
-        for (String mobDictKey : blackDragon.getDictKeys()) { mobMap.put(mobDictKey,blackDragon); }
+        for (String mobDictKey : blackDragon.getDictKeysArray()) { mobMap.put(mobDictKey,blackDragon); }
         Mob foppishGuard = new Mob("Foppish Palace Guard","This guard looks a liiiitle bit too concerned with his appearance","A foppish palace guard is here, fixing his hair in the mirror",125,20,15,Eqpmt.LONGSWORD,"foppish palace guard,palace guard,guard,foppish guard,fop");
-        for (String mobDictKey : foppishGuard.getDictKeys()) { mobMap.put(mobDictKey,foppishGuard); }
+        for (String mobDictKey : foppishGuard.getDictKeysArray()) { mobMap.put(mobDictKey,foppishGuard); }
         Mob evilKing = new Mob("Evil King","","The Corrupt and Nasty King (of destruction-ness and killing) is here, waiting for you to FINISH HIM",300,35,20,Eqpmt.SHINYBROADSWORD,Eqpmt.SHINYNEWBREASTPLATE,Eqpmt.SHINYNEWLEGPLATES,"evil king,nasty king,corrupt king,nasty,corrupt,evil,king");
-        for (String mobDictKey : evilKing.getDictKeys()) { mobMap.put(mobDictKey,evilKing); }
+        for (String mobDictKey : evilKing.getDictKeysArray()) { mobMap.put(mobDictKey,evilKing); }
         return mobMap;
     }
 

@@ -115,6 +115,7 @@ public class Mob {
     public Eqpmt getDefaultBody() { return defaultBody; }
     public Eqpmt getDefaultLegs() { return defaultLegs; }
     public String getDictKeys() { return dictKeys; }
+    public String[] getDictKeysArray() { return dictKeys.split(","); }
 
     public void setMaxHP(int newMax) {maxHP = newMax; }
     public void setHP(int newHP) {

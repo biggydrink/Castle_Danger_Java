@@ -140,7 +140,7 @@ public class Room {
     protected void addMob(Mob mob) {
         mobList.add(mob);
         roomMobMap.put(mob.getName().toLowerCase(),mob);
-        for (String mobShortHand : mob.getDictKeys().split(",")) {
+        for (String mobShortHand : mob.getDictKeysArray()) {
             roomMobMap.put(mobShortHand,mob);
         }
     }
@@ -149,7 +149,7 @@ public class Room {
     protected void removeMob(Mob mob) {
         mobList.remove(mob);
         roomMobMap.remove(mob.getName().toLowerCase());
-        for (String mobShortHand : mob.getDictKeys().split(",")) {
+        for (String mobShortHand : mob.getDictKeysArray()) {
             roomMobMap.remove(mobShortHand,mob);
         }
     }
