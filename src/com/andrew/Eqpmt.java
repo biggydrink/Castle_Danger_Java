@@ -1,6 +1,6 @@
 package com.andrew;
 
-import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * Created by Andrew on 4/25/2017.
@@ -26,7 +26,7 @@ public enum Eqpmt {
 
 
     BALLOONSWORD("BALLOONSWORD","balloon Animal Sword","It's a \"sword\" made out of those skinny balloons that balloon animals are made out of. You really should probably find something else to use if you can..","A balloon animal sword is lying here",1,0,0,EquipSlot.MAINHAND),
-    LONGSWORD("LONGSWORD","Longsword","Nice, an actual sword, with a blade and everything!","A regular longsword is lying here",8,0,0,EquipSlot.MAINHAND),
+    LONGSWORD("LONGSWORD","Longsword","An actual sword, with a blade and everything!","A regular longsword is lying here",8,0,0,EquipSlot.MAINHAND),
     GREENSWORD("GREENSWORD","Green Sword","There's no reason why a green sword would be better than a longsword, but it is","A nice green sword is lying here",11,0,0,EquipSlot.MAINHAND),
     BLACKSWORD("BLACKSWORD","Blackened Sword","This sword didn't used to be black, but it's previous owner was a 5-packs-a-day smoker","A smokey looking, blackened sword is lying here",15,0,0,EquipSlot.MAINHAND),
     SHINYBROADSWORD("SHINYBROADSWORD","Shiny Broadsword","This broadsword looks like it's been polished kind of an unreasonable amount","A very shiny broadsword lies here",20,0,0,EquipSlot.MAINHAND),
@@ -54,7 +54,6 @@ public enum Eqpmt {
     int defense;
     int hp;
     EquipSlot equipSlot;
-    String[] lookStrings;
 
 
     Eqpmt(String variableName, String name, String description, String setting, int attack, int defense, int hp, EquipSlot equipSlot) {
@@ -66,7 +65,6 @@ public enum Eqpmt {
         this.hp = hp;
         this.equipSlot = equipSlot;
         this.attack = attack;
-        lookStrings = description.split(" ");
     }
 
     public String getSetting() { return setting; }
@@ -93,15 +91,17 @@ public enum Eqpmt {
     }
 
     /** returns true if given arg corresponds to a lookString in at least one Eqpmt */
-    public static boolean isInLookStrings(String name) {
+    public static LinkedList<Eqpmt> searchDescr(String query) {
+        LinkedList<Eqpmt> results = new LinkedList<Eqpmt>();
+
         for (Eqpmt eq : values()) {
-            for (String lookStr : eq.lookStrings) {
-                if (name.equalsIgnoreCase(lookStr)) {
-                    return true;
+            for (String descrWord : eq.description.split(" ")) {
+                if (query.equalsIgnoreCase(descrWord)) {
+                    results.add(eq);
                 }
             }
         }
-        return false;
+        return results;
     }
 
 }

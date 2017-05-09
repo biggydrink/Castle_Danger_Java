@@ -1,6 +1,46 @@
-package com.andrew;
+    package com.andrew;
 
 import java.util.*;
+
+
+/*
+Core Problem:
+Program requires precise structure - all Eqpmt must act the same, have similar methods/properties etc
+But, UI takes user input, which can be ANYTHING at all
+-How to determine what a player wants to do, and what they are referring to?
+
+List of commands:
+    Movement:
+        commandShortcuts.put("n", "north");
+        commandShortcuts.put("s", "south");
+        commandShortcuts.put("e", "east");
+        commandShortcuts.put("w", "west");
+        These commands all relate to the player's current position and where they want to go
+        Need to know:
+            1) Mob/player's current room
+                -Contained in player attribute currentRoom
+                -Can only be 1
+            2) Current room's exits
+                -Contained in room's attributes, north/south/east/west
+
+        commandShortcuts.put("g", "get");
+        Get an object/item from the room
+        Need to know:
+            1) List of items in current room
+                -Mob.currentRoom.itemList
+            2) Which item a player is referring to
+                -Provided by player's command argument, e.x. "get sword"
+                    -Core problem: how to convert "sword" to "Blackened Sword" in room (or Longsword, or Green Sword, or Balloon Animal Sword, etc)
+
+        commandShortcuts.put("eq", "equipment");
+        commandShortcuts.put("equip", "equipment");
+        commandShortcuts.put("uneq", "unequip");
+        commandShortcuts.put("h", "help");
+        commandShortcuts.put("i", "inventory");
+        commandShortcuts.put("inv", "inventory");
+        commandShortcuts.put("stat", "status");
+
+ */
 
 /*
 Broken things:
@@ -13,8 +53,6 @@ Broken things:
     |eq command formatting (maybe add some more \t)
     |Mob.die() command (only for mobs that have items - probably has to do with that)
     |help command not updated for 'st' meaning 'stat'
-
-
  */
 
 
@@ -653,24 +691,28 @@ public class GameInterface {
      */
     static public void look(String name) {
         try {
+            String[] splitName = name.split(" ");
+            int itemIndicator;
+            // Get item indicator if there is one (e.x. 2.sword for 2nd sword item)
+            try {
+                itemIndicator = Integer.getInteger(splitName[0]);
+            } catch (NumberFormatException nfe) {
+                itemIndicator = 0;
+            }
+
             if (player.currentRoom.roomMobMap.containsKey(name)) { // if looking at a mob/player
                 Mob viewingMob = player.currentRoom.roomMobMap.get(name);
                 System.out.println(viewingMob.getDescription());
                 System.out.println(viewingMob.getInventoryString());
                 System.out.println(viewingMob.getEquipmentString());
-            } else if (Eqpmt.isInLookStrings(name)){ // If args is some kind of item
-                // I feel there is definitely a way to improve this
-                for (Eqpmt item : Eqpmt.values()) {
-                    if (player.currentRoom.itemIsInRoom(item) || player.isInInventory(item) || player.isEquipped(item)) {
-                        for (String shorthand : item.lookStrings) {
-                            if (shorthand.equalsIgnoreCase(name)) {
-                                System.out.println(item.getDescription());
-                            }
-                        }
-                    }
-                }
             } else {
-                System.out.println("You don't see that here");
+                LinkedList<Eqpmt> possibleItems = findPossibleItemsInRoom(name);
+                if (possibleItems.isEmpty()) {
+                    System.out.println("You don't see that here");
+                } else {
+                    // Print first unless item indicator is named
+                    System.out.println(possibleItems.get(itemIndicator).getDescription());
+                }
             }
         } catch (Exception e) {
             // why this exception?
@@ -701,6 +743,22 @@ public class GameInterface {
                 System.out.println(ANSI_RED + monsterName + ANSI_RESET);
             }
         }
+    }
+
+    /**
+     * Returns a list of items where a word in the item's description matches the search query, AND the item is
+     * in the player's current room.
+     * @param itemSearchQuery String search query, checked against the description strings of all items
+     * @return a LinkedList of items that matches the search query and is in the player's current room
+     */
+    static private LinkedList<Eqpmt> findPossibleItemsInRoom(String itemSearchQuery) {
+        LinkedList<Eqpmt> possibleItems = Eqpmt.searchDescr(itemSearchQuery);
+        for (Eqpmt item : possibleItems) {
+            if (!player.currentRoom.itemIsInRoom(item)) {
+                possibleItems.remove(item);
+            }
+        }
+        return possibleItems;
     }
 
 }
