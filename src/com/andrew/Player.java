@@ -22,7 +22,7 @@ public class Player extends Mob {
 
     public Player(String name) {
 
-        super(name,"","",100,1,1);
+        super(name,"","",100,1,1,"player");
         playerRand = new Random();
         this.name = name;
         this.description = "Behold, " + this.name + ". An elite player in this game!";

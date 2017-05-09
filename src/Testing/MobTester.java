@@ -17,10 +17,11 @@ public class MobTester {
         String mobName = "Test Mob";
         String mobDescription = "It looks like a test";
         String mobSetting = "A piece of paper with questions and check boxes lies here";
+        String mobDictKeys = "paper,piece of paper";
         int mobHP = 100;
         int mobAttack = 10;
         int mobDefense = 5;
-        Mob testMob = new Mob(mobName,mobDescription,mobSetting,mobHP,mobAttack,mobDefense);
+        Mob testMob = new Mob(mobName,mobDescription,mobSetting,mobHP,mobAttack,mobDefense,mobDictKeys);
 
         // Test getters
         Assert.assertEquals(mobName,testMob.getName()); // getName()
@@ -29,6 +30,7 @@ public class MobTester {
         Assert.assertEquals(mobHP,testMob.getHP()); // getHP()
         Assert.assertEquals(mobHP,testMob.getMaxHP()); // getMaxHP()
         Assert.assertEquals(mobAttack,testMob.getAttack()); // getAttack()
+        Assert.assertEquals(mobDictKeys, testMob.getDictKeys());
 
     }
 
@@ -39,10 +41,11 @@ public class MobTester {
         String mobName = "Test Mob";
         String mobDescription = "It looks like a test";
         String mobSetting = "A piece of paper with questions and check boxes lies here";
+        String mobDictKeys = "paper,piece of paper";
         int mobHP = 100;
         int mobAttack = 10;
         int mobDefense = 5;
-        Mob testMob = new Mob(mobName,mobDescription,mobSetting,mobHP,mobAttack,mobDefense);
+        Mob testMob = new Mob(mobName,mobDescription,mobSetting,mobHP,mobAttack,mobDefense,mobDictKeys);
 
         // Run setters
         String newMobName = "Changing Test";

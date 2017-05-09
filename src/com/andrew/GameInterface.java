@@ -44,6 +44,8 @@ List of commands:
 
 /*
 Broken things:
+    |findPossibleItemsInRoom gives concurrentModificationException
+    |Getting a specific item (nothing appears to happen)
     |Equipping items in inventory (probably does not adequately convert command args to Eqpmt)
     |Doing anything with items (can't seem to find items, probably also due to converting args to Eqpmt) (applies to get, look, drop)
     |No feedback when dropping items
@@ -744,7 +746,7 @@ public class GameInterface {
      * @return a LinkedList of items that matches the search query and is in the player's current room
      */
     static private LinkedList<Eqpmt> findPossibleItemsInRoom(String itemSearchQuery) {
-        LinkedList<Eqpmt> possibleItems = Eqpmt.searchDescr(itemSearchQuery);
+        LinkedList<Eqpmt> possibleItems = Eqpmt.searchItems(itemSearchQuery);
         for (Eqpmt item : possibleItems) {
             if (!player.currentRoom.itemIsInRoom(item)) {
                 possibleItems.remove(item);
@@ -764,9 +766,14 @@ public class GameInterface {
         String[] splitName = userArgs.split(".");
         int itemIndicator;
         // Get item indicator if there is one (e.x. 2.sword for 2nd sword item)
-        try {
-            itemIndicator = Integer.getInteger(splitName[0]);
-        } catch (NumberFormatException nfe) {
+
+        if (splitName.length > 0) {
+            try {
+                itemIndicator = Integer.getInteger(splitName[0]) - 1;
+            } catch (NumberFormatException nfe) {
+                itemIndicator = 0;
+            }
+        } else {
             itemIndicator = 0;
         }
 
