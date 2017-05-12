@@ -141,9 +141,9 @@ public class Mob {
      * Also adds equipment to the equipmentMap
      */
     private void equipDefaults() {
-        equip(defaultWeapon);
-        equip(defaultBody);
-        equip(defaultLegs);
+        equipFromAnywhere(defaultWeapon);
+        equipFromAnywhere(defaultBody);
+        equipFromAnywhere(defaultLegs);
     }
 
     /** begins fight between this mob and another mob (can be monster or player character) */
@@ -270,7 +270,7 @@ public class Mob {
     }
 
     /** Shortcut to equip something. Unlike the other equip, item does not need to be in inventory. */
-    public boolean equip(Eqpmt item) {
+    public boolean equipFromAnywhere(Eqpmt item) {
         if (item != null) {
             mobEquipmentMap.put(item.getEquipSlot(),item);
             setAttack(attack += item.getAttack());

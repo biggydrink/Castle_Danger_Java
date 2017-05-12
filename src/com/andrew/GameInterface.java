@@ -2,6 +2,10 @@
 
 import java.util.*;
 
+    // TODO revisit item indicator - just changed the return value from actual text indicator -1 (as in, 2 = 1) to returning
+    // item indicator itself (as in 2 = 2). May mess up current methods that call findItemNumberIndicator, but will allow
+    // us to know when an indicator was used and strip the leading ".#" from the user's argument string, in case it is
+    // used for anything further and we need the item itself minus the number indicator
 
 /*
 Core Problem:
@@ -31,14 +35,38 @@ List of commands:
             2) Which item a player is referring to
                 -Provided by player's command argument, e.x. "get sword"
                     -Core problem: how to convert "sword" to "Blackened Sword" in room (or Longsword, or Green Sword, or Balloon Animal Sword, etc)
+                    -Trying to solve by giving all items a searchValues string
+                    -Using GameInterface.findPossibleItemsInRoom()
 
         commandShortcuts.put("eq", "equipment");
+        1) List the equipment the player is wearing
+            Need to know:
+                1) List of items player is wearing
+                    -Mob.mobEquipmentMap
+                2) What slot those items are equipped in
+                    -Mob.mobEquipmentMap
+        2) Equip (wear) an item the player is carrying
+            Need to know:
+                1) List of items the player is carrying
+                    -Mob.mobInventoryList
+                2) Which inventory item the player is referring to (specific Eqpmt)
+                    -Use findPossibleItemsInInventory
+                3) Which slot that inventory item goes to
+                    -Eqpmt.equipSlot
+                4) What is currently euipped in that slot
+                    -Mob.mobEquipmentMap
+            Need access to
+                1) Mob methods, esp. Mob.equipFromInv(Eqpmt eqpmt)
+
+
+
+
         commandShortcuts.put("equip", "equipment");
         commandShortcuts.put("uneq", "unequip");
-        commandShortcuts.put("h", "help");
         commandShortcuts.put("i", "inventory");
         commandShortcuts.put("inv", "inventory");
         commandShortcuts.put("stat", "status");
+        commandShortcuts.put("h", "help");
 
  */
 
@@ -206,10 +234,10 @@ public class GameInterface {
         // Initializations
         player.setCurrentRoom(roomList.get(0));
         player.setPassword(password);
-//        player.equip(equipmentMap.get("polkadot shirt"));
-//        player.equip(equipmentMap.get("polkadot pants"));
-        player.equip(Eqpmt.POLKADOTSHIRT);
-        player.equip(Eqpmt.POLKADOTPANTS);
+//        player.equipFromAnywhere(equipmentMap.get("polkadot shirt"));
+//        player.equipFromAnywhere(equipmentMap.get("polkadot pants"));
+        player.equipFromAnywhere(Eqpmt.POLKADOTSHIRT);
+        player.equipFromAnywhere(Eqpmt.POLKADOTPANTS);
         // Update db
         db.addNewPlayer(player); // add to players table
         player.setPlayerID(db.getID(player.name)); // query db to get ID, used for loading character
@@ -237,7 +265,7 @@ public class GameInterface {
         HashMap<EquipSlot,Eqpmt> loadedEqMap = db.loadPlayerEQ(id);
 
         for (EquipSlot eqSlot : EquipSlot.values()) {
-            loadedPlayer.equip(loadedEqMap.get(eqSlot));
+            loadedPlayer.equipFromAnywhere(loadedEqMap.get(eqSlot));
         }
 
         // Load inventory
@@ -523,6 +551,11 @@ public class GameInterface {
                         System.out.println("You are wearing: ");
                         System.out.println(player.getEquipmentString());
                     } else {
+                    // with argument, look for Eqpmt in inventory that matches string used
+                        LinkedList<Eqpmt> possibleItemsInInventory = findPossibleItemsInInventory(args);
+                        int itemIndicator = getItemNumberIndicator(args);
+
+
                         if (Eqpmt.enumExists(args.toUpperCase())) {
                             Eqpmt toEquip = Eqpmt.valueOf(args);
                             // If argument is a real item and is in inventory, equip
@@ -756,8 +789,26 @@ public class GameInterface {
     }
 
     /**
+     * // TODO update this doc string, it's copied directly from findPossibleItemsInRoom
+     * Returns a list of items where a word in the item's description matches the search query, AND the item is
+     * in the player's current room.
+     * @param itemSearchQuery String search query, checked against the description strings of all items
+     * @return a LinkedList of items that matches the search query and is in the player's current room
+     */
+    static private LinkedList<Eqpmt> findPossibleItemsInInventory(String itemSearchQuery) {
+        LinkedList<Eqpmt> possibleItems = Eqpmt.searchItems(itemSearchQuery);
+        for (Eqpmt item : possibleItems) {
+            if (!player.mobInventoryList.contains(item)) {
+                possibleItems.remove(item);
+            }
+        }
+        return possibleItems;
+    }
+
+    /**
      * Attempts to split a user's input by a . and return the number
      * Expects input following '#.itemName' such as '2.sword'. In that example, 2 would be returned
+     * If using as an actual index, will need to reduce result by 1 (2nd item of an array is in index 1)
      * Default is 0
      * @param userArgs user input from the game's UI
      * @return user number if given in form of #.itemName. Default return is 0
@@ -769,7 +820,7 @@ public class GameInterface {
 
         if (splitName.length > 0) {
             try {
-                itemIndicator = Integer.getInteger(splitName[0]) - 1;
+                itemIndicator = Integer.getInteger(splitName[0]);
             } catch (NumberFormatException nfe) {
                 itemIndicator = 0;
             }
